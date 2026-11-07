@@ -1,0 +1,16 @@
+# Secretos: nunca versionar (solo los .env.example)
+.env
+.env.*
+!.env.example
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.idea/
+.vscode/
+
+# Logs
+*.log

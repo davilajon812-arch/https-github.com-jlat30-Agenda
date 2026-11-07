@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Herramientas
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Entorno local de Supabase (CLI)
+.supabase/
+
+# Secretos
+.env
+.env.*
+!.env.example

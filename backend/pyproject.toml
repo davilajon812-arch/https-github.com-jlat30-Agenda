@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "rls: pruebas de aislamiento de Row Level Security (requieren SUPABASE_DB_URL)",
+]
