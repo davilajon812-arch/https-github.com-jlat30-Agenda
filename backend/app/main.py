@@ -12,6 +12,7 @@ from psycopg_pool import ConnectionPool
 
 from app.api.router import api_router
 from app.api.routes import health
+from app.core.billing_client import build_play_client
 from app.core.config import Settings, get_settings
 from app.core.db import DatabaseUnavailableError, close_pool, open_pool
 from app.core.logging import configure_logging
@@ -61,6 +62,7 @@ def create_app(app_settings: Settings | None = None) -> FastAPI:
 
     application.state.settings = settings
     application.state.token_verifier = SupabaseTokenVerifier(settings)
+    application.state.play_client = build_play_client(settings)
 
     if not application.state.token_verifier.is_configured:
         logger.warning(

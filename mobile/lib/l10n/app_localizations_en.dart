@@ -523,4 +523,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorBackend => 'Could not reach the availability server.';
+
+  @override
+  String get billingTitle => 'Your plan';
+
+  @override
+  String billingRenewsOn(String date) {
+    return 'Renews on $date';
+  }
+
+  @override
+  String billingExpiresOn(String date) {
+    return 'Expires on $date';
+  }
+
+  @override
+  String get billingNoRenewal => 'Auto-renewal off';
+
+  @override
+  String get billingStatusActive => 'Active';
+
+  @override
+  String get billingStatusGrace => 'Grace period';
+
+  @override
+  String get billingStatusPaused => 'Paused';
+
+  @override
+  String get billingStatusCanceled => 'Canceled';
+
+  @override
+  String get billingStatusExpired => 'Expired';
+
+  @override
+  String get billingStatusPending => 'Payment pending';
+
+  @override
+  String get billingManage => 'Manage in Google Play';
+
+  @override
+  String get billingUpgrade => 'Upgrade';
+
+  @override
+  String get billingCurrent => 'Current plan';
+
+  @override
+  String get billingChoose => 'Choose plan';
+
+  @override
+  String get billingRestore => 'Restore purchases';
+
+  @override
+  String get billingPriceUnavailable => 'Price unavailable';
+
+  @override
+  String get billingPurchasePending => 'Processing your purchase...';
+
+  @override
+  String get billingPurchaseSuccess => 'Done! Your plan is active.';
+
+  @override
+  String get billingPurchaseError => 'The purchase could not be completed.';
+
+  @override
+  String get billingRestoreStarted => 'Looking for previous purchases...';
+
+  @override
+  String get billingRestoreEmpty => 'No purchases to restore.';
+
+  @override
+  String get billingStoreUnavailable =>
+      'Google Play is not available on this device.';
+
+  @override
+  String billingUsageStaff(int used, String limit) {
+    return 'Staff: $used of $limit';
+  }
+
+  @override
+  String billingUsageAppointments(int used, String limit) {
+    return 'Appointments this month: $used of $limit';
+  }
+
+  @override
+  String billingUsageMessages(int used, String limit) {
+    return 'Messages this month: $used of $limit';
+  }
+
+  @override
+  String get billingUnlimited => 'Unlimited';
+
+  @override
+  String get billingFeatureReminders => 'Automatic reminders';
+
+  @override
+  String get billingFeatureReports => 'Advanced reports';
+
+  @override
+  String get billingFeatureBranding => 'Custom branding';
+
+  @override
+  String get planLimitTitle => 'Plan limit';
+
+  @override
+  String planLimitStaff(String limit) {
+    return 'Your plan allows $limit active staff member(s).';
+  }
+
+  @override
+  String planLimitAppointments(String limit) {
+    return 'You reached the $limit appointment limit this month.';
+  }
+
+  @override
+  String get planLimitGeneric => 'You reached your current plan limit.';
+
+  @override
+  String get planLimitUpgrade => 'See plans';
+
+  @override
+  String get planLimitLater => 'Not now';
 }

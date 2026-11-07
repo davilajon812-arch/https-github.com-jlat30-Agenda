@@ -21,6 +21,11 @@ from app.schemas.appointments import (
 )
 from app.services import appointments as rules
 from app.services.access import BUSINESS_STAFF_ROLES, require_member, require_roles
+from app.services.entitlements import (
+    LIMIT_APPOINTMENTS,
+    ensure_capacity,
+    load_entitlements,
+)
 
 router = APIRouter(prefix="/businesses/{business_id}/appointments", tags=["appointments"])
 
@@ -101,6 +106,7 @@ def create_appointment(
     user: CurrentUser,
 ) -> dict[str, Any]:
     require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    ensure_capacity(load_entitlements(conn, str(business_id)), LIMIT_APPOINTMENTS)
 
     rules.ensure_client_belongs(conn, str(business_id), payload.client_id)
 

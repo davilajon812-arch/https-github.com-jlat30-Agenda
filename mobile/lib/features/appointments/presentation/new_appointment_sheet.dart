@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/api/agenda_api.dart';
 import '../../../core/providers/app_providers.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../billing/domain/plan.dart';
+import '../../billing/presentation/widgets/plan_limit_dialog.dart';
 import '../../clients/domain/client.dart';
 import '../../clients/presentation/providers/clients_providers.dart';
 import '../../clients/presentation/widgets/client_form_sheet.dart';
@@ -102,7 +103,7 @@ class _NewAppointmentSheetState extends ConsumerState<NewAppointmentSheet> {
     });
 
     try {
-      await ref.read(appointmentsRepositoryProvider).create(
+      await ref.read(agendaApiProvider).createAppointment(
             businessId: widget.businessId,
             clientId: _client!.id,
             serviceId: _service!.id,
@@ -116,15 +117,15 @@ class _NewAppointmentSheetState extends ConsumerState<NewAppointmentSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.newAppointmentCreated)),
       );
-    } on PostgrestException catch (error) {
+    } on PlanLimitException catch (error) {
       if (!mounted) return;
-      // 23514 = choque de horario detectado por la base de datos.
+      Navigator.of(context).pop();
+      await showPlanLimitDialog(context, error);
+    } on AgendaApiException catch (error) {
+      if (!mounted) return;
       setState(() {
-        _error = error.code == '23514' ? l10n.errorConflict : l10n.errorSave;
+        _error = error.statusCode == 409 ? l10n.errorConflict : error.message;
       });
-    } on AgendaApiException {
-      if (!mounted) return;
-      setState(() => _error = l10n.errorBackend);
     } catch (_) {
       if (!mounted) return;
       setState(() => _error = l10n.errorSave);

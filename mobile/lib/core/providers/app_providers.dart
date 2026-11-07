@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/appointments/data/appointments_repository.dart';
 import '../../features/auth/data/auth_repository.dart';
+import '../../features/billing/data/play_billing.dart';
 import '../../features/business/data/business_repository.dart';
 import '../../features/clients/data/clients_repository.dart';
 import '../../features/services/data/services_repository.dart';
@@ -59,3 +60,6 @@ final agendaApiProvider = Provider<AgendaApi>((ref) {
   ref.onDispose(api.dispose);
   return api;
 });
+
+/// Envoltorio de Google Play Billing.
+final playBillingProvider = Provider<PlayBilling>((ref) => PlayBilling());

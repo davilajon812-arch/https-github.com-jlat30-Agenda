@@ -47,6 +47,19 @@ class Settings(BaseSettings):
     database_pool_min_size: int = 1
     database_pool_max_size: int = 8
 
+    # --- Google Play Billing ---
+    # "play" usa la Google Play Developer API; "fake" simula Play para
+    # desarrollo local y pruebas.
+    billing_provider: Literal["play", "fake"] = "fake"
+    google_play_package_name: str = "com.agendapro.agenda_pro"
+    # JSON completo de la cuenta de servicio con permisos en Play Console.
+    # Se define como secreto en Render; nunca en el repositorio.
+    google_play_service_account_json: str = ""
+    # Secreto compartido que se configura en la suscripción push de Pub/Sub
+    # (se envía en la cabecera X-Agendapro-Token).
+    google_pubsub_rtdn_token: str = ""
+    # Secreto para el endpoint de mantenimiento manual.
+    maintenance_token: str = ""
 
     @field_validator("cors_origins", mode="before")
     @classmethod

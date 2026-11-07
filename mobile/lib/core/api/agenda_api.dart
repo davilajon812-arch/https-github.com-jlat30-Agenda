@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../features/billing/domain/plan.dart';
+
 /// Error devuelto por la API del backend.
 class AgendaApiException implements Exception {
   AgendaApiException(this.message, {this.statusCode});
@@ -79,7 +81,7 @@ class DayAvailability {
 
 /// Cliente HTTP de la API de AgendaPro.
 ///
-/// La disponibilidad se calcula en el backend para que sea la fuente de verdad.
+/// El backend es la fuente de verdad de disponibilidad y de límites del plan.
 class AgendaApi {
   AgendaApi({
     required this.baseUrl,
@@ -92,46 +94,13 @@ class AgendaApi {
   final SupabaseClient _supabase;
   final http.Client _http;
 
-  Future<DayAvailability> availability({
-    required String businessId,
-    required String serviceId,
-    required DateTime date,
-    String? staffId,
-  }) async {
+  Map<String, String> _authHeaders() {
     final token = _supabase.auth.currentSession?.accessToken;
     if (token == null) {
-      throw AgendaApiException('Sesión expirada');
+      throw AgendaApiException('Sesión expirada', statusCode: 401);
     }
-
-    final query = {
-      'service_id': serviceId,
-      'date': _dateOnly(date),
-      'staff_id': ?staffId,
-    };
-    final uri = Uri.parse('$baseUrl/api/v1/businesses/$businessId/availability')
-        .replace(queryParameters: query);
-
-    final response = await _http.get(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode != 200) {
-      throw AgendaApiException(
-        _errorMessage(response.body),
-        statusCode: response.statusCode,
-      );
-    }
-
-    return DayAvailability.fromJson(
-      jsonDecode(response.body) as Map<String, dynamic>,
-    );
+    return {'Authorization': 'Bearer $token'};
   }
-
-  static String _dateOnly(DateTime date) =>
-      '${date.year.toString().padLeft(4, '0')}-'
-      '${date.month.toString().padLeft(2, '0')}-'
-      '${date.day.toString().padLeft(2, '0')}';
 
   static String _errorMessage(String body) {
     try {
@@ -142,8 +111,149 @@ class AgendaApi {
     } catch (_) {
       // El cuerpo no era JSON: se usa el mensaje genérico.
     }
-    return 'No se pudo consultar la disponibilidad';
+    return 'No se pudo completar la operación';
   }
+
+  /// Convierte un error HTTP en excepción tipada (402 -> límite de plan).
+  static Never _throwFor(http.Response response) {
+    try {
+      final decoded = jsonDecode(response.body);
+      if (response.statusCode == 402 &&
+          decoded is Map &&
+          decoded['detail'] is Map) {
+        throw PlanLimitException.fromDetail(
+          Map<String, dynamic>.from(decoded['detail'] as Map),
+        );
+      }
+    } on PlanLimitException {
+      rethrow;
+    } catch (_) {
+      // Se sigue con el error genérico.
+    }
+    throw AgendaApiException(
+      _errorMessage(response.body),
+      statusCode: response.statusCode,
+    );
+  }
+
+  Future<DayAvailability> availability({
+    required String businessId,
+    required String serviceId,
+    required DateTime date,
+    String? staffId,
+  }) async {
+    final query = {
+      'service_id': serviceId,
+      'date': _dateOnly(date),
+      'staff_id': ?staffId,
+    };
+    final uri = Uri.parse('$baseUrl/api/v1/businesses/$businessId/availability')
+        .replace(queryParameters: query);
+
+    final response = await _http.get(uri, headers: _authHeaders());
+    if (response.statusCode != 200) _throwFor(response);
+
+    return DayAvailability.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Catálogo de planes con sus límites.
+  Future<List<Plan>> plans() async {
+    final response = await _http.get(Uri.parse('$baseUrl/api/v1/billing/plans'));
+    if (response.statusCode != 200) _throwFor(response);
+
+    return [
+      for (final item in jsonDecode(response.body) as List<dynamic>)
+        Plan.fromJson(item as Map<String, dynamic>),
+    ];
+  }
+
+  /// Plan activo y consumo del negocio.
+  Future<Entitlements> entitlements(String businessId) async {
+    final response = await _http.get(
+      Uri.parse('$baseUrl/api/v1/businesses/$businessId/entitlements'),
+      headers: _authHeaders(),
+    );
+    if (response.statusCode != 200) _throwFor(response);
+
+    return Entitlements.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Verifica una compra de Google Play y devuelve el nuevo estado del plan.
+  Future<Entitlements> verifyPurchase({
+    required String businessId,
+    required String productId,
+    required String purchaseToken,
+  }) async {
+    final response = await _http.post(
+      Uri.parse('$baseUrl/api/v1/billing/verify'),
+      headers: {..._authHeaders(), 'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'business_id': businessId,
+        'product_id': productId,
+        'purchase_token': purchaseToken,
+      }),
+    );
+    if (response.statusCode != 200) _throwFor(response);
+
+    return Entitlements.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Crea un empleado (el backend aplica el límite del plan).
+  Future<Map<String, dynamic>> createStaff({
+    required String businessId,
+    required String displayName,
+    String? phone,
+  }) async {
+    final response = await _http.post(
+      Uri.parse('$baseUrl/api/v1/businesses/$businessId/staff'),
+      headers: {..._authHeaders(), 'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'display_name': displayName,
+        'phone': phone,
+      }),
+    );
+    if (response.statusCode != 201) _throwFor(response);
+
+    return jsonDecode(response.body) as Map<String, dynamic>;
+  }
+
+  /// Crea una cita (el backend valida choques y límite mensual).
+  Future<Map<String, dynamic>> createAppointment({
+    required String businessId,
+    required String clientId,
+    required DateTime startsAt,
+    String? serviceId,
+    String? staffId,
+    double? price,
+    String? notes,
+  }) async {
+    final response = await _http.post(
+      Uri.parse('$baseUrl/api/v1/businesses/$businessId/appointments'),
+      headers: {..._authHeaders(), 'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'client_id': clientId,
+        'service_id': serviceId,
+        'staff_id': staffId,
+        'starts_at': startsAt.toIso8601String(),
+        'price': price,
+        'notes': notes,
+      }),
+    );
+    if (response.statusCode != 201) _throwFor(response);
+
+    return jsonDecode(response.body) as Map<String, dynamic>;
+  }
+
+  static String _dateOnly(DateTime date) =>
+      '${date.year.toString().padLeft(4, '0')}-'
+      '${date.month.toString().padLeft(2, '0')}-'
+      '${date.day.toString().padLeft(2, '0')}';
 
   void dispose() => _http.close();
 }

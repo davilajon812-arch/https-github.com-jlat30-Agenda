@@ -29,6 +29,7 @@ from app.services.access import (
     require_owner,
     require_roles,
 )
+from app.services.entitlements import LIMIT_STAFF, ensure_capacity, load_entitlements
 
 router = APIRouter(prefix="/businesses/{business_id}/staff", tags=["staff"])
 
@@ -69,6 +70,7 @@ def create_staff(
     business_id: UUID, payload: StaffCreate, conn: Connection, user: CurrentUser
 ) -> dict[str, Any]:
     require_owner(conn, user.id, str(business_id))
+    ensure_capacity(load_entitlements(conn, str(business_id)), LIMIT_STAFF)
 
     try:
         row = (

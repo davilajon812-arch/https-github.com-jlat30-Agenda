@@ -173,5 +173,61 @@
   "errorPermission": "Your role cannot perform this action.",
   "errorNotFound": "Record not found.",
   "errorSave": "Could not save. Please try again.",
-  "errorBackend": "Could not reach the availability server."
+  "errorBackend": "Could not reach the availability server.",
+  "billingTitle": "Your plan",
+  "billingRenewsOn": "Renews on {date}",
+  "@billingRenewsOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "billingExpiresOn": "Expires on {date}",
+  "@billingExpiresOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "billingNoRenewal": "Auto-renewal off",
+  "billingStatusActive": "Active",
+  "billingStatusGrace": "Grace period",
+  "billingStatusPaused": "Paused",
+  "billingStatusCanceled": "Canceled",
+  "billingStatusExpired": "Expired",
+  "billingStatusPending": "Payment pending",
+  "billingManage": "Manage in Google Play",
+  "billingUpgrade": "Upgrade",
+  "billingCurrent": "Current plan",
+  "billingChoose": "Choose plan",
+  "billingRestore": "Restore purchases",
+  "billingPriceUnavailable": "Price unavailable",
+  "billingPurchasePending": "Processing your purchase...",
+  "billingPurchaseSuccess": "Done! Your plan is active.",
+  "billingPurchaseError": "The purchase could not be completed.",
+  "billingRestoreStarted": "Looking for previous purchases...",
+  "billingRestoreEmpty": "No purchases to restore.",
+  "billingStoreUnavailable": "Google Play is not available on this device.",
+  "billingUsageStaff": "Staff: {used} of {limit}",
+  "@billingUsageStaff": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingUsageAppointments": "Appointments this month: {used} of {limit}",
+  "@billingUsageAppointments": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingUsageMessages": "Messages this month: {used} of {limit}",
+  "@billingUsageMessages": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingUnlimited": "Unlimited",
+  "billingFeatureReminders": "Automatic reminders",
+  "billingFeatureReports": "Advanced reports",
+  "billingFeatureBranding": "Custom branding",
+  "planLimitTitle": "Plan limit",
+  "planLimitStaff": "Your plan allows {limit} active staff member(s).",
+  "@planLimitStaff": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
+  "planLimitAppointments": "You reached the {limit} appointment limit this month.",
+  "@planLimitAppointments": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
+  "planLimitGeneric": "You reached your current plan limit.",
+  "planLimitUpgrade": "See plans",
+  "planLimitLater": "Not now"
 }

@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 
 from app.core.config import Settings
 from app.main import create_app
+from app.services.google_play import FakeGooglePlayClient
 from tests.database_support import start_embedded_postgres
 
 JWT_SECRET = "secret-de-pruebas-para-la-api-de-agenda-0123456789"
@@ -126,6 +127,19 @@ def seeded(postgres_uri: str) -> str:
             (CLIENT_ID, BUSINESS_ID, OTHER_CLIENT_ID, BUSINESS_ID),
         )
 
+        # El negocio de pruebas arranca en Pro (ilimitado) para que las pruebas
+        # de la Fase 2 no choquen con los límites; las de facturación bajan a
+        # Free explícitamente.
+        conn.execute(
+            """
+            update public.subscriptions
+            set plan = 'pro', status = 'active', source = 'manual',
+                current_period_end = now() + interval '1 year', auto_renewing = false
+            where business_id = %s
+            """,
+            (BUSINESS_ID,),
+        )
+
     return postgres_uri
 
 
@@ -139,6 +153,9 @@ def app_settings(seeded: str) -> Settings:
         supabase_url="",
         supabase_jwt_secret=JWT_SECRET,
         database_url=seeded,
+        billing_provider="fake",
+        maintenance_token="token-de-mantenimiento",
+        google_pubsub_rtdn_token="token-rtdn",
     )
 
 
@@ -149,13 +166,51 @@ def client(app_settings: Settings) -> Iterator[TestClient]:
         yield test_client
 
 
+@pytest.fixture
+def play_client(client: TestClient) -> FakeGooglePlayClient:
+    """Cliente de Play en modo estricto: solo existen los tokens registrados."""
+    fake = FakeGooglePlayClient(known_tokens={})
+    client.app.state.play_client = fake
+    return fake
+
+
 @pytest.fixture(autouse=True)
-def clean_appointments(postgres_uri: str) -> Iterator[None]:
-    """Cada prueba empieza sin citas ni bloqueos."""
+def clean_db(seeded: str) -> Iterator[None]:
+    """Cada prueba empieza con el negocio limpio y en plan Pro."""
+    _reset(seeded)
+    yield
+    _reset(seeded)
+
+
+def _reset(postgres_uri: str) -> None:
     with psycopg.connect(postgres_uri, autocommit=True) as conn:
         conn.execute("delete from public.appointments")
         conn.execute("delete from public.staff_blocks")
-    yield
+        conn.execute("delete from public.billing_events")
+        conn.execute(
+            "delete from public.staff_members where id <> all(%s)",
+            ([STAFF_MEMBER_ID, OTHER_STAFF_ID],),
+        )
+        conn.execute(
+            """
+            update public.plans
+            set max_appointments_per_month = case id when 'free' then 30 else null end
+            """
+        )
+        conn.execute(
+            "delete from public.subscriptions where business_id = %s",
+            (BUSINESS_ID,),
+        )
+        conn.execute(
+            """
+            insert into public.subscriptions
+                (business_id, plan, status, source, current_period_start,
+                 current_period_end, auto_renewing)
+            values (%s, 'pro', 'active', 'manual', now(),
+                    now() + interval '1 year', false)
+            """,
+            (BUSINESS_ID,),
+        )
 
 
 @pytest.fixture

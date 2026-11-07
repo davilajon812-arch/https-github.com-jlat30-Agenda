@@ -29,6 +29,7 @@ class AppConfig {
     required this.supabaseUrl,
     required this.supabaseAnonKey,
     required this.apiBaseUrl,
+    this.androidPackageName = 'com.agendapro.agenda_pro',
   });
 
   factory AppConfig.fromEnvironment({AppFlavor? defaultFlavor}) {
@@ -41,7 +42,11 @@ class AppConfig {
       supabaseAnonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
       apiBaseUrl: const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'http://localhost:8000',
+        defaultValue: 'http://10.0.2.2:8000',
+      ),
+      androidPackageName: const String.fromEnvironment(
+        'APP_PACKAGE_NAME',
+        defaultValue: 'com.agendapro.agenda_pro',
       ),
     );
   }
@@ -50,6 +55,9 @@ class AppConfig {
   final String supabaseUrl;
   final String supabaseAnonKey;
   final String apiBaseUrl;
+
+  /// applicationId de Android (necesario para el enlace de gestión de suscripción).
+  final String androidPackageName;
 
   bool get isDev => flavor == AppFlavor.dev;
 

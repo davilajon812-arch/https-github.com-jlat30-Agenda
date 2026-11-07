@@ -3,12 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('AppConfig', () {
-    test('usa el flavor dev por defecto', () {
+    test('usa el flavor dev y el host del emulador por defecto', () {
       final config = AppConfig.fromEnvironment();
 
       expect(config.flavor, AppFlavor.dev);
       expect(config.isDev, isTrue);
-      expect(config.apiBaseUrl, 'http://localhost:8000');
+      expect(config.apiBaseUrl, 'http://10.0.2.2:8000');
+      expect(config.androidPackageName, 'com.agendapro.agenda_pro');
     });
 
     test('sin variables de compilación Supabase no está configurado', () {

@@ -173,5 +173,61 @@
   "errorPermission": "Tu rol no permite esta acción.",
   "errorNotFound": "No se encontró el registro.",
   "errorSave": "No se pudo guardar. Intenta de nuevo.",
-  "errorBackend": "No se pudo conectar con el servidor de disponibilidad."
+  "errorBackend": "No se pudo conectar con el servidor de disponibilidad.",
+  "billingTitle": "Tu plan",
+  "billingRenewsOn": "Se renueva el {date}",
+  "@billingRenewsOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "billingExpiresOn": "Vence el {date}",
+  "@billingExpiresOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "billingNoRenewal": "Renovación desactivada",
+  "billingStatusActive": "Activo",
+  "billingStatusGrace": "Periodo de gracia",
+  "billingStatusPaused": "En pausa",
+  "billingStatusCanceled": "Cancelado",
+  "billingStatusExpired": "Vencido",
+  "billingStatusPending": "Pendiente de pago",
+  "billingManage": "Administrar en Google Play",
+  "billingUpgrade": "Mejorar plan",
+  "billingCurrent": "Plan actual",
+  "billingChoose": "Elegir plan",
+  "billingRestore": "Restaurar compras",
+  "billingPriceUnavailable": "Precio no disponible",
+  "billingPurchasePending": "Procesando la compra...",
+  "billingPurchaseSuccess": "¡Listo! Tu plan ya está activo.",
+  "billingPurchaseError": "No se pudo completar la compra.",
+  "billingRestoreStarted": "Buscando compras anteriores...",
+  "billingRestoreEmpty": "No encontramos compras para restaurar.",
+  "billingStoreUnavailable": "Google Play no está disponible en este dispositivo.",
+  "billingUsageStaff": "Empleados: {used} de {limit}",
+  "@billingUsageStaff": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingUsageAppointments": "Citas este mes: {used} de {limit}",
+  "@billingUsageAppointments": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingUsageMessages": "Mensajes este mes: {used} de {limit}",
+  "@billingUsageMessages": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingUnlimited": "Ilimitado",
+  "billingFeatureReminders": "Recordatorios automáticos",
+  "billingFeatureReports": "Reportes avanzados",
+  "billingFeatureBranding": "Marca personalizada",
+  "planLimitTitle": "Límite de tu plan",
+  "planLimitStaff": "Tu plan permite {limit} empleado(s) activo(s).",
+  "@planLimitStaff": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
+  "planLimitAppointments": "Llegaste al límite de {limit} citas este mes.",
+  "@planLimitAppointments": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
+  "planLimitGeneric": "Alcanzaste el límite de tu plan actual.",
+  "planLimitUpgrade": "Ver planes",
+  "planLimitLater": "Ahora no"
 }

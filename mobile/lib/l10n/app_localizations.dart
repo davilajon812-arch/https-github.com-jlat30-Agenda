@@ -1105,6 +1105,216 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo conectar con el servidor de disponibilidad.'**
   String get errorBackend;
+
+  /// No description provided for @billingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu plan'**
+  String get billingTitle;
+
+  /// No description provided for @billingRenewsOn.
+  ///
+  /// In es, this message translates to:
+  /// **'Se renueva el {date}'**
+  String billingRenewsOn(String date);
+
+  /// No description provided for @billingExpiresOn.
+  ///
+  /// In es, this message translates to:
+  /// **'Vence el {date}'**
+  String billingExpiresOn(String date);
+
+  /// No description provided for @billingNoRenewal.
+  ///
+  /// In es, this message translates to:
+  /// **'Renovación desactivada'**
+  String get billingNoRenewal;
+
+  /// No description provided for @billingStatusActive.
+  ///
+  /// In es, this message translates to:
+  /// **'Activo'**
+  String get billingStatusActive;
+
+  /// No description provided for @billingStatusGrace.
+  ///
+  /// In es, this message translates to:
+  /// **'Periodo de gracia'**
+  String get billingStatusGrace;
+
+  /// No description provided for @billingStatusPaused.
+  ///
+  /// In es, this message translates to:
+  /// **'En pausa'**
+  String get billingStatusPaused;
+
+  /// No description provided for @billingStatusCanceled.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelado'**
+  String get billingStatusCanceled;
+
+  /// No description provided for @billingStatusExpired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencido'**
+  String get billingStatusExpired;
+
+  /// No description provided for @billingStatusPending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente de pago'**
+  String get billingStatusPending;
+
+  /// No description provided for @billingManage.
+  ///
+  /// In es, this message translates to:
+  /// **'Administrar en Google Play'**
+  String get billingManage;
+
+  /// No description provided for @billingUpgrade.
+  ///
+  /// In es, this message translates to:
+  /// **'Mejorar plan'**
+  String get billingUpgrade;
+
+  /// No description provided for @billingCurrent.
+  ///
+  /// In es, this message translates to:
+  /// **'Plan actual'**
+  String get billingCurrent;
+
+  /// No description provided for @billingChoose.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir plan'**
+  String get billingChoose;
+
+  /// No description provided for @billingRestore.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar compras'**
+  String get billingRestore;
+
+  /// No description provided for @billingPriceUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio no disponible'**
+  String get billingPriceUnavailable;
+
+  /// No description provided for @billingPurchasePending.
+  ///
+  /// In es, this message translates to:
+  /// **'Procesando la compra...'**
+  String get billingPurchasePending;
+
+  /// No description provided for @billingPurchaseSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Listo! Tu plan ya está activo.'**
+  String get billingPurchaseSuccess;
+
+  /// No description provided for @billingPurchaseError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo completar la compra.'**
+  String get billingPurchaseError;
+
+  /// No description provided for @billingRestoreStarted.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando compras anteriores...'**
+  String get billingRestoreStarted;
+
+  /// No description provided for @billingRestoreEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos compras para restaurar.'**
+  String get billingRestoreEmpty;
+
+  /// No description provided for @billingStoreUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'Google Play no está disponible en este dispositivo.'**
+  String get billingStoreUnavailable;
+
+  /// No description provided for @billingUsageStaff.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleados: {used} de {limit}'**
+  String billingUsageStaff(int used, String limit);
+
+  /// No description provided for @billingUsageAppointments.
+  ///
+  /// In es, this message translates to:
+  /// **'Citas este mes: {used} de {limit}'**
+  String billingUsageAppointments(int used, String limit);
+
+  /// No description provided for @billingUsageMessages.
+  ///
+  /// In es, this message translates to:
+  /// **'Mensajes este mes: {used} de {limit}'**
+  String billingUsageMessages(int used, String limit);
+
+  /// No description provided for @billingUnlimited.
+  ///
+  /// In es, this message translates to:
+  /// **'Ilimitado'**
+  String get billingUnlimited;
+
+  /// No description provided for @billingFeatureReminders.
+  ///
+  /// In es, this message translates to:
+  /// **'Recordatorios automáticos'**
+  String get billingFeatureReminders;
+
+  /// No description provided for @billingFeatureReports.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportes avanzados'**
+  String get billingFeatureReports;
+
+  /// No description provided for @billingFeatureBranding.
+  ///
+  /// In es, this message translates to:
+  /// **'Marca personalizada'**
+  String get billingFeatureBranding;
+
+  /// No description provided for @planLimitTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Límite de tu plan'**
+  String get planLimitTitle;
+
+  /// No description provided for @planLimitStaff.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu plan permite {limit} empleado(s) activo(s).'**
+  String planLimitStaff(String limit);
+
+  /// No description provided for @planLimitAppointments.
+  ///
+  /// In es, this message translates to:
+  /// **'Llegaste al límite de {limit} citas este mes.'**
+  String planLimitAppointments(String limit);
+
+  /// No description provided for @planLimitGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'Alcanzaste el límite de tu plan actual.'**
+  String get planLimitGeneric;
+
+  /// No description provided for @planLimitUpgrade.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver planes'**
+  String get planLimitUpgrade;
+
+  /// No description provided for @planLimitLater.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get planLimitLater;
 }
 
 class _AppLocalizationsDelegate

@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/api/agenda_api.dart';
 import '../../../core/providers/app_providers.dart';
 import '../../../core/widgets/error_view.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../billing/domain/plan.dart';
+import '../../billing/presentation/providers/billing_providers.dart';
+import '../../billing/presentation/widgets/plan_limit_dialog.dart';
 import '../../business/presentation/providers/business_providers.dart';
 import './providers/staff_providers.dart';
 
@@ -143,15 +147,27 @@ class StaffScreen extends ConsumerWidget {
               FilledButton(
                 onPressed: () async {
                   if (!formKey.currentState!.validate()) return;
-                  await ref.read(staffRepositoryProvider).create(
-                        businessId: businessId,
-                        displayName: nameController.text,
-                        phone: phoneController.text.trim().isEmpty
-                            ? null
-                            : phoneController.text.trim(),
-                      );
-                  ref.invalidate(staffProvider(businessId));
-                  if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                  try {
+                    await ref.read(agendaApiProvider).createStaff(
+                          businessId: businessId,
+                          displayName: nameController.text,
+                          phone: phoneController.text.trim().isEmpty
+                              ? null
+                              : phoneController.text.trim(),
+                        );
+                    ref.invalidate(staffProvider(businessId));
+                    ref.invalidate(entitelementsProvider);
+                    if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                  } on PlanLimitException catch (error) {
+                    if (!sheetContext.mounted) return;
+                    Navigator.of(sheetContext).pop();
+                    await showPlanLimitDialog(context, error);
+                  } on AgendaApiException catch (error) {
+                    if (!sheetContext.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(error.message)),
+                    );
+                  }
                 },
                 child: Text(l10n.commonSave),
               ),

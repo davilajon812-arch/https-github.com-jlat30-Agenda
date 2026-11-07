@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,10 +7,12 @@ import '../../features/appointments/presentation/appointment_detail_screen.dart'
 import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/billing/presentation/billing_screen.dart';
 import '../../features/clients/presentation/client_detail_screen.dart';
 import '../../features/services/presentation/services_screen.dart';
 import '../../features/staff/presentation/staff_schedule_screen.dart';
 import '../../features/staff/presentation/staff_screen.dart';
+import '../../l10n/app_localizations.dart';
 import '../app_gate.dart';
 import 'router_refresh.dart';
 
@@ -69,6 +72,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/staff/:id/schedule',
         builder: (context, state) => StaffScheduleScreen(
           staffId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: '/plan',
+        builder: (context, state) => Scaffold(
+          appBar: AppBar(title: Text(AppLocalizations.of(context).billingTitle)),
+          body: const BillingScreen(),
         ),
       ),
     ],

@@ -107,9 +107,29 @@ def test_el_dueno_ve_las_suscripciones_de_su_negocio(seeded_db) -> None:
     conn, _ = seeded_db
 
     with act_as(conn, USER_A):
-        rows = conn.execute("select id from public.subscriptions").fetchall()
+        rows = conn.execute("select id, business_id from public.subscriptions").fetchall()
 
-    assert ids(rows) == [uuid.UUID(SUBSCRIPTION_A)]
+    visibles = {row[0] for row in rows}
+    assert uuid.UUID(SUBSCRIPTION_A) in visibles
+    assert all(row[1] == uuid.UUID(BUSINESS_A) for row in rows)
+
+
+def test_toda_cuenta_nueva_arranca_en_plan_gratis(seeded_db) -> None:
+    """El trigger crea la suscripción gratuita al dar de alta el negocio."""
+    conn, _ = seeded_db
+
+    row = conn.execute(
+        """
+        select plan, status, source
+        from public.subscriptions
+        where business_id = %s and purchase_token is null
+        order by created_at
+        limit 1
+        """,
+        (BUSINESS_B,),
+    ).fetchone()
+
+    assert row == ("free", "active", "manual")
 
 
 def test_el_empleado_no_puede_editar_el_negocio(seeded_db) -> None:

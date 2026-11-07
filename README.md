@@ -24,7 +24,8 @@ render.yaml  Blueprint de Render para el backend
 | 0 | Estructura, /health, deploy base, tema, i18n, flavors | ✅ |
 | 1 | Modelo de datos, RLS, auth y onboarding del negocio | ✅ |
 | 2 | Núcleo de la agenda (servicios, clientes, citas) | ✅ |
-| 3 | Suscripciones con Google Play Billing | ⏳ |
+| 3 | Suscripciones con Google Play Billing | ✅ |
+| 4 | Link de reserva público | ⏳ |
 
 ## Requisitos
 
@@ -62,6 +63,23 @@ Endpoints de la Fase 2 (todos bajo `/api/v1/businesses/{business_id}` y con JWT)
 | PATCH | `/appointments/{id}` | Reagendar / editar |
 | POST | `/appointments/{id}/status` | Cambiar estado |
 | GET | `/availability` | Huecos libres (`service_id`, `date`, `staff_id` opcional) |
+
+Endpoints de facturación (Fase 3):
+
+| Método | Ruta | Descripción |
+| ------ | ---- | ----------- |
+| GET | `/billing/plans` | Catálogo de planes y límites (precios vienen de Play) |
+| GET | `/businesses/{id}/entitlements` | Plan activo, consumo y cupos restantes |
+| POST | `/billing/verify` | Verifica la compra en Play, guarda y confirma (*acknowledge*) |
+| POST | `/billing/rtdn` | Notificaciones de Pub/Sub (renovación, cancelación, gracia, reembolso) |
+| POST | `/internal/maintenance/daily` | Reconciliación manual (requiere `MAINTENANCE_TOKEN`) |
+
+Los límites del plan se aplican en el backend: crear un empleado o una cita por
+encima del cupo responde **402** con `{code, limit, plan, upgrade_to}` y la app
+muestra un bloqueo amable con invitación a mejorar.
+
+Guía completa de Play Console, cuenta de servicio y RTDN:
+[docs/play-billing-setup.md](docs/play-billing-setup.md).
 
 La validación de choques de horario vive en dos capas: el backend responde 409
 y un trigger de Postgres (`validate_appointment_no_overlap`) lo impide incluso si
@@ -134,6 +152,8 @@ como secretos y verificar que `GET /health` responda 200.
 - [docs/deploy-render.md](docs/deploy-render.md): despliegue paso a paso.
 - [docs/phase-01-report.md](docs/phase-01-report.md): entrega de las fases 0 y 1.
 - [docs/phase-02-report.md](docs/phase-02-report.md): entrega de la fase 2.
+- [docs/phase-03-report.md](docs/phase-03-report.md): entrega de la fase 3.
+- [docs/play-billing-setup.md](docs/play-billing-setup.md): Play Console, cuenta de servicio y RTDN.
 
 ## Reglas de cumplimiento (Google Play)
 

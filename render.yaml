@@ -19,6 +19,10 @@ services:
         value: INFO
       - key: API_V1_PREFIX
         value: /api/v1
+      - key: BILLING_PROVIDER
+        value: play
+      - key: GOOGLE_PLAY_PACKAGE_NAME
+        value: com.agendapro.agenda_pro
       - key: CORS_ORIGINS
         sync: false
       - key: SUPABASE_URL
@@ -31,3 +35,51 @@ services:
         sync: false
       - key: SUPABASE_JWT_AUDIENCE
         value: authenticated
+      - key: DATABASE_URL
+        sync: false
+      - key: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: GOOGLE_PUBSUB_RTDN_TOKEN
+        sync: false
+      - key: MAINTENANCE_TOKEN
+        sync: false
+
+  - type: cron
+    name: agendapro-daily
+    runtime: python
+    plan: starter
+    region: oregon
+    branch: main
+    rootDir: backend
+    schedule: "0 7 * * *"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m app.jobs.daily_maintenance
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: APP_ENV
+        value: prod
+      - key: BILLING_PROVIDER
+        value: play
+      - key: GOOGLE_PLAY_PACKAGE_NAME
+        value: com.agendapro.agenda_pro
+      - key: SUPABASE_URL
+        fromService:
+          type: web
+          name: agendapro-api
+          envVarKey: SUPABASE_URL
+      - key: SUPABASE_ANON_KEY
+        fromService:
+          type: web
+          name: agendapro-api
+          envVarKey: SUPABASE_ANON_KEY
+      - key: DATABASE_URL
+        fromService:
+          type: web
+          name: agendapro-api
+          envVarKey: DATABASE_URL
+      - key: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
+        fromService:
+          type: web
+          name: agendapro-api
+          envVarKey: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
