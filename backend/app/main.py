@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from psycopg_pool import AsyncConnectionPool
+from psycopg_pool import ConnectionPool
 
 from app.api.router import api_router
 from app.api.routes import health
@@ -29,9 +29,9 @@ def create_app(app_settings: Settings | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        pool: AsyncConnectionPool | None = None
+        pool: ConnectionPool | None = None
         try:
-            pool = await open_pool(
+            pool = open_pool(
                 settings.database_url,
                 settings.database_pool_min_size,
                 settings.database_pool_max_size,
@@ -48,7 +48,7 @@ def create_app(app_settings: Settings | None = None) -> FastAPI:
         try:
             yield
         finally:
-            await close_pool(pool)
+            close_pool(pool)
 
     application = FastAPI(
         title=settings.app_name,

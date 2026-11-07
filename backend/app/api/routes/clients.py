@@ -6,7 +6,7 @@ from typing import Annotated, Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from psycopg import AsyncConnection
+from psycopg import Connection
 from psycopg.errors import UniqueViolation
 
 from app.api.deps import get_current_user
@@ -25,19 +25,19 @@ router = APIRouter(prefix="/businesses/{business_id}/clients", tags=["clients"])
 
 CLIENT_COLUMNS = "id, business_id, full_name, phone, notes, created_at, updated_at"
 
-Connection = Annotated[AsyncConnection[Any], Depends(get_connection)]
+Connection = Annotated[Connection[Any], Depends(get_connection)]
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
 
 
 @router.get("", response_model=list[ClientRead], summary="Listar y buscar clientes")
-async def list_clients(
+def list_clients(
     business_id: UUID,
     conn: Connection,
     user: CurrentUser,
     search: Annotated[str | None, Query(max_length=80)] = None,
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
 ) -> list[dict[str, Any]]:
-    await require_member(conn, user.id, str(business_id))
+    require_member(conn, user.id, str(business_id))
 
     query = f"select {CLIENT_COLUMNS} from public.clients where business_id = %s"
     params: list[Any] = [str(business_id)]
@@ -50,7 +50,7 @@ async def list_clients(
     query += " order by full_name limit %s"
     params.append(limit)
 
-    return list(await (await conn.execute(query, params)).fetchall())
+    return list((conn.execute(query, params)).fetchall())
 
 
 @router.post(
@@ -59,14 +59,14 @@ async def list_clients(
     status_code=status.HTTP_201_CREATED,
     summary="Crear cliente",
 )
-async def create_client(
+def create_client(
     business_id: UUID, payload: ClientCreate, conn: Connection, user: CurrentUser
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
     try:
-        row = await (
-            await conn.execute(
+        row = (
+            conn.execute(
                 f"""
                 insert into public.clients (business_id, full_name, phone, notes)
                 values (%s, %s, %s, %s)
@@ -91,25 +91,25 @@ async def create_client(
 
 
 @router.patch("/{client_id}", response_model=ClientRead, summary="Actualizar cliente")
-async def update_client(
+def update_client(
     business_id: UUID,
     client_id: UUID,
     payload: ClientUpdate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
     changes = payload.model_dump(exclude_unset=True)
     if not changes:
-        return await _fetch_client(conn, business_id, client_id)
+        return _fetch_client(conn, business_id, client_id)
 
     assignments = ", ".join(f"{column} = %s" for column in changes)
     values = [*changes.values(), str(client_id), str(business_id)]
 
     try:
-        row = await (
-            await conn.execute(
+        row = (
+            conn.execute(
                 f"""
                 update public.clients
                 set {assignments}
@@ -135,13 +135,13 @@ async def update_client(
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Eliminar cliente sin citas",
 )
-async def delete_client(
+def delete_client(
     business_id: UUID, client_id: UUID, conn: Connection, user: CurrentUser
 ) -> None:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
-    has_appointments = await (
-        await conn.execute(
+    has_appointments = (
+        conn.execute(
             "select 1 from public.appointments where client_id = %s limit 1",
             (str(client_id),),
         )
@@ -152,8 +152,8 @@ async def delete_client(
             detail="El cliente tiene citas registradas; no se puede eliminar",
         )
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             "delete from public.clients where id = %s and business_id = %s returning id",
             (str(client_id), str(business_id)),
         )
@@ -167,15 +167,15 @@ async def delete_client(
     response_model=ClientHistory,
     summary="Historial de visitas",
 )
-async def client_history(
+def client_history(
     business_id: UUID, client_id: UUID, conn: Connection, user: CurrentUser
 ) -> ClientHistory:
-    await require_member(conn, user.id, str(business_id))
+    require_member(conn, user.id, str(business_id))
 
-    client = await _fetch_client(conn, business_id, client_id)
+    client = _fetch_client(conn, business_id, client_id)
 
-    rows = await (
-        await conn.execute(
+    rows = (
+        conn.execute(
             """
             select a.id, a.starts_at, a.ends_at, a.status,
                    s.name as service_name,
@@ -220,11 +220,11 @@ async def client_history(
     )
 
 
-async def _fetch_client(
-    conn: AsyncConnection[Any], business_id: UUID, client_id: UUID
+def _fetch_client(
+    conn: Connection[Any], business_id: UUID, client_id: UUID
 ) -> dict[str, Any]:
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             f"select {CLIENT_COLUMNS} from public.clients "
             "where id = %s and business_id = %s",
             (str(client_id), str(business_id)),

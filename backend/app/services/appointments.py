@@ -7,7 +7,7 @@ from typing import Any
 from uuid import UUID
 
 from fastapi import HTTPException, status
-from psycopg import AsyncConnection
+from psycopg import Connection
 
 from app.core.timeutils import parse_datetime
 
@@ -15,12 +15,12 @@ ACTIVE_STATUSES = ("pendiente", "confirmada", "completada")
 FINAL_STATUSES = ("completada", "cancelada", "no_asistio")
 
 
-async def fetch_service_duration(
-    conn: AsyncConnection[Any], business_id: str, service_id: UUID
+def fetch_service_duration(
+    conn: Connection[Any], business_id: str, service_id: UUID
 ) -> int | None:
     """Duración del servicio si pertenece al negocio."""
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             select duration_minutes
             from public.services
@@ -32,11 +32,11 @@ async def fetch_service_duration(
     return row["duration_minutes"] if row else None
 
 
-async def ensure_client_belongs(
-    conn: AsyncConnection[Any], business_id: str, client_id: UUID
+def ensure_client_belongs(
+    conn: Connection[Any], business_id: str, client_id: UUID
 ) -> None:
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             "select 1 from public.clients where id = %s and business_id = %s",
             (str(client_id), business_id),
         )
@@ -47,11 +47,11 @@ async def ensure_client_belongs(
         )
 
 
-async def ensure_staff_belongs(
-    conn: AsyncConnection[Any], business_id: str, staff_id: UUID
+def ensure_staff_belongs(
+    conn: Connection[Any], business_id: str, staff_id: UUID
 ) -> None:
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             "select 1 from public.staff_members where id = %s and business_id = %s",
             (str(staff_id), business_id),
         )
@@ -62,8 +62,8 @@ async def ensure_staff_belongs(
         )
 
 
-async def find_conflict(
-    conn: AsyncConnection[Any],
+def find_conflict(
+    conn: Connection[Any],
     business_id: str,
     staff_id: str | None,
     starts_at: datetime,
@@ -74,8 +74,8 @@ async def find_conflict(
     if staff_id is None:
         return None
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             select id, starts_at, ends_at
             from public.appointments
@@ -101,8 +101,8 @@ async def find_conflict(
     return row
 
 
-async def ensure_no_conflict(
-    conn: AsyncConnection[Any],
+def ensure_no_conflict(
+    conn: Connection[Any],
     business_id: str,
     staff_id: str | None,
     starts_at: datetime,
@@ -110,7 +110,7 @@ async def ensure_no_conflict(
     exclude_id: str | None = None,
 ) -> None:
     """Responde 409 si el empleado ya tiene una cita en ese horario."""
-    conflict = await find_conflict(
+    conflict = find_conflict(
         conn, business_id, staff_id, starts_at, ends_at, exclude_id
     )
     if conflict is not None:
@@ -120,8 +120,8 @@ async def ensure_no_conflict(
         )
 
 
-async def ensure_block_free(
-    conn: AsyncConnection[Any],
+def ensure_block_free(
+    conn: Connection[Any],
     staff_id: str | None,
     starts_at: datetime,
     ends_at: datetime,
@@ -130,8 +130,8 @@ async def ensure_block_free(
     if staff_id is None:
         return
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             select 1
             from public.staff_blocks

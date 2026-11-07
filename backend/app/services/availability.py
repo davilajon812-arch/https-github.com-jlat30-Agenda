@@ -7,7 +7,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException, status
-from psycopg import AsyncConnection
+from psycopg import Connection
 
 from app.core.timeutils import day_bounds_utc, get_timezone, weekday_sunday_zero
 from app.schemas.availability import AvailabilityResponse, SlotRead, StaffAvailability
@@ -16,11 +16,11 @@ SLOT_STEP_MINUTES = 15
 ACTIVE_STATUSES = ("pendiente", "confirmada", "completada")
 
 
-async def _fetch_service(
-    conn: AsyncConnection[Any], business_id: str, service_id: str
+def _fetch_service(
+    conn: Connection[Any], business_id: str, service_id: str
 ) -> dict[str, Any]:
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             select id, duration_minutes
             from public.services
@@ -36,21 +36,21 @@ async def _fetch_service(
     return row
 
 
-async def _fetch_timezone(conn: AsyncConnection[Any], business_id: str) -> str:
-    row = await (
-        await conn.execute(
+def _fetch_timezone(conn: Connection[Any], business_id: str) -> str:
+    row = (
+        conn.execute(
             "select timezone from public.businesses where id = %s", (business_id,)
         )
     ).fetchone()
     return row["timezone"] if row else "UTC"
 
 
-async def _fetch_staff(
-    conn: AsyncConnection[Any], business_id: str, staff_id: str | None
+def _fetch_staff(
+    conn: Connection[Any], business_id: str, staff_id: str | None
 ) -> list[dict[str, Any]]:
     if staff_id:
-        rows = await (
-            await conn.execute(
+        rows = (
+            conn.execute(
                 """
                 select id, display_name
                 from public.staff_members
@@ -65,8 +65,8 @@ async def _fetch_staff(
             )
         return list(rows)
 
-    rows = await (
-        await conn.execute(
+    rows = (
+        conn.execute(
             """
             select id, display_name
             from public.staff_members
@@ -96,25 +96,25 @@ def _merge_intervals(
     return merged
 
 
-async def compute_availability(
-    conn: AsyncConnection[Any],
+def compute_availability(
+    conn: Connection[Any],
     business_id: str,
     service_id: str,
     day_value: str,
     staff_id: str | None = None,
 ) -> AvailabilityResponse:
     """Devuelve los huecos libres del día para el servicio indicado."""
-    service = await _fetch_service(conn, business_id, service_id)
+    service = _fetch_service(conn, business_id, service_id)
     duration = timedelta(minutes=service["duration_minutes"])
 
-    timezone_name = await _fetch_timezone(conn, business_id)
+    timezone_name = _fetch_timezone(conn, business_id)
     tz = get_timezone(timezone_name)
 
     day = date.fromisoformat(day_value)
     weekday = weekday_sunday_zero(day)
     day_start_utc, day_end_utc = day_bounds_utc(day, tz)
 
-    staff_rows = await _fetch_staff(conn, business_id, staff_id)
+    staff_rows = _fetch_staff(conn, business_id, staff_id)
     if not staff_rows:
         return AvailabilityResponse(
             date=day.isoformat(),
@@ -126,8 +126,8 @@ async def compute_availability(
 
     staff_ids = [row["id"] for row in staff_rows]
 
-    schedule_rows = await (
-        await conn.execute(
+    schedule_rows = (
+        conn.execute(
             """
             select staff_id, start_time, end_time
             from public.staff_schedules
@@ -138,8 +138,8 @@ async def compute_availability(
         )
     ).fetchall()
 
-    busy_rows = await (
-        await conn.execute(
+    busy_rows = (
+        conn.execute(
             """
             select staff_id, starts_at, ends_at
             from public.appointments
@@ -152,8 +152,8 @@ async def compute_availability(
         )
     ).fetchall()
 
-    block_rows = await (
-        await conn.execute(
+    block_rows = (
+        conn.execute(
             """
             select staff_id, starts_at, ends_at
             from public.staff_blocks

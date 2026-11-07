@@ -7,7 +7,7 @@ from typing import Annotated, Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from psycopg import AsyncConnection
+from psycopg import Connection
 from psycopg.errors import UniqueViolation
 
 from app.api.deps import get_current_user
@@ -37,18 +37,18 @@ STAFF_COLUMNS = (
     "created_at, updated_at"
 )
 
-Connection = Annotated[AsyncConnection[Any], Depends(get_connection)]
+Connection = Annotated[Connection[Any], Depends(get_connection)]
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
 
 
 @router.get("", response_model=list[StaffRead], summary="Listar empleados")
-async def list_staff(
+def list_staff(
     business_id: UUID,
     conn: Connection,
     user: CurrentUser,
     include_inactive: Annotated[bool, Query()] = False,
 ) -> list[dict[str, Any]]:
-    await require_member(conn, user.id, str(business_id))
+    require_member(conn, user.id, str(business_id))
 
     query = f"select {STAFF_COLUMNS} from public.staff_members where business_id = %s"
     params: list[Any] = [str(business_id)]
@@ -56,7 +56,7 @@ async def list_staff(
         query += " and is_active"
     query += " order by display_name"
 
-    return list(await (await conn.execute(query, params)).fetchall())
+    return list((conn.execute(query, params)).fetchall())
 
 
 @router.post(
@@ -65,14 +65,14 @@ async def list_staff(
     status_code=status.HTTP_201_CREATED,
     summary="Crear empleado",
 )
-async def create_staff(
+def create_staff(
     business_id: UUID, payload: StaffCreate, conn: Connection, user: CurrentUser
 ) -> dict[str, Any]:
-    await require_owner(conn, user.id, str(business_id))
+    require_owner(conn, user.id, str(business_id))
 
     try:
-        row = await (
-            await conn.execute(
+        row = (
+            conn.execute(
                 f"""
                 insert into public.staff_members
                     (business_id, profile_id, display_name, phone, color, is_active)
@@ -100,27 +100,27 @@ async def create_staff(
 
 
 @router.patch("/{staff_id}", response_model=StaffRead, summary="Actualizar empleado")
-async def update_staff(
+def update_staff(
     business_id: UUID,
     staff_id: UUID,
     payload: StaffUpdate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_owner(conn, user.id, str(business_id))
+    require_owner(conn, user.id, str(business_id))
 
     changes = payload.model_dump(exclude_unset=True)
     if "profile_id" in changes and changes["profile_id"] is not None:
         changes["profile_id"] = str(changes["profile_id"])
 
     if not changes:
-        return await _fetch_staff(conn, business_id, staff_id)
+        return _fetch_staff(conn, business_id, staff_id)
 
     assignments = ", ".join(f"{column} = %s" for column in changes)
     values = [*changes.values(), str(staff_id), str(business_id)]
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             f"""
             update public.staff_members
             set {assignments}
@@ -140,13 +140,13 @@ async def update_staff(
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Desactivar empleado",
 )
-async def delete_staff(
+def delete_staff(
     business_id: UUID, staff_id: UUID, conn: Connection, user: CurrentUser
 ) -> None:
-    await require_owner(conn, user.id, str(business_id))
+    require_owner(conn, user.id, str(business_id))
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             update public.staff_members set is_active = false
             where id = %s and business_id = %s
@@ -164,14 +164,14 @@ async def delete_staff(
     response_model=list[StaffScheduleRead],
     summary="Horario semanal",
 )
-async def get_schedule(
+def get_schedule(
     business_id: UUID, staff_id: UUID, conn: Connection, user: CurrentUser
 ) -> list[dict[str, Any]]:
-    await require_member(conn, user.id, str(business_id))
-    await _fetch_staff(conn, business_id, staff_id)
+    require_member(conn, user.id, str(business_id))
+    _fetch_staff(conn, business_id, staff_id)
 
-    rows = await (
-        await conn.execute(
+    rows = (
+        conn.execute(
             """
             select id, business_id, staff_id, weekday, start_time, end_time,
                    location_id
@@ -190,15 +190,15 @@ async def get_schedule(
     response_model=list[StaffScheduleRead],
     summary="Reemplazar horario semanal",
 )
-async def replace_schedule(
+def replace_schedule(
     business_id: UUID,
     staff_id: UUID,
     payload: ScheduleReplace,
     conn: Connection,
     user: CurrentUser,
 ) -> list[dict[str, Any]]:
-    await require_owner(conn, user.id, str(business_id))
-    await _fetch_staff(conn, business_id, staff_id)
+    require_owner(conn, user.id, str(business_id))
+    _fetch_staff(conn, business_id, staff_id)
 
     for slot in payload.slots:
         if slot.end_time <= slot.start_time:
@@ -207,12 +207,12 @@ async def replace_schedule(
                 detail="La hora de fin debe ser posterior a la de inicio",
             )
 
-    await conn.execute(
+    conn.execute(
         "delete from public.staff_schedules where staff_id = %s", (str(staff_id),)
     )
 
     for slot in payload.slots:
-        await conn.execute(
+        conn.execute(
             """
             insert into public.staff_schedules
                 (business_id, staff_id, location_id, weekday, start_time, end_time)
@@ -228,13 +228,13 @@ async def replace_schedule(
             ),
         )
 
-    return await get_schedule(business_id, staff_id, conn, user)
+    return get_schedule(business_id, staff_id, conn, user)
 
 
 @router.get(
     "/{staff_id}/blocks", response_model=list[BlockRead], summary="Listar bloqueos"
 )
-async def list_blocks(
+def list_blocks(
     business_id: UUID,
     staff_id: UUID,
     conn: Connection,
@@ -242,8 +242,8 @@ async def list_blocks(
     starts_from: Annotated[datetime | None, Query()] = None,
     starts_to: Annotated[datetime | None, Query()] = None,
 ) -> list[dict[str, Any]]:
-    await require_member(conn, user.id, str(business_id))
-    await _fetch_staff(conn, business_id, staff_id)
+    require_member(conn, user.id, str(business_id))
+    _fetch_staff(conn, business_id, staff_id)
 
     query = """
         select id, business_id, staff_id, starts_at, ends_at, kind, reason
@@ -259,7 +259,7 @@ async def list_blocks(
         params.append(starts_to)
     query += " order by starts_at"
 
-    return list(await (await conn.execute(query, params)).fetchall())
+    return list((conn.execute(query, params)).fetchall())
 
 
 @router.post(
@@ -268,17 +268,17 @@ async def list_blocks(
     status_code=status.HTTP_201_CREATED,
     summary="Crear bloqueo",
 )
-async def create_block(
+def create_block(
     business_id: UUID,
     staff_id: UUID,
     payload: BlockCreate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_member(conn, user.id, str(business_id))
-    await _require_staff_writer(conn, user.id, business_id)
+    require_member(conn, user.id, str(business_id))
+    _require_staff_writer(conn, user.id, business_id)
 
-    await _fetch_staff(conn, business_id, staff_id)
+    _fetch_staff(conn, business_id, staff_id)
 
     starts_at = parse_datetime(payload.starts_at, "starts_at")
     ends_at = parse_datetime(payload.ends_at, "ends_at")
@@ -288,8 +288,8 @@ async def create_block(
             detail="ends_at debe ser posterior a starts_at",
         )
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             insert into public.staff_blocks
                 (business_id, staff_id, starts_at, ends_at, kind, reason)
@@ -315,17 +315,17 @@ async def create_block(
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Eliminar bloqueo",
 )
-async def delete_block(
+def delete_block(
     business_id: UUID,
     staff_id: UUID,
     block_id: UUID,
     conn: Connection,
     user: CurrentUser,
 ) -> None:
-    await _require_staff_writer(conn, user.id, business_id)
+    _require_staff_writer(conn, user.id, business_id)
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             "delete from public.staff_blocks where id = %s and staff_id = %s returning id",
             (str(block_id), str(staff_id)),
         )
@@ -336,18 +336,18 @@ async def delete_block(
         )
 
 
-async def _require_staff_writer(
-    conn: AsyncConnection[Any], user_id: str, business_id: UUID
+def _require_staff_writer(
+    conn: Connection[Any], user_id: str, business_id: UUID
 ) -> str:
     """Dueño y empleados pueden gestionar bloqueos de su negocio."""
-    return await require_roles(conn, user_id, str(business_id), BUSINESS_STAFF_ROLES)
+    return require_roles(conn, user_id, str(business_id), BUSINESS_STAFF_ROLES)
 
 
-async def _fetch_staff(
-    conn: AsyncConnection[Any], business_id: UUID, staff_id: UUID
+def _fetch_staff(
+    conn: Connection[Any], business_id: UUID, staff_id: UUID
 ) -> dict[str, Any]:
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             f"select {STAFF_COLUMNS} from public.staff_members "
             "where id = %s and business_id = %s",
             (str(staff_id), str(business_id)),

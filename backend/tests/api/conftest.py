@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import asyncio
 import json
-import sys
 import time
 from collections.abc import Iterator
 from datetime import date
@@ -18,10 +16,6 @@ from fastapi.testclient import TestClient
 from app.core.config import Settings
 from app.main import create_app
 from tests.database_support import start_embedded_postgres
-
-# psycopg async necesita un selector loop; en Windows el default es Proactor.
-if sys.platform == "win32":
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 JWT_SECRET = "secret-de-pruebas-para-la-api-de-agenda-0123456789"
 

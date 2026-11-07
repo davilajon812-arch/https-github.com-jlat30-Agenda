@@ -7,7 +7,7 @@ from typing import Annotated, Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from psycopg import AsyncConnection
+from psycopg import Connection
 from psycopg.errors import CheckViolation, ForeignKeyViolation
 
 from app.api.deps import get_current_user
@@ -37,12 +37,12 @@ APPOINTMENT_SELECT = """
     left join public.staff_members st on st.id = a.staff_id
 """
 
-Connection = Annotated[AsyncConnection[Any], Depends(get_connection)]
+Connection = Annotated[Connection[Any], Depends(get_connection)]
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
 
 
 @router.get("", response_model=list[AppointmentRead], summary="Agenda por rango")
-async def list_appointments(
+def list_appointments(
     business_id: UUID,
     conn: Connection,
     user: CurrentUser,
@@ -54,7 +54,7 @@ async def list_appointments(
     ] = None,
     limit: Annotated[int, Query(ge=1, le=500)] = 200,
 ) -> list[dict[str, Any]]:
-    await require_member(conn, user.id, str(business_id))
+    require_member(conn, user.id, str(business_id))
 
     query = f"{APPOINTMENT_SELECT} where a.business_id = %s"
     params: list[Any] = [str(business_id)]
@@ -75,17 +75,17 @@ async def list_appointments(
     query += " order by a.starts_at limit %s"
     params.append(limit)
 
-    return list(await (await conn.execute(query, params)).fetchall())
+    return list((conn.execute(query, params)).fetchall())
 
 
 @router.get(
     "/{appointment_id}", response_model=AppointmentRead, summary="Detalle de cita"
 )
-async def get_appointment(
+def get_appointment(
     business_id: UUID, appointment_id: UUID, conn: Connection, user: CurrentUser
 ) -> dict[str, Any]:
-    await require_member(conn, user.id, str(business_id))
-    return await _fetch_appointment(conn, business_id, appointment_id)
+    require_member(conn, user.id, str(business_id))
+    return _fetch_appointment(conn, business_id, appointment_id)
 
 
 @router.post(
@@ -94,19 +94,19 @@ async def get_appointment(
     status_code=status.HTTP_201_CREATED,
     summary="Crear cita",
 )
-async def create_appointment(
+def create_appointment(
     business_id: UUID,
     payload: AppointmentCreate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
-    await rules.ensure_client_belongs(conn, str(business_id), payload.client_id)
+    rules.ensure_client_belongs(conn, str(business_id), payload.client_id)
 
     duration = None
     if payload.service_id is not None:
-        duration = await rules.fetch_service_duration(
+        duration = rules.fetch_service_duration(
             conn, str(business_id), payload.service_id
         )
         if duration is None:
@@ -117,21 +117,21 @@ async def create_appointment(
 
     staff_id = str(payload.staff_id) if payload.staff_id else None
     if payload.staff_id is not None:
-        await rules.ensure_staff_belongs(conn, str(business_id), payload.staff_id)
+        rules.ensure_staff_belongs(conn, str(business_id), payload.staff_id)
 
     starts_at, ends_at = rules.resolve_range(
         payload.starts_at, payload.ends_at, duration
     )
 
     if staff_id is not None:
-        await rules.ensure_no_conflict(
+        rules.ensure_no_conflict(
             conn, str(business_id), staff_id, starts_at, ends_at
         )
-        await rules.ensure_block_free(conn, staff_id, starts_at, ends_at)
+        rules.ensure_block_free(conn, staff_id, starts_at, ends_at)
 
     try:
-        row = await (
-            await conn.execute(
+        row = (
+            conn.execute(
                 """
                 insert into public.appointments (
                     business_id, client_id, service_id, staff_id, location_id,
@@ -158,27 +158,27 @@ async def create_appointment(
         raise _conflict_from_db(exc) from exc
 
     assert row is not None
-    return await _fetch_appointment(conn, business_id, row["id"])
+    return _fetch_appointment(conn, business_id, row["id"])
 
 
 @router.patch(
     "/{appointment_id}", response_model=AppointmentRead, summary="Editar cita"
 )
-async def update_appointment(
+def update_appointment(
     business_id: UUID,
     appointment_id: UUID,
     payload: AppointmentUpdate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
-    current = await _fetch_appointment(conn, business_id, appointment_id)
+    current = _fetch_appointment(conn, business_id, appointment_id)
     changes = payload.model_dump(exclude_unset=True)
 
     duration = None
     if payload.service_id is not None:
-        duration = await rules.fetch_service_duration(
+        duration = rules.fetch_service_duration(
             conn, str(business_id), payload.service_id
         )
         if duration is None:
@@ -186,7 +186,7 @@ async def update_appointment(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Servicio no encontrado"
             )
     elif current["service_id"] is not None:
-        duration = await rules.fetch_service_duration(
+        duration = rules.fetch_service_duration(
             conn, str(business_id), current["service_id"]
         )
 
@@ -202,10 +202,10 @@ async def update_appointment(
         else (str(current["staff_id"]) if current["staff_id"] else None)
     )
     if payload.staff_id is not None:
-        await rules.ensure_staff_belongs(conn, str(business_id), payload.staff_id)
+        rules.ensure_staff_belongs(conn, str(business_id), payload.staff_id)
 
     if staff_id is not None:
-        await rules.ensure_no_conflict(
+        rules.ensure_no_conflict(
             conn,
             str(business_id),
             staff_id,
@@ -213,7 +213,7 @@ async def update_appointment(
             ends_at,
             exclude_id=str(appointment_id),
         )
-        await rules.ensure_block_free(conn, staff_id, starts_at, ends_at)
+        rules.ensure_block_free(conn, staff_id, starts_at, ends_at)
 
     assignments: list[str] = ["starts_at = %s", "ends_at = %s", "staff_id = %s"]
     values: list[Any] = [starts_at, ends_at, staff_id]
@@ -232,7 +232,7 @@ async def update_appointment(
     values.extend([str(appointment_id), str(business_id)])
 
     try:
-        await conn.execute(
+        conn.execute(
             f"""
             update public.appointments
             set {", ".join(assignments)}
@@ -243,7 +243,7 @@ async def update_appointment(
     except (CheckViolation, ForeignKeyViolation) as exc:
         raise _conflict_from_db(exc) from exc
 
-    return await _fetch_appointment(conn, business_id, appointment_id)
+    return _fetch_appointment(conn, business_id, appointment_id)
 
 
 @router.post(
@@ -251,16 +251,16 @@ async def update_appointment(
     response_model=AppointmentRead,
     summary="Cambiar estado de la cita",
 )
-async def change_status(
+def change_status(
     business_id: UUID,
     appointment_id: UUID,
     payload: AppointmentStatusUpdate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
-    current = await _fetch_appointment(conn, business_id, appointment_id)
+    current = _fetch_appointment(conn, business_id, appointment_id)
     rules.validate_transition(current["status"], payload.status)
 
     extra = ""
@@ -274,7 +274,7 @@ async def change_status(
     values.extend([str(appointment_id), str(business_id)])
 
     try:
-        await conn.execute(
+        conn.execute(
             f"""
             update public.appointments
             set status = %s{extra}
@@ -285,14 +285,14 @@ async def change_status(
     except CheckViolation as exc:
         raise _conflict_from_db(exc) from exc
 
-    return await _fetch_appointment(conn, business_id, appointment_id)
+    return _fetch_appointment(conn, business_id, appointment_id)
 
 
-async def _fetch_appointment(
-    conn: AsyncConnection[Any], business_id: UUID, appointment_id: UUID
+def _fetch_appointment(
+    conn: Connection[Any], business_id: UUID, appointment_id: UUID
 ) -> dict[str, Any]:
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             f"{APPOINTMENT_SELECT} where a.business_id = %s and a.id = %s",
             (str(business_id), str(appointment_id)),
         )

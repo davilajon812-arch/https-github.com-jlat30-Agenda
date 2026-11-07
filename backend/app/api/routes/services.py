@@ -6,7 +6,7 @@ from typing import Annotated, Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
-from psycopg import AsyncConnection
+from psycopg import Connection
 
 from app.api.deps import get_current_user
 from app.core.db import get_connection
@@ -21,18 +21,18 @@ SERVICE_COLUMNS = """
     price::float8 as price, is_active, created_at, updated_at
 """
 
-Connection = Annotated[AsyncConnection[Any], Depends(get_connection)]
+Connection = Annotated[Connection[Any], Depends(get_connection)]
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
 
 
 @router.get("", response_model=list[ServiceRead], summary="Listar servicios")
-async def list_services(
+def list_services(
     business_id: UUID,
     conn: Connection,
     user: CurrentUser,
     include_inactive: Annotated[bool, Query()] = False,
 ) -> list[dict[str, Any]]:
-    await require_member(conn, user.id, str(business_id))
+    require_member(conn, user.id, str(business_id))
 
     query = f"select {SERVICE_COLUMNS} from public.services where business_id = %s"
     params: list[Any] = [str(business_id)]
@@ -40,7 +40,7 @@ async def list_services(
         query += " and is_active"
     query += " order by name"
 
-    return list(await (await conn.execute(query, params)).fetchall())
+    return list((conn.execute(query, params)).fetchall())
 
 
 @router.post(
@@ -49,13 +49,13 @@ async def list_services(
     status_code=status.HTTP_201_CREATED,
     summary="Crear servicio",
 )
-async def create_service(
+def create_service(
     business_id: UUID, payload: ServiceCreate, conn: Connection, user: CurrentUser
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             f"""
             insert into public.services
                 (business_id, name, description, duration_minutes, price, is_active)
@@ -79,19 +79,19 @@ async def create_service(
 @router.patch(
     "/{service_id}", response_model=ServiceRead, summary="Actualizar servicio"
 )
-async def update_service(
+def update_service(
     business_id: UUID,
     service_id: UUID,
     payload: ServiceUpdate,
     conn: Connection,
     user: CurrentUser,
 ) -> dict[str, Any]:
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
     changes = payload.model_dump(exclude_unset=True)
     if not changes:
-        row = await (
-            await conn.execute(
+        row = (
+            conn.execute(
                 f"select {SERVICE_COLUMNS} from public.services "
                 "where id = %s and business_id = %s",
                 (str(service_id), str(business_id)),
@@ -104,8 +104,8 @@ async def update_service(
     assignments = ", ".join(f"{column} = %s" for column in changes)
     values = [*changes.values(), str(service_id), str(business_id)]
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             f"""
             update public.services
             set {assignments}
@@ -125,14 +125,14 @@ async def update_service(
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Desactivar servicio",
 )
-async def delete_service(
+def delete_service(
     business_id: UUID, service_id: UUID, conn: Connection, user: CurrentUser
 ) -> None:
     """Desactiva el servicio: las citas históricas lo siguen referenciando."""
-    await require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
+    require_roles(conn, user.id, str(business_id), BUSINESS_STAFF_ROLES)
 
-    row = await (
-        await conn.execute(
+    row = (
+        conn.execute(
             """
             update public.services set is_active = false
             where id = %s and business_id = %s

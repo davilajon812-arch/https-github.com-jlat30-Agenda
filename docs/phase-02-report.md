@@ -12,7 +12,7 @@
 
 | Archivo | Contenido |
 | ------- | --------- |
-| `app/core/db.py` | Pool async de psycopg (`DATABASE_URL`), dependencia `get_connection`, cierre en el `lifespan`. |
+| `app/core/db.py` | Pool de psycopg síncrono (`DATABASE_URL`), dependencia `get_connection`, cierre en el `lifespan`.<br>*Síncrono a propósito*: FastAPI ejecuta los endpoints `def` en el threadpool, así funciona igual en Linux (Render) y en Windows, donde el event loop Proactor no soporta psycopg async. |
 | `app/core/timeutils.py` | Parseo de fechas ISO con zona, zona IANA del negocio, límites del día en UTC. |
 | `app/services/access.py` | `require_member`, `require_roles`, `require_owner` (404 para negocios ajenos, 403 para roles insuficientes). |
 | `app/services/appointments.py` | Duración por servicio, detección de choques y bloqueos, validación de transiciones de estado. |
