@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/preferences/preferences_controller.dart';
-import '../../../../core/providers/app_providers.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../core/preferences/preferences_controller.dart';
+import '../../../core/providers/app_providers.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/providers/auth_providers.dart';
 import '../../business/presentation/providers/business_providers.dart';
 
@@ -33,6 +34,19 @@ class SettingsScreen extends ConsumerWidget {
             title: Text(email),
             subtitle: Text(l10n.settingsAccount),
           ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(Icons.content_cut),
+          title: Text(l10n.servicesManagement),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/services'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.badge_outlined),
+          title: Text(l10n.staffManagement),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/staff'),
+        ),
         const Divider(),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),

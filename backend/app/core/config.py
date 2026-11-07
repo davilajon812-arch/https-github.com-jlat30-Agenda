@@ -1,10 +1,10 @@
 """Configuración central de la aplicación basada en variables de entorno."""
 
 from functools import lru_cache
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -26,7 +26,10 @@ class Settings(BaseSettings):
 
     # --- CORS ---
     # Lista separada por comas: "http://localhost:3000,https://app.agendapro.com"
-    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
+    # NoDecode evita que pydantic-settings intente parsear el valor como JSON.
+    cors_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["http://localhost:3000"]
+    )
 
     # --- Supabase ---
     supabase_url: str = ""
@@ -36,6 +39,14 @@ class Settings(BaseSettings):
     # HS256 se valida con él (útil para desarrollo y pruebas).
     supabase_jwt_secret: str = ""
     supabase_jwt_audience: str = "authenticated"
+
+    # --- Base de datos (Postgres de Supabase) ---
+    # Cadena del pooler, por ejemplo:
+    # postgresql://postgres.<ref>:<password>@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+    database_url: str = ""
+    database_pool_min_size: int = 1
+    database_pool_max_size: int = 8
+
 
     @field_validator("cors_origins", mode="before")
     @classmethod

@@ -232,4 +232,298 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get configMissingMessage =>
       'Define SUPABASE_URL y SUPABASE_ANON_KEY al compilar la app (ver README).';
+
+  @override
+  String get commonSave => 'Guardar';
+
+  @override
+  String get commonDelete => 'Eliminar';
+
+  @override
+  String get commonEdit => 'Editar';
+
+  @override
+  String get commonClose => 'Cerrar';
+
+  @override
+  String get commonAdd => 'Agregar';
+
+  @override
+  String get commonSearch => 'Buscar';
+
+  @override
+  String get commonAll => 'Todos';
+
+  @override
+  String commonMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get statusPendiente => 'Pendiente';
+
+  @override
+  String get statusConfirmada => 'Confirmada';
+
+  @override
+  String get statusCompletada => 'Completada';
+
+  @override
+  String get statusCancelada => 'Cancelada';
+
+  @override
+  String get statusNoAsistio => 'No asistió';
+
+  @override
+  String get agendaToday => 'Hoy';
+
+  @override
+  String get agendaDay => 'Día';
+
+  @override
+  String get agendaWeek => 'Semana';
+
+  @override
+  String get agendaEmptyDay => 'No hay citas para este día.';
+
+  @override
+  String get agendaEmptyWeek => 'No hay citas esta semana.';
+
+  @override
+  String get agendaNewAppointment => 'Nueva cita';
+
+  @override
+  String get agendaWhatsapp => 'Abrir WhatsApp';
+
+  @override
+  String agendaTotalDay(int count) {
+    return '$count citas';
+  }
+
+  @override
+  String get appointmentDetailTitle => 'Detalle de la cita';
+
+  @override
+  String get appointmentClient => 'Cliente';
+
+  @override
+  String get appointmentService => 'Servicio';
+
+  @override
+  String get appointmentStaff => 'Empleado';
+
+  @override
+  String get appointmentWhen => 'Fecha y hora';
+
+  @override
+  String get appointmentPrice => 'Precio';
+
+  @override
+  String get appointmentNotes => 'Notas';
+
+  @override
+  String get appointmentChangeStatus => 'Cambiar estado';
+
+  @override
+  String get appointmentConfirm => 'Confirmar';
+
+  @override
+  String get appointmentComplete => 'Marcar completada';
+
+  @override
+  String get appointmentNoShow => 'No asistió';
+
+  @override
+  String get appointmentCancel => 'Cancelar cita';
+
+  @override
+  String get appointmentCancelReason => 'Motivo (opcional)';
+
+  @override
+  String get appointmentUpdated => 'Cita actualizada';
+
+  @override
+  String get newAppointmentTitle => 'Nueva cita';
+
+  @override
+  String get newAppointmentClient => '1. Cliente';
+
+  @override
+  String get newAppointmentService => '2. Servicio';
+
+  @override
+  String get newAppointmentSlot => '3. Horario';
+
+  @override
+  String get newAppointmentStaff => 'Empleado';
+
+  @override
+  String get newAppointmentAnyStaff => 'Cualquiera';
+
+  @override
+  String get newAppointmentNoSlots => 'No hay horarios libres ese día.';
+
+  @override
+  String get newAppointmentPickSlot => 'Elige el horario del servicio';
+
+  @override
+  String get newAppointmentCreated => 'Cita creada';
+
+  @override
+  String get newAppointmentNeedService => 'Elige un servicio para ver horarios';
+
+  @override
+  String get newClientInline => 'Cliente nuevo';
+
+  @override
+  String get clientsTitle => 'Clientes';
+
+  @override
+  String get clientsSearchHint => 'Buscar por nombre o teléfono';
+
+  @override
+  String get clientsEmpty => 'Aún no tienes clientes registrados.';
+
+  @override
+  String get clientNew => 'Nuevo cliente';
+
+  @override
+  String get clientName => 'Nombre completo';
+
+  @override
+  String get clientPhone => 'Teléfono con código de país';
+
+  @override
+  String get clientNotes => 'Notas';
+
+  @override
+  String get clientHistory => 'Historial de visitas';
+
+  @override
+  String get clientNoVisits => 'Sin visitas registradas.';
+
+  @override
+  String get clientSaved => 'Cliente guardado';
+
+  @override
+  String get clientDeleteConfirm => '¿Eliminar este cliente?';
+
+  @override
+  String get clientHasVisits =>
+      'No se puede eliminar: tiene citas registradas.';
+
+  @override
+  String get servicesTitle => 'Servicios';
+
+  @override
+  String get servicesEmpty => 'Agrega tu primer servicio.';
+
+  @override
+  String get serviceNew => 'Nuevo servicio';
+
+  @override
+  String get serviceName => 'Nombre del servicio';
+
+  @override
+  String get serviceDuration => 'Duración (minutos)';
+
+  @override
+  String get servicePrice => 'Precio';
+
+  @override
+  String get serviceSaved => 'Servicio guardado';
+
+  @override
+  String get servicesManagement => 'Servicios';
+
+  @override
+  String get staffTitle => 'Empleados';
+
+  @override
+  String get staffEmpty => 'Agrega a tu primer empleado.';
+
+  @override
+  String get staffNew => 'Nuevo empleado';
+
+  @override
+  String get staffName => 'Nombre del empleado';
+
+  @override
+  String get staffSaved => 'Empleado guardado';
+
+  @override
+  String get staffManagement => 'Empleados y horarios';
+
+  @override
+  String get staffScheduleTitle => 'Horario semanal';
+
+  @override
+  String get staffScheduleEmpty => 'Sin horario: no aparecerá disponible.';
+
+  @override
+  String get staffScheduleSaved => 'Horario guardado';
+
+  @override
+  String get staffBlocksTitle => 'Bloqueos';
+
+  @override
+  String get staffBlocksEmpty => 'Sin vacaciones ni descansos.';
+
+  @override
+  String get staffBlockNew => 'Nuevo bloqueo';
+
+  @override
+  String get staffBlockKind => 'Tipo';
+
+  @override
+  String get staffBlockVacation => 'Vacaciones';
+
+  @override
+  String get staffBlockBreak => 'Descanso';
+
+  @override
+  String get staffBlockOther => 'Otro';
+
+  @override
+  String get staffBlockReason => 'Motivo (opcional)';
+
+  @override
+  String get staffBlockRange => 'Desde / hasta';
+
+  @override
+  String get weekdaySunday => 'Domingo';
+
+  @override
+  String get weekdayMonday => 'Lunes';
+
+  @override
+  String get weekdayTuesday => 'Martes';
+
+  @override
+  String get weekdayWednesday => 'Miércoles';
+
+  @override
+  String get weekdayThursday => 'Jueves';
+
+  @override
+  String get weekdayFriday => 'Viernes';
+
+  @override
+  String get weekdaySaturday => 'Sábado';
+
+  @override
+  String get errorConflict => 'Ese horario ya está ocupado.';
+
+  @override
+  String get errorPermission => 'Tu rol no permite esta acción.';
+
+  @override
+  String get errorNotFound => 'No se encontró el registro.';
+
+  @override
+  String get errorSave => 'No se pudo guardar. Intenta de nuevo.';
+
+  @override
+  String get errorBackend =>
+      'No se pudo conectar con el servidor de disponibilidad.';
 }

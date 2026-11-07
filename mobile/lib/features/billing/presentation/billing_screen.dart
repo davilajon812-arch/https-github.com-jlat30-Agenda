@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Plan actual del negocio (los pagos llegan en la Fase 3).
 class BillingScreen extends ConsumerWidget {

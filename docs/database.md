@@ -5,8 +5,7 @@
 ```mermaid
 erDiagram
     AUTH_USERS ||--|| PROFILES : "trigger handle_new_user"
-    PROFILES ||--o{ BUSINESS_MEMBERS : "pertenece a"
-    BUSINESSES ||--o{ BUSINESS_MEMBERS : "tiene miembros"
+    PROFILES ||--o{ BUSINESS_MEMBERS : "pertenece a"    BUSINESSES ||--o{ BUSINESS_MEMBERS : "tiene miembros"
     PROFILES ||--o{ BUSINESSES : "es dueño (owner_id)"
 
     BUSINESSES ||--o{ LOCATIONS : "sedes"
@@ -16,10 +15,14 @@ erDiagram
     BUSINESSES ||--o{ SUBSCRIPTIONS : "suscripción"
     BUSINESSES ||--o{ USAGE_COUNTERS : "consumo mensual"
 
+    BUSINESSES ||--o{ STAFF_MEMBERS : "empleados"
+    STAFF_MEMBERS ||--o{ STAFF_SCHEDULES : "horario semanal"
+    STAFF_MEMBERS ||--o{ STAFF_BLOCKS : "vacaciones y descansos"
+
     CLIENTS ||--o{ APPOINTMENTS : "agenda"
     SERVICES ||--o{ APPOINTMENTS : "se reserva"
     LOCATIONS ||--o{ APPOINTMENTS : "se atiende en"
-    PROFILES ||--o{ APPOINTMENTS : "atiende (staff_id)"
+    STAFF_MEMBERS ||--o{ APPOINTMENTS : "atiende (staff_id)"
 
     AUTH_USERS {
         uuid id PK
@@ -83,6 +86,37 @@ erDiagram
         text notes
     }
 
+    STAFF_MEMBERS {
+        uuid id PK
+        uuid business_id FK
+        uuid profile_id FK "opcional: si tiene cuenta"
+        text display_name
+        text phone
+        text color
+        boolean is_active
+    }
+
+    STAFF_SCHEDULES {
+        uuid id PK
+        uuid business_id FK
+        uuid staff_id FK
+        uuid location_id FK
+        smallint weekday "0 = domingo"
+        time start_time
+        time end_time
+        boolean is_active
+    }
+
+    STAFF_BLOCKS {
+        uuid id PK
+        uuid business_id FK
+        uuid staff_id FK
+        timestamptz starts_at
+        timestamptz ends_at
+        text kind "vacacion | descanso | bloqueo"
+        text reason
+    }
+
     APPOINTMENTS {
         uuid id PK
         uuid business_id FK
@@ -142,6 +176,9 @@ Son `SECURITY DEFINER` para que las políticas puedan consultar
 | `businesses` | miembros | `owner_id = auth.uid()` | dueño | dueño |
 | `business_members` | miembros | dueño (el owner inicial lo crea un trigger) | dueño | dueño (no puede borrar al owner) |
 | `locations` | miembros | dueño | dueño | dueño |
+| `staff_members` | miembros | dueño | dueño | dueño |
+| `staff_schedules` | miembros | dueño | dueño | dueño |
+| `staff_blocks` | miembros | dueño y empleados | dueño y empleados | dueño y empleados |
 | `services` | miembros | dueño y empleados | dueño y empleados | dueño y empleados |
 | `clients` | miembros | dueño y empleados | dueño y empleados | dueño y empleados |
 | `appointments` | miembros | dueño y empleados | dueño y empleados | dueño y empleados |
@@ -159,7 +196,12 @@ las tareas programadas.
 | `on_auth_user_created` | `auth.users` | Crea el registro en `profiles` al registrarse. |
 | `on_business_created` | `businesses` | Agrega al dueño como miembro `owner`. |
 | `validate_appointment_consistency` | `appointments` | Cliente, servicio, sede y empleado deben ser del mismo negocio. |
+| `validate_appointment_no_overlap` | `appointments` | Impide dos citas activas del mismo empleado en horarios que se solapan. |
+| `validate_staff_child_consistency` | `staff_schedules`, `staff_blocks` | El empleado debe pertenecer al negocio. |
 | `set_updated_at` | todas | Mantiene `updated_at`. |
+
+Estados `cancelada` y `no_asistio` liberan el horario: la verificación de choques
+solo considera `pendiente`, `confirmada` y `completada`.
 
 ## Índices relevantes
 

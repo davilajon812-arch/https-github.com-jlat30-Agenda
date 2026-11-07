@@ -9,12 +9,15 @@ import pytest
 
 from tests.rls.conftest import (
     APPOINTMENT_A,
+    BLOCK_A,
     BUSINESS_A,
     BUSINESS_B,
     CLIENT_A,
     CLIENT_B,
+    SCHEDULE_A,
     SERVICE_A,
     STAFF_A,
+    STAFF_MEMBER_A,
     SUBSCRIPTION_A,
     USAGE_A,
     USER_A,
@@ -149,7 +152,7 @@ def test_el_empleado_puede_crear_citas_en_su_negocio(seeded_db) -> None:
                 values (%s, %s, %s, %s, now() + interval '1 hour',
                         now() + interval '90 minutes', 'pendiente')
                 """,
-                (BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_A),
+                (BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_MEMBER_A),
             )
 
     assert cursor.rowcount == 1
@@ -166,10 +169,10 @@ def test_no_se_puede_crear_citas_en_otro_negocio(seeded_db) -> None:
                     business_id, client_id, service_id, staff_id,
                     starts_at, ends_at, status
                 )
-                values (%s, %s, %s, %s, now(), now() + interval '30 minutes',
-                        'pendiente')
+                values (%s, %s, %s, %s, now() + interval '30 days',
+                        now() + interval '30 days 30 minutes', 'pendiente')
                 """,
-                (BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_A),
+                (BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_MEMBER_A),
             )
 
 
@@ -188,7 +191,7 @@ def test_la_cita_debe_usar_datos_del_mismo_negocio(seeded_db) -> None:
                 values (%s, %s, %s, %s, now(), now() + interval '30 minutes',
                         'pendiente')
                 """,
-                (BUSINESS_B, CLIENT_A, SERVICE_A, STAFF_A),
+                (BUSINESS_B, CLIENT_A, SERVICE_A, STAFF_MEMBER_A),
             )
 
 
@@ -236,3 +239,106 @@ def test_el_negocio_b_existe_solo_para_su_dueno(seeded_db) -> None:
         rows = conn.execute("select id from public.businesses").fetchall()
 
     assert ids(rows) == [uuid.UUID(BUSINESS_B)]
+
+
+def test_los_horarios_del_negocio_a_estan_aislados(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with act_as(conn, USER_B):
+        rows = conn.execute("select id from public.staff_schedules").fetchall()
+        ajeno = conn.execute(
+            "select id from public.staff_schedules where id = %s",
+            (SCHEDULE_A,),
+        ).fetchall()
+
+    assert rows == []
+    assert ajeno == []
+
+
+def test_los_bloqueos_del_negocio_a_estan_aislados(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with act_as(conn, USER_B):
+        rows = conn.execute("select id from public.staff_blocks").fetchall()
+
+    assert rows == []
+
+
+def test_solo_el_dueno_crea_empleados(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with act_as(conn, STAFF_A):
+        with pytest.raises(psycopg.errors.InsufficientPrivilege):
+            conn.execute(
+                """
+                insert into public.staff_members (business_id, display_name)
+                values (%s, 'Intruso')
+                """,
+                (BUSINESS_A,),
+            )
+
+
+def test_el_dueno_crea_empleados(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with act_as(conn, USER_A):
+        with conn.transaction(force_rollback=True):
+            cursor = conn.execute(
+                """
+                insert into public.staff_members (business_id, display_name)
+                values (%s, 'Nuevo estilista')
+                """,
+                (BUSINESS_A,),
+            )
+
+    assert cursor.rowcount == 1
+
+
+def test_el_empleado_puede_crear_bloqueos(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with act_as(conn, STAFF_A):
+        with conn.transaction(force_rollback=True):
+            cursor = conn.execute(
+                """
+                insert into public.staff_blocks (business_id, staff_id, starts_at, ends_at)
+                values (%s, %s, now() + interval '40 days', now() + interval '41 days')
+                """,
+                (BUSINESS_A, STAFF_MEMBER_A),
+            )
+
+    assert cursor.rowcount == 1
+
+
+def test_no_se_pueden_solapar_citas_del_mismo_empleado(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with pytest.raises(psycopg.errors.CheckViolation, match="horario"):
+        conn.execute(
+            """
+            insert into public.appointments (
+                business_id, client_id, service_id, staff_id,
+                starts_at, ends_at, status
+            )
+            values (%s, %s, %s, %s, now() + interval '5 minutes',
+                    now() + interval '20 minutes', 'pendiente')
+            """,
+            (BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_MEMBER_A),
+        )
+
+
+def test_una_cita_cancelada_libera_el_horario(seeded_db) -> None:
+    conn, _ = seeded_db
+
+    with conn.transaction(force_rollback=True):
+        conn.execute(
+            """
+            insert into public.appointments (
+                business_id, client_id, service_id, staff_id,
+                starts_at, ends_at, status
+            )
+            values (%s, %s, %s, %s, now() + interval '5 minutes',
+                    now() + interval '20 minutes', 'cancelada')
+            """,
+            (BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_MEMBER_A),
+        )

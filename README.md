@@ -23,7 +23,7 @@ render.yaml  Blueprint de Render para el backend
 | ---- | ------- | ------ |
 | 0 | Estructura, /health, deploy base, tema, i18n, flavors | ✅ |
 | 1 | Modelo de datos, RLS, auth y onboarding del negocio | ✅ |
-| 2 | Núcleo de la agenda (servicios, clientes, citas) | ⏳ |
+| 2 | Núcleo de la agenda (servicios, clientes, citas) | ✅ |
 | 3 | Suscripciones con Google Play Billing | ⏳ |
 
 ## Requisitos
@@ -45,6 +45,27 @@ Copy-Item .env.example .env      # completa las variables de Supabase
 - Estado del servicio: <http://localhost:8000/health>
 - Documentación interactiva: <http://localhost:8000/docs>
 - Usuario del token: `GET /api/v1/me` con cabecera `Authorization: Bearer <access_token>`
+
+Endpoints de la Fase 2 (todos bajo `/api/v1/businesses/{business_id}` y con JWT):
+
+| Método | Ruta | Descripción |
+| ------ | ---- | ----------- |
+| GET/POST | `/services` | Listar y crear servicios |
+| PATCH/DELETE | `/services/{id}` | Editar y desactivar |
+| GET/POST | `/clients` | Buscar (`?search=`) y crear clientes |
+| PATCH/DELETE | `/clients/{id}` | Editar y borrar (si no tiene citas) |
+| GET | `/clients/{id}/history` | Historial de visitas |
+| GET/POST | `/staff` | Empleados |
+| GET/PUT | `/staff/{id}/schedule` | Horario semanal (reemplazo completo) |
+| GET/POST/DELETE | `/staff/{id}/blocks` | Vacaciones y descansos |
+| GET/POST | `/appointments` | Agenda por rango y alta de citas |
+| PATCH | `/appointments/{id}` | Reagendar / editar |
+| POST | `/appointments/{id}/status` | Cambiar estado |
+| GET | `/availability` | Huecos libres (`service_id`, `date`, `staff_id` opcional) |
+
+La validación de choques de horario vive en dos capas: el backend responde 409
+y un trigger de Postgres (`validate_appointment_no_overlap`) lo impide incluso si
+la app escribe directo por Supabase.
 
 Pruebas:
 
@@ -79,6 +100,10 @@ flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=.env
 El archivo `mobile/.env` (no versionado) debe copiarse desde `mobile/.env.example`
 y contener `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `API_BASE_URL` y `APP_FLAVOR`.
 
+> En el **emulador de Android** el host de tu máquina es `10.0.2.2`, así que usa
+> `API_BASE_URL=http://10.0.2.2:8000`. En un teléfono físico usa la IP de tu PC
+> en la red local (por ejemplo `http://192.168.1.20:8000`).
+
 Sin esas variables la app arranca en una pantalla de "falta configuración" en
 lugar de fallar.
 
@@ -108,6 +133,7 @@ como secretos y verificar que `GET /health` responda 200.
 - [docs/supabase-setup.md](docs/supabase-setup.md): crear el proyecto y migrar.
 - [docs/deploy-render.md](docs/deploy-render.md): despliegue paso a paso.
 - [docs/phase-01-report.md](docs/phase-01-report.md): entrega de las fases 0 y 1.
+- [docs/phase-02-report.md](docs/phase-02-report.md): entrega de la fase 2.
 
 ## Reglas de cumplimiento (Google Play)
 

@@ -529,6 +529,582 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Define SUPABASE_URL y SUPABASE_ANON_KEY al compilar la app (ver README).'**
   String get configMissingMessage;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get commonSave;
+
+  /// No description provided for @commonDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get commonDelete;
+
+  /// No description provided for @commonEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get commonEdit;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get commonClose;
+
+  /// No description provided for @commonAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar'**
+  String get commonAdd;
+
+  /// No description provided for @commonSearch.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar'**
+  String get commonSearch;
+
+  /// No description provided for @commonAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get commonAll;
+
+  /// No description provided for @commonMinutes.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} min'**
+  String commonMinutes(int count);
+
+  /// No description provided for @statusPendiente.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get statusPendiente;
+
+  /// No description provided for @statusConfirmada.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmada'**
+  String get statusConfirmada;
+
+  /// No description provided for @statusCompletada.
+  ///
+  /// In es, this message translates to:
+  /// **'Completada'**
+  String get statusCompletada;
+
+  /// No description provided for @statusCancelada.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelada'**
+  String get statusCancelada;
+
+  /// No description provided for @statusNoAsistio.
+  ///
+  /// In es, this message translates to:
+  /// **'No asistió'**
+  String get statusNoAsistio;
+
+  /// No description provided for @agendaToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy'**
+  String get agendaToday;
+
+  /// No description provided for @agendaDay.
+  ///
+  /// In es, this message translates to:
+  /// **'Día'**
+  String get agendaDay;
+
+  /// No description provided for @agendaWeek.
+  ///
+  /// In es, this message translates to:
+  /// **'Semana'**
+  String get agendaWeek;
+
+  /// No description provided for @agendaEmptyDay.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay citas para este día.'**
+  String get agendaEmptyDay;
+
+  /// No description provided for @agendaEmptyWeek.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay citas esta semana.'**
+  String get agendaEmptyWeek;
+
+  /// No description provided for @agendaNewAppointment.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva cita'**
+  String get agendaNewAppointment;
+
+  /// No description provided for @agendaWhatsapp.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir WhatsApp'**
+  String get agendaWhatsapp;
+
+  /// No description provided for @agendaTotalDay.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} citas'**
+  String agendaTotalDay(int count);
+
+  /// No description provided for @appointmentDetailTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Detalle de la cita'**
+  String get appointmentDetailTitle;
+
+  /// No description provided for @appointmentClient.
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente'**
+  String get appointmentClient;
+
+  /// No description provided for @appointmentService.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicio'**
+  String get appointmentService;
+
+  /// No description provided for @appointmentStaff.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleado'**
+  String get appointmentStaff;
+
+  /// No description provided for @appointmentWhen.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha y hora'**
+  String get appointmentWhen;
+
+  /// No description provided for @appointmentPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio'**
+  String get appointmentPrice;
+
+  /// No description provided for @appointmentNotes.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get appointmentNotes;
+
+  /// No description provided for @appointmentChangeStatus.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar estado'**
+  String get appointmentChangeStatus;
+
+  /// No description provided for @appointmentConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar'**
+  String get appointmentConfirm;
+
+  /// No description provided for @appointmentComplete.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar completada'**
+  String get appointmentComplete;
+
+  /// No description provided for @appointmentNoShow.
+  ///
+  /// In es, this message translates to:
+  /// **'No asistió'**
+  String get appointmentNoShow;
+
+  /// No description provided for @appointmentCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar cita'**
+  String get appointmentCancel;
+
+  /// No description provided for @appointmentCancelReason.
+  ///
+  /// In es, this message translates to:
+  /// **'Motivo (opcional)'**
+  String get appointmentCancelReason;
+
+  /// No description provided for @appointmentUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'Cita actualizada'**
+  String get appointmentUpdated;
+
+  /// No description provided for @newAppointmentTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva cita'**
+  String get newAppointmentTitle;
+
+  /// No description provided for @newAppointmentClient.
+  ///
+  /// In es, this message translates to:
+  /// **'1. Cliente'**
+  String get newAppointmentClient;
+
+  /// No description provided for @newAppointmentService.
+  ///
+  /// In es, this message translates to:
+  /// **'2. Servicio'**
+  String get newAppointmentService;
+
+  /// No description provided for @newAppointmentSlot.
+  ///
+  /// In es, this message translates to:
+  /// **'3. Horario'**
+  String get newAppointmentSlot;
+
+  /// No description provided for @newAppointmentStaff.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleado'**
+  String get newAppointmentStaff;
+
+  /// No description provided for @newAppointmentAnyStaff.
+  ///
+  /// In es, this message translates to:
+  /// **'Cualquiera'**
+  String get newAppointmentAnyStaff;
+
+  /// No description provided for @newAppointmentNoSlots.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay horarios libres ese día.'**
+  String get newAppointmentNoSlots;
+
+  /// No description provided for @newAppointmentPickSlot.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige el horario del servicio'**
+  String get newAppointmentPickSlot;
+
+  /// No description provided for @newAppointmentCreated.
+  ///
+  /// In es, this message translates to:
+  /// **'Cita creada'**
+  String get newAppointmentCreated;
+
+  /// No description provided for @newAppointmentNeedService.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige un servicio para ver horarios'**
+  String get newAppointmentNeedService;
+
+  /// No description provided for @newClientInline.
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente nuevo'**
+  String get newClientInline;
+
+  /// No description provided for @clientsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Clientes'**
+  String get clientsTitle;
+
+  /// No description provided for @clientsSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar por nombre o teléfono'**
+  String get clientsSearchHint;
+
+  /// No description provided for @clientsEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes clientes registrados.'**
+  String get clientsEmpty;
+
+  /// No description provided for @clientNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo cliente'**
+  String get clientNew;
+
+  /// No description provided for @clientName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre completo'**
+  String get clientName;
+
+  /// No description provided for @clientPhone.
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono con código de país'**
+  String get clientPhone;
+
+  /// No description provided for @clientNotes.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get clientNotes;
+
+  /// No description provided for @clientHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial de visitas'**
+  String get clientHistory;
+
+  /// No description provided for @clientNoVisits.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin visitas registradas.'**
+  String get clientNoVisits;
+
+  /// No description provided for @clientSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente guardado'**
+  String get clientSaved;
+
+  /// No description provided for @clientDeleteConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar este cliente?'**
+  String get clientDeleteConfirm;
+
+  /// No description provided for @clientHasVisits.
+  ///
+  /// In es, this message translates to:
+  /// **'No se puede eliminar: tiene citas registradas.'**
+  String get clientHasVisits;
+
+  /// No description provided for @servicesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicios'**
+  String get servicesTitle;
+
+  /// No description provided for @servicesEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega tu primer servicio.'**
+  String get servicesEmpty;
+
+  /// No description provided for @serviceNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo servicio'**
+  String get serviceNew;
+
+  /// No description provided for @serviceName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del servicio'**
+  String get serviceName;
+
+  /// No description provided for @serviceDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración (minutos)'**
+  String get serviceDuration;
+
+  /// No description provided for @servicePrice.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio'**
+  String get servicePrice;
+
+  /// No description provided for @serviceSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicio guardado'**
+  String get serviceSaved;
+
+  /// No description provided for @servicesManagement.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicios'**
+  String get servicesManagement;
+
+  /// No description provided for @staffTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleados'**
+  String get staffTitle;
+
+  /// No description provided for @staffEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega a tu primer empleado.'**
+  String get staffEmpty;
+
+  /// No description provided for @staffNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo empleado'**
+  String get staffNew;
+
+  /// No description provided for @staffName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del empleado'**
+  String get staffName;
+
+  /// No description provided for @staffSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleado guardado'**
+  String get staffSaved;
+
+  /// No description provided for @staffManagement.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleados y horarios'**
+  String get staffManagement;
+
+  /// No description provided for @staffScheduleTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Horario semanal'**
+  String get staffScheduleTitle;
+
+  /// No description provided for @staffScheduleEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin horario: no aparecerá disponible.'**
+  String get staffScheduleEmpty;
+
+  /// No description provided for @staffScheduleSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Horario guardado'**
+  String get staffScheduleSaved;
+
+  /// No description provided for @staffBlocksTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Bloqueos'**
+  String get staffBlocksTitle;
+
+  /// No description provided for @staffBlocksEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin vacaciones ni descansos.'**
+  String get staffBlocksEmpty;
+
+  /// No description provided for @staffBlockNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo bloqueo'**
+  String get staffBlockNew;
+
+  /// No description provided for @staffBlockKind.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get staffBlockKind;
+
+  /// No description provided for @staffBlockVacation.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacaciones'**
+  String get staffBlockVacation;
+
+  /// No description provided for @staffBlockBreak.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso'**
+  String get staffBlockBreak;
+
+  /// No description provided for @staffBlockOther.
+  ///
+  /// In es, this message translates to:
+  /// **'Otro'**
+  String get staffBlockOther;
+
+  /// No description provided for @staffBlockReason.
+  ///
+  /// In es, this message translates to:
+  /// **'Motivo (opcional)'**
+  String get staffBlockReason;
+
+  /// No description provided for @staffBlockRange.
+  ///
+  /// In es, this message translates to:
+  /// **'Desde / hasta'**
+  String get staffBlockRange;
+
+  /// No description provided for @weekdaySunday.
+  ///
+  /// In es, this message translates to:
+  /// **'Domingo'**
+  String get weekdaySunday;
+
+  /// No description provided for @weekdayMonday.
+  ///
+  /// In es, this message translates to:
+  /// **'Lunes'**
+  String get weekdayMonday;
+
+  /// No description provided for @weekdayTuesday.
+  ///
+  /// In es, this message translates to:
+  /// **'Martes'**
+  String get weekdayTuesday;
+
+  /// No description provided for @weekdayWednesday.
+  ///
+  /// In es, this message translates to:
+  /// **'Miércoles'**
+  String get weekdayWednesday;
+
+  /// No description provided for @weekdayThursday.
+  ///
+  /// In es, this message translates to:
+  /// **'Jueves'**
+  String get weekdayThursday;
+
+  /// No description provided for @weekdayFriday.
+  ///
+  /// In es, this message translates to:
+  /// **'Viernes'**
+  String get weekdayFriday;
+
+  /// No description provided for @weekdaySaturday.
+  ///
+  /// In es, this message translates to:
+  /// **'Sábado'**
+  String get weekdaySaturday;
+
+  /// No description provided for @errorConflict.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese horario ya está ocupado.'**
+  String get errorConflict;
+
+  /// No description provided for @errorPermission.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu rol no permite esta acción.'**
+  String get errorPermission;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontró el registro.'**
+  String get errorNotFound;
+
+  /// No description provided for @errorSave.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar. Intenta de nuevo.'**
+  String get errorSave;
+
+  /// No description provided for @errorBackend.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo conectar con el servidor de disponibilidad.'**
+  String get errorBackend;
 }
 
 class _AppLocalizationsDelegate

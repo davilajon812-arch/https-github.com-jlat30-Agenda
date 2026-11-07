@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/providers/app_providers.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../core/providers/app_providers.dart';
+import '../../../l10n/app_localizations.dart';
 import 'providers/business_providers.dart';
 import 'widgets/onboarding_options.dart';
 

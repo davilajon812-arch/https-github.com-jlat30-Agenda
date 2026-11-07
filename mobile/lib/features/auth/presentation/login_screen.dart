@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/providers/app_providers.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../core/providers/app_providers.dart';
+import '../../../l10n/app_localizations.dart';
 import 'auth_error_messages.dart';
 import 'widgets/auth_scaffold.dart';
 

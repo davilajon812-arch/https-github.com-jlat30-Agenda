@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/appointments/presentation/appointments_screen.dart';
-import '../../features/billing/presentation/billing_screen.dart';
-import '../../features/clients/presentation/clients_screen.dart';
-import '../../features/business/presentation/providers/business_providers.dart';
-import '../../features/settings/presentation/settings_screen.dart';
-import '../../l10n/app_localizations.dart';
+import '../features/appointments/presentation/appointments_screen.dart';
+import '../features/billing/presentation/billing_screen.dart';
+import '../features/clients/presentation/clients_screen.dart';
+import '../features/business/presentation/providers/business_providers.dart';
+import '../features/settings/presentation/settings_screen.dart';
+import '../l10n/app_localizations.dart';
 
 /// Contenedor principal con la navegación por pestañas.
 class HomeShell extends ConsumerStatefulWidget {

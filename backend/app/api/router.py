@@ -2,7 +2,12 @@
 
 from fastapi import APIRouter
 
-from app.api.routes import me
+from app.api.routes import appointments, availability, clients, me, services, staff
 
 api_router = APIRouter()
 api_router.include_router(me.router)
+api_router.include_router(services.router)
+api_router.include_router(clients.router)
+api_router.include_router(staff.router)
+api_router.include_router(appointments.router)
+api_router.include_router(availability.router)

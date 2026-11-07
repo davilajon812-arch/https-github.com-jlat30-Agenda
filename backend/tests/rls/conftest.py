@@ -13,11 +13,9 @@ from __future__ import annotations
 import json
 import logging
 import os
-import tempfile
 import uuid
 from collections.abc import Iterator
 from contextlib import contextmanager
-from pathlib import Path
 from typing import Any
 
 import psycopg
@@ -26,11 +24,20 @@ import pytest
 # pgserver registra cada comando; con WARNING se evita ruido en las pruebas.
 logging.getLogger("pgserver").setLevel(logging.WARNING)
 
-MIGRATIONS_DIR = Path(__file__).resolve().parents[2] / "supabase" / "migrations"
+from tests.database_support import (
+    AUTH_STUB,
+    apply_migrations,
+    start_embedded_postgres,
+)
 
 USER_A = "11111111-1111-1111-1111-111111111111"
 USER_B = "22222222-2222-2222-2222-222222222222"
 STAFF_A = "33333333-3333-3333-3333-333333333333"
+# Empleado de agenda (staff_members) enlazado al perfil STAFF_A.
+STAFF_MEMBER_A = "44444444-4444-4444-4444-444444444444"
+STAFF_MEMBER_B = "44444444-4444-4444-4444-555555555555"
+SCHEDULE_A = "55555555-5555-5555-5555-111111111111"
+BLOCK_A = "66666666-6666-6666-6666-111111111111"
 
 BUSINESS_A = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
 BUSINESS_B = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
@@ -42,58 +49,6 @@ APPOINTMENT_A = "a1111111-1111-1111-1111-111111111111"
 SUBSCRIPTION_A = "b1111111-1111-1111-1111-111111111111"
 USAGE_A = "d1111111-1111-1111-1111-111111111111"
 
-# Réplica mínima del esquema auth de Supabase para pruebas locales.
-AUTH_STUB = """
-create schema if not exists auth;
-
-create table if not exists auth.users (
-    id uuid primary key,
-    instance_id uuid default '00000000-0000-0000-0000-000000000000',
-    aud text default 'authenticated',
-    role text default 'authenticated',
-    email text,
-    encrypted_password text,
-    email_confirmed_at timestamptz default now(),
-    raw_app_meta_data jsonb default '{}'::jsonb,
-    raw_user_meta_data jsonb default '{}'::jsonb,
-    created_at timestamptz default now(),
-    updated_at timestamptz default now()
-);
-
-create or replace function auth.uid()
-returns uuid
-language sql
-stable
-as $$
-    select coalesce(
-        nullif(current_setting('request.jwt.claim.sub', true), ''),
-        nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub'
-    )::uuid;
-$$;
-
-do $$
-begin
-    if not exists (select 1 from pg_roles where rolname = 'anon') then
-        create role anon nologin;
-    end if;
-    if not exists (select 1 from pg_roles where rolname = 'authenticated') then
-        create role authenticated nologin;
-    end if;
-    if not exists (select 1 from pg_roles where rolname = 'service_role') then
-        create role service_role nologin bypassrls;
-    end if;
-end;
-$$;
-
-grant usage on schema public to anon, authenticated, service_role;
-grant usage on schema auth to anon, authenticated, service_role;
-grant execute on function auth.uid() to anon, authenticated, service_role;
-"""
-
-
-def _apply_migrations(conn: psycopg.Connection[Any]) -> None:
-    for migration in sorted(MIGRATIONS_DIR.glob("*.sql")):
-        conn.execute(migration.read_text(encoding="utf-8"))
 
 
 @pytest.fixture(scope="session")
@@ -108,12 +63,9 @@ def database() -> Iterator[tuple[psycopg.Connection[Any], str]]:
     pgserver = pytest.importorskip(
         "pgserver", reason="instala pgserver para pruebas locales"
     )
-    data_dir = tempfile.mkdtemp(prefix="agendapro-rls-")
-    server = pgserver.get_server(data_dir)
+    server, uri = start_embedded_postgres()
     try:
-        with psycopg.connect(server.get_uri(), autocommit=True) as conn:
-            conn.execute(AUTH_STUB)
-            _apply_migrations(conn)
+        with psycopg.connect(uri, autocommit=True) as conn:
             yield conn, "local"
     finally:
         server.cleanup()
@@ -127,6 +79,10 @@ def _cleanup(conn: psycopg.Connection[Any]) -> None:
     )
     conn.execute(
         "delete from public.clients where business_id in (%s, %s)",
+        (BUSINESS_A, BUSINESS_B),
+    )
+    conn.execute(
+        "delete from public.staff_members where business_id in (%s, %s)",
         (BUSINESS_A, BUSINESS_B),
     )
     conn.execute(
@@ -176,6 +132,32 @@ def _seed(conn: psycopg.Connection[Any]) -> None:
         (BUSINESS_A, STAFF_A),
     )
 
+    # Empleados de agenda: uno con cuenta (STAFF_A) y uno del negocio B.
+    conn.execute(
+        """
+        insert into public.staff_members (id, business_id, profile_id, display_name)
+        values (%s, %s, %s, 'Empleado A'),
+               (%s, %s, null, 'Empleado B')
+        """,
+        (STAFF_MEMBER_A, BUSINESS_A, STAFF_A, STAFF_MEMBER_B, BUSINESS_B),
+    )
+
+    conn.execute(
+        """
+        insert into public.staff_schedules (id, business_id, staff_id, weekday, start_time, end_time)
+        values (%s, %s, %s, 1, '09:00', '18:00')
+        """,
+        (SCHEDULE_A, BUSINESS_A, STAFF_MEMBER_A),
+    )
+
+    conn.execute(
+        """
+        insert into public.staff_blocks (id, business_id, staff_id, starts_at, ends_at, kind)
+        values (%s, %s, %s, now() + interval '10 days', now() + interval '12 days', 'vacacion')
+        """,
+        (BLOCK_A, BUSINESS_A, STAFF_MEMBER_A),
+    )
+
     conn.execute(
         """
         insert into public.clients (id, business_id, full_name, phone)
@@ -202,7 +184,7 @@ def _seed(conn: psycopg.Connection[Any]) -> None:
         values (%s, %s, %s, %s, %s, now(), now() + interval '30 minutes',
                 'pendiente', 150)
         """,
-        (APPOINTMENT_A, BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_A),
+        (APPOINTMENT_A, BUSINESS_A, CLIENT_A, SERVICE_A, STAFF_MEMBER_A),
     )
 
     conn.execute(

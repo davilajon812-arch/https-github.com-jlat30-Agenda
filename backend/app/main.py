@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from psycopg_pool import AsyncConnectionPool
 
 from app.api.router import api_router
 from app.api.routes import health
 from app.core.config import Settings, get_settings
+from app.core.db import DatabaseUnavailableError, close_pool, open_pool
 from app.core.logging import configure_logging
 from app.core.security import SupabaseTokenVerifier
 from app.middleware.auth import SupabaseAuthMiddleware
@@ -23,12 +27,36 @@ def create_app(app_settings: Settings | None = None) -> FastAPI:
     settings = app_settings or get_settings()
     configure_logging(settings.log_level)
 
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        pool: AsyncConnectionPool | None = None
+        try:
+            pool = await open_pool(
+                settings.database_url,
+                settings.database_pool_min_size,
+                settings.database_pool_max_size,
+            )
+        except DatabaseUnavailableError:
+            logger.warning(
+                "DATABASE_URL sin configurar: los endpoints con base de datos "
+                "responderán 503."
+            )
+        except Exception as exc:  # la API igual arranca: /health debe responder
+            logger.error("No se pudo abrir el pool de Postgres: %s", exc)
+
+        app.state.db_pool = pool
+        try:
+            yield
+        finally:
+            await close_pool(pool)
+
     application = FastAPI(
         title=settings.app_name,
         version=settings.app_version,
         description="API de agenda de citas para negocios de servicios.",
         docs_url="/docs" if not settings.is_production else None,
         redoc_url="/redoc" if not settings.is_production else None,
+        lifespan=lifespan,
     )
 
     application.state.settings = settings

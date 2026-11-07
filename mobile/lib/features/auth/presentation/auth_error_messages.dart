@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Traduce los errores de Supabase Auth a mensajes de la interfaz.
 String authErrorMessage(AppLocalizations l10n, Object error) {
