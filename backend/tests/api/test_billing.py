@@ -35,8 +35,11 @@ def _rtdn(client: TestClient, notification: dict, token: str | None = "token-rtd
         },
         "subscription": "projects/test/subscriptions/rtdn",
     }
-    headers = {"X-Agendapro-Token": token} if token else {}
-    return client.post("/api/v1/billing/rtdn", headers=headers, json=body)
+    # Pub/Sub no permite cabeceras propias: el secreto viaja en la query string.
+    url = "/api/v1/billing/rtdn"
+    if token:
+        url = f"{url}?token={token}"
+    return client.post(url, json=body)
 
 
 def _subscription(postgres_uri: str) -> dict:
@@ -266,12 +269,38 @@ def test_rtdn_mal_formado(
     client: TestClient, play_client: FakeGooglePlayClient
 ) -> None:
     response = client.post(
-        "/api/v1/billing/rtdn",
-        headers={"X-Agendapro-Token": "token-rtdn"},
+        "/api/v1/billing/rtdn?token=token-rtdn",
         json={"message": {"data": "!!"}},
     )
 
     assert response.status_code == 400
+
+
+def test_rtdn_acepta_el_secreto_por_cabecera(
+    client: TestClient, play_client: FakeGooglePlayClient
+) -> None:
+    """Útil para disparar mantenimientos o pruebas manuales."""
+    response = client.post(
+        "/api/v1/billing/rtdn",
+        headers={"X-Agendapro-Token": "token-rtdn"},
+        json={
+            "message": {
+                "data": base64.b64encode(
+                    json.dumps(
+                        {
+                            "subscriptionNotification": {
+                                "notificationType": 2,
+                                "purchaseToken": "tok-cabecera",
+                            }
+                        }
+                    ).encode()
+                ).decode()
+            }
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["result"] == "unknown_token"
 
 
 def test_cada_evento_queda_auditado(

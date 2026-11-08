@@ -44,42 +44,47 @@ services:
       - key: MAINTENANCE_TOKEN
         sync: false
 
-  - type: cron
-    name: agendapro-daily
-    runtime: python
-    plan: starter
-    region: oregon
-    branch: main
-    rootDir: backend
-    schedule: "0 7 * * *"
-    buildCommand: pip install -r requirements.txt
-    startCommand: python -m app.jobs.daily_maintenance
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.8
-      - key: APP_ENV
-        value: prod
-      - key: BILLING_PROVIDER
-        value: play
-      - key: GOOGLE_PLAY_PACKAGE_NAME
-        value: com.agendapro.agenda_pro
-      - key: SUPABASE_URL
-        fromService:
-          type: web
-          name: agendapro-api
-          envVarKey: SUPABASE_URL
-      - key: SUPABASE_ANON_KEY
-        fromService:
-          type: web
-          name: agendapro-api
-          envVarKey: SUPABASE_ANON_KEY
-      - key: DATABASE_URL
-        fromService:
-          type: web
-          name: agendapro-api
-          envVarKey: DATABASE_URL
-      - key: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
-        fromService:
-          type: web
-          name: agendapro-api
-          envVarKey: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
+  # Mantenimiento diario (reconciliacion con Play + apertura del mes).
+  # Los cron jobs de Render NO existen en el plan gratuito: requieren plan
+  # Starter. Descomenta este bloque al pasar a plan de pago, o usa el
+  # endpoint POST /api/v1/internal/maintenance/daily con un cron externo.
+
+  # - type: cron
+  # name: agendapro-daily
+  # runtime: python
+  # plan: starter
+  # region: oregon
+  # branch: main
+  # rootDir: backend
+  # schedule: "0 7 * * *"
+  # buildCommand: pip install -r requirements.txt
+  # startCommand: python -m app.jobs.daily_maintenance
+  # envVars:
+  # - key: PYTHON_VERSION
+  # value: 3.12.8
+  # - key: APP_ENV
+  # value: prod
+  # - key: BILLING_PROVIDER
+  # value: play
+  # - key: GOOGLE_PLAY_PACKAGE_NAME
+  # value: com.agendapro.agenda_pro
+  # - key: SUPABASE_URL
+  # fromService:
+  # type: web
+  # name: agendapro-api
+  # envVarKey: SUPABASE_URL
+  # - key: SUPABASE_ANON_KEY
+  # fromService:
+  # type: web
+  # name: agendapro-api
+  # envVarKey: SUPABASE_ANON_KEY
+  # - key: DATABASE_URL
+  # fromService:
+  # type: web
+  # name: agendapro-api
+  # envVarKey: DATABASE_URL
+  # - key: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
+  # fromService:
+  # type: web
+  # name: agendapro-api
+  # envVarKey: GOOGLE_PLAY_SERVICE_ACCOUNT_JSON

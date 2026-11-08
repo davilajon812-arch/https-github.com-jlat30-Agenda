@@ -144,6 +144,9 @@ Ver [docs/deploy-render.md](docs/deploy-render.md). Resumen: crear un *Blueprint
 apuntando a `render.yaml` (rootDir `backend`), definir las variables de Supabase
 como secretos y verificar que `GET /health` responda 200.
 
+> Usa la cadena del **pooler** de Supabase (`aws-1-<region>.pooler.supabase.com:5432`),
+> no la conexión directa `db.<ref>.supabase.co` (IPv6-only, no alcanzable desde Render).
+
 ## Documentación
 
 - [docs/architecture.md](docs/architecture.md): capas, convenciones y flujo de auth.

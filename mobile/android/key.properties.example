@@ -1,0 +1,15 @@
+# Plantilla de credenciales de firma. Copia este archivo como key.properties
+# y completa los valores. NUNCA lo subas al repositorio (está en .gitignore).
+#
+# Genera el keystore con:
+#   "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkey -v ^
+#     -keystore agendapro-upload.jks -storetype JKS ^
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# Guarda la contraseña y el archivo .jks en un lugar seguro: sin ellos no
+# podrás publicar actualizaciones.
+
+storePassword=CAMBIAR
+keyPassword=CAMBIAR
+keyAlias=upload
+storeFile=../agendapro-upload.jks

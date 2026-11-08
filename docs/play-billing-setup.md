@@ -61,23 +61,57 @@ de prueba.
 
 ## 3. Notificaciones en tiempo real (RTDN) con Pub/Sub
 
-1. En Google Cloud → **Pub/Sub → Temas → Crear tema**:
-   `play-subscriptions` (nombre de ejemplo).
-2. En el tema, **Permisos → Agregar principal**:
+> **Importante:** las suscripciones push de Pub/Sub **no permiten cabeceras HTTP
+> personalizadas**. Por eso el secreto compartido viaja en la *query string* del
+> endpoint (`?token=...`). El backend también acepta la cabecera
+> `X-Agendapro-Token` para pruebas manuales.
+
+1. Genera un secreto largo y guárdalo:
+
+   ```powershell
+   -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 40 | % {[char]$_})
+   ```
+
+   Ese valor va en `GOOGLE_PUBSUB_RTDN_TOKEN` (Render y `backend/.env`).
+
+2. En Google Cloud → **Pub/Sub → Temas → Crear tema**:
+   - Nombre: `play-subscriptions`
+   - Déjalo con suscripciones predeterminadas o crea la push aparte.
+
+3. En el tema → **Permisos → Agregar principal**:
    - Principal: `google-play-developer-notifications@system.gserviceaccount.com`
-   - Rol: **Publicador de Pub/Sub** (`roles/pubsub.publisher`).
-3. **Crear suscripción** tipo **Push**:
-   - Endpoint: `https://<tu-servicio>.onrender.com/api/v1/billing/rtdn`
-   - Marca **Habilitar autenticación** solo si vas a validar la identidad del
-     emisor con OAuth. En esta entrega se valida un **secreto compartido**: añade
-     el atributo `X-Agendapro-Token` = valor de `GOOGLE_PUBSUB_RTDN_TOKEN`.
-     (Si prefieres OAuth de Pub/Sub, deja `GOOGLE_PUBSUB_RTDN_TOKEN` vacío y
-     valida el JWT del emisor en un paso posterior.)
-4. En Play Console → **Monetizar con Play → Configuración de monetización** →
+   - Rol: **Publicador de Pub/Sub** (`roles/pubsub.publisher`)
+
+4. **Crear suscripción** de tipo **Push**:
+   - **Endpoint**:
+     ```
+     https://<tu-servicio>.onrender.com/api/v1/billing/rtdn?token=<GOOGLE_PUBSUB_RTDN_TOKEN>
+     ```
+   - Sin autenticación OIDC (el secreto de la URL es la autenticación).
+   - **Política de reintento**: reintento exponencial, 10 s a 600 s.
+
+5. En Play Console → **Monetizar con Play → Configuración de monetización** →
    **Notificaciones de suscripciones** → pega el nombre completo del tema:
-   `projects/<proyecto>/topics/play-subscriptions`.
-5. Envía una notificación de prueba desde Pub/Sub y revisa que aparezca en
-   `billing_events`.
+   ```
+   projects/<proyecto>/topics/play-subscriptions
+   ```
+
+6. Verifica que lleguen: compra con una cuenta de licencia y revisa la tabla
+   `billing_events` en Supabase (debe aparecer `rtdn_SUBSCRIPTION_PURCHASED` o
+   `rtdn_SUBSCRIPTION_RENEWED`). También puedes publicar un mensaje de prueba
+   desde la consola de Pub/Sub.
+
+### Probar el endpoint a mano
+
+```powershell
+$token = "<GOOGLE_PUBSUB_RTDN_TOKEN>"
+$payload = '{"message":{"data":"eyJzdWJzY3JpcHRpb25Ob3RpZmljYXRpb24iOnsibm90aWZpY2F0aW9uVHlwZSI6MiwicHVyY2hhc2VUb2tlbiI6Im5vLWV4aXN0ZSJ9fQ=="}}'
+curl.exe -s -X POST -H "Content-Type: application/json" `
+  --data-binary $payload "https://<tu-servicio>.onrender.com/api/v1/billing/rtdn?token=$token"
+```
+
+Respuesta esperada: `{"result":"unknown_token"}` (HTTP 200). Si devuelve **401**,
+el token no coincide.
 
 ### Qué procesa el backend
 
@@ -132,7 +166,8 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 | Error 401/403 al verificar | La cuenta de servicio no tiene permisos en Play Console o aún no propagó. |
 | La compra se reembolsa sola a los 3 días | La app no llamó a `completePurchase` (o el backend no pudo verificar). |
 | Las RTDN no llegan | El tema no está configurado en *Configuración de monetización*, o falta el rol *Publicador* al servicio de Google. |
-| RTDN responde 401 | `GOOGLE_PUBSUB_RTDN_TOKEN` no coincide con la cabecera de la suscripción push. |
+| RTDN responde 401 | `GOOGLE_PUBSUB_RTDN_TOKEN` no coincide con el `?token=` de la URL de la suscripción push. |
+| RTDN devuelve 404 | El endpoint está mal escrito o el servicio está dormido (plan free de Render). |
 | Precio vacío en la app | El producto no está activo o la app no está instalada desde Play. |
 
 ## 7. Checklist final
@@ -141,8 +176,8 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 - [ ] `plans.play_product_id` coincide con los IDs de Play.
 - [ ] Cuenta de servicio con permiso de suscripciones en Play Console.
 - [ ] `BILLING_PROVIDER=play` y `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` en Render.
-- [ ] Tema RTDN configurado y suscripción push apuntando a `/api/v1/billing/rtdn`.
-- [ ] `GOOGLE_PUBSUB_RTDN_TOKEN` coincide con la cabecera configurada.
+- [ ] Tema RTDN configurado y suscripción push apuntando a `/api/v1/billing/rtdn?token=...`.
+- [ ] `GOOGLE_PUBSUB_RTDN_TOKEN` coincide con el `?token=` de la URL.
 - [ ] Cron diario activo (`python -m app.jobs.daily_maintenance`).
 - [ ] Una compra de prueba activa el plan, una cancelación lo desactiva y el
       límite del plan se aplica en el backend.

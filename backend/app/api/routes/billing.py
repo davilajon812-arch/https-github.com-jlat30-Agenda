@@ -6,7 +6,15 @@ import logging
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    Header,
+    HTTPException,
+    Query,
+    Request,
+    status,
+)
 from psycopg import Connection
 
 from app.api.deps import get_current_user
@@ -134,16 +142,30 @@ def receive_rtdn(
     body: dict[str, Any],
     request: Request,
     conn: ConnectionDep,
-    x_agendapro_token: Annotated[str | None, Header(alias="X-Agendapro-Token")] = None,
+    token: Annotated[
+        str | None,
+        Query(description="Secreto compartido (Pub/Sub no envía cabeceras propias)"),
+    ] = None,
+    x_agendapro_token: Annotated[
+        str | None, Header(alias="X-Agendapro-Token")
+    ] = None,
 ) -> dict[str, str]:
-    """Procesa renovaciones, cancelaciones, pausas, gracia y reembolsos."""
+    """Procesa renovaciones, cancelaciones, pausas, gracia y reembolsos.
+
+    El secreto puede venir en `?token=` (lo que sí permite configurar la
+    suscripción push de Pub/Sub) o en la cabecera `X-Agendapro-Token`, útil
+    para pruebas manuales.
+    """
     settings = request.app.state.settings
     expected = settings.google_pubsub_rtdn_token
 
-    if expected and x_agendapro_token != expected:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token de RTDN inválido"
-        )
+    if expected:
+        provided = token or x_agendapro_token
+        if provided != expected:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token de RTDN inválido",
+            )
 
     notification = billing.decode_pubsub_message(body)
     client = getattr(request.app.state, "play_client", None)
