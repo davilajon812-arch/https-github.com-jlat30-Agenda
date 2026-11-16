@@ -154,6 +154,34 @@ curl.exe -s -o NUL -w "%{http_code}`n" -X POST `
   "https://agendapro-api.onrender.com/api/v1/billing/rtdn?token=incorrecto"
 ```
 
+### Resultados esperados
+
+| Check | Respuesta |
+| ----- | --------- |
+| 1 | `{"status":"ok","service":"AgendaPro API","version":"0.1.0","environment":"prod"} [200]` |
+| 2 | Array con los tres planes (`free`, `basico`, `pro`) |
+| 3 | `{"result":"unknown_token"}` con código 200 |
+| 4 | `{"detail":"Token de RTDN inválido"}` con código 401 |
+
+> La primera petición tras un rato sin tráfico tarda ~30 s porque el plan free
+> duerme el servicio. Usa `-m 120` en `curl` para no interpretar la espera como
+> una caída.
+
+### Si `curl` se queda sin recibir ni un byte
+
+Ese síntoma **no** es un problema de la app: significa que el servicio existe en
+Render (una URL inexistente responde `404 Not Found` en menos de un segundo)
+pero la instancia no está atendiendo HTTP. Revisa en el panel de Render:
+
+1. **Events / Deploys**: que el último despliegue diga `Live` y no
+   `Build failed` ni `Deploy failed`.
+2. **Logs**: busca `Uvicorn running on` y `Pool de Postgres abierto`. Si no
+   aparecen, el proceso murió antes de abrir el puerto.
+3. **Environment**: que estén todas las variables de `render.yaml`; las marcadas
+   con `sync: false` se capturan a mano y el despliegue falla sin ellas.
+4. **Plan free**: si el servicio fue suspendido por consumo de horas, hay que
+   reanudarlo desde el panel.
+
 ## Problemas comunes
 
 | Síntoma | Causa |

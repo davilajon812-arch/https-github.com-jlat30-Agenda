@@ -56,3 +56,6 @@ android/*.jks
 android/*.keystore
 *.jks
 
+# Configuracion local de Flutter DevTools (depende de cada maquina)
+devtools_options.yaml
+
