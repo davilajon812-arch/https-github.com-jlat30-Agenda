@@ -1,5 +1,15 @@
 # Despliegue del backend en Render
 
+> **Estado actual: desplegado y funcionando.**
+>
+> - URL: **https://agendapro-api-469f.onrender.com**
+> - Servicio: `agendapro-api` (`srv-dbt5j3ei0phs73eookog`), plan free, región oregon
+> - Repo: `davilajon812-arch/https-github.com-jlat30-Agenda`, rama `main`, `rootDir=backend`
+> - Auto-deploy activo: cada push a `main` reconstruye el servicio
+>
+> El sufijo `-469f` aparece porque el nombre `agendapro-api` ya estaba ocupado
+> globalmente en Render.
+
 Objetivo: dejar `https://<servicio>.onrender.com/health` respondiendo 200 y el
 backend listo para verificar compras de Google Play.
 
@@ -44,7 +54,7 @@ function New-Secret { -join ((48..57) + (65..90) + (97..122) | Get-Random -Count
 
    | Variable | Valor |
    | -------- | ----- |
-   | `CORS_ORIGINS` | `https://agendapro-api.onrender.com,http://localhost:3000` |
+   | `CORS_ORIGINS` | `https://agendapro-api-469f.onrender.com,http://localhost:3000` |
    | `SUPABASE_URL` | `https://<ref>.supabase.co` |
    | `SUPABASE_ANON_KEY` | publishable key |
    | `SUPABASE_SERVICE_ROLE_KEY` | secret key |
@@ -58,7 +68,7 @@ function New-Secret { -join ((48..57) + (65..90) + (97..122) | Get-Random -Count
 6. Verifica:
 
    ```powershell
-   curl.exe -s https://agendapro-api.onrender.com/health
+   curl.exe -s https://agendapro-api-469f.onrender.com/health
    ```
 
    ```json
@@ -68,7 +78,7 @@ function New-Secret { -join ((48..57) + (65..90) + (97..122) | Get-Random -Count
 7. Comprueba que conecta a la base y cargó los planes:
 
    ```powershell
-   curl.exe -s https://agendapro-api.onrender.com/api/v1/billing/plans
+   curl.exe -s https://agendapro-api-469f.onrender.com/api/v1/billing/plans
    ```
 
 > En los logs del deploy debe aparecer `Pool de Postgres abierto (min=1, max=8)`.
@@ -105,7 +115,7 @@ contador del mes.
 Los cron jobs de Render requieren plan **Starter**; por eso el bloque viene
 comentado en `render.yaml`. Usa un programador externo gratuito:
 
-- **URL**: `https://agendapro-api.onrender.com/api/v1/internal/maintenance/daily`
+- **URL**: `https://agendapro-api-469f.onrender.com/api/v1/internal/maintenance/daily`
 - **Método**: `POST`
 - **Cabecera**: `X-Maintenance-Token: <MAINTENANCE_TOKEN>`
 - **Horario**: diario 13:00 UTC (07:00 en Nicaragua)
@@ -124,7 +134,7 @@ jobs:
       - run: |
           curl -sS -X POST \
             -H "X-Maintenance-Token: ${{ secrets.MAINTENANCE_TOKEN }}" \
-            https://agendapro-api.onrender.com/api/v1/internal/maintenance/daily
+            https://agendapro-api-469f.onrender.com/api/v1/internal/maintenance/daily
 ```
 
 ### Plan de pago
@@ -139,19 +149,19 @@ blueprint. Corre `python -m app.jobs.daily_maintenance` a diario.
 
 ```powershell
 # 1. Estado
-curl.exe -s -w " [%{http_code}]`n" https://agendapro-api.onrender.com/health
+curl.exe -s -w " [%{http_code}]`n" https://agendapro-api-469f.onrender.com/health
 
 # 2. Planes (público)
-curl.exe -s https://agendapro-api.onrender.com/api/v1/billing/plans
+curl.exe -s https://agendapro-api-469f.onrender.com/api/v1/billing/plans
 
 # 3. RTDN con el secreto correcto -> {"result":"unknown_token"}
 curl.exe -s -X POST -H "Content-Type: application/json" `
   --data-binary '{"message":{"data":"eyJzdWJzY3JpcHRpb25Ob3RpZmljYXRpb24iOnsibm90aWZpY2F0aW9uVHlwZSI6MiwicHVyY2hhc2VUb2tlbiI6Im5vLWV4aXN0ZSJ9fQ=="}}' `
-  "https://agendapro-api.onrender.com/api/v1/billing/rtdn?token=<GOOGLE_PUBSUB_RTDN_TOKEN>"
+  "https://agendapro-api-469f.onrender.com/api/v1/billing/rtdn?token=<GOOGLE_PUBSUB_RTDN_TOKEN>"
 
 # 4. RTDN con token incorrecto -> 401
 curl.exe -s -o NUL -w "%{http_code}`n" -X POST `
-  "https://agendapro-api.onrender.com/api/v1/billing/rtdn?token=incorrecto"
+  "https://agendapro-api-469f.onrender.com/api/v1/billing/rtdn?token=incorrecto"
 ```
 
 ### Resultados esperados

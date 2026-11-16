@@ -2,6 +2,8 @@
 .env
 .env.*
 !.env.example
+.render-api-key
+.supabase-service-role
 
 # Sistema operativo
 .DS_Store
