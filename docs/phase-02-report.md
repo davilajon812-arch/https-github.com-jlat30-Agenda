@@ -67,7 +67,7 @@ cd backend
 Contra el proyecto real (migraciones ya aplicadas):
 
 ```powershell
-$env:SUPABASE_DB_URL="postgresql://postgres.<ref>:<password>@aws-1-us-west-2.pooler.supabase.com:5432/postgres"
+$env:SUPABASE_DB_URL="postgresql://postgres.<ref>:<password>@aws-1-<region>.pooler.supabase.com:5432/postgres"
 .venv\Scripts\python.exe -m pytest tests/rls -q     # 24 pruebas de aislamiento
 ```
 
