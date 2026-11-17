@@ -55,6 +55,8 @@ class _AppointmentBody extends ConsumerWidget {
           .read(appointmentsRepositoryProvider)
           .changeStatus(appointment.id, status);
       ref.invalidate(appointmentProvider(appointment.id));
+      ref.invalidate(agendaProvider);
+      ref.invalidate(clientVisitsProvider);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.appointmentUpdated)),

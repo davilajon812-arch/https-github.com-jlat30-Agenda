@@ -113,6 +113,7 @@ class _NewAppointmentSheetState extends ConsumerState<NewAppointmentSheet> {
           );
 
       if (!mounted) return;
+      ref.invalidate(agendaProvider);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.newAppointmentCreated)),
