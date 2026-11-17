@@ -4,6 +4,9 @@
 !.env.example
 .render-api-key
 .supabase-service-role
+.google-play-sa.json
+google-play-sa.json
+*service-account*.json
 
 # Sistema operativo
 .DS_Store
