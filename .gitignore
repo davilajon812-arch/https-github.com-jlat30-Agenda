@@ -7,6 +7,7 @@
 .google-play-sa.json
 google-play-sa.json
 *service-account*.json
+.keystore-password
 
 # Sistema operativo
 .DS_Store

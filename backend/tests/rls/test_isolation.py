@@ -261,6 +261,32 @@ def test_el_negocio_b_existe_solo_para_su_dueno(seeded_db) -> None:
     assert ids(rows) == [uuid.UUID(BUSINESS_B)]
 
 
+def test_el_dueno_puede_crear_su_negocio_con_returning(seeded_db) -> None:
+    """Regresión: `INSERT ... RETURNING` necesita que el dueño lea su propio
+    negocio antes de que el trigger AFTER INSERT cree la membresía.
+
+    La app usa `.select()` tras el insert (equivale a RETURNING); sin el
+    predicado `owner_id = auth.uid()` en la política SELECT, Postgres responde
+    "new row violates row-level security policy".
+    """
+    conn, _ = seeded_db
+    nuevo = uuid.uuid4()
+
+    with act_as(conn, USER_B):
+        with conn.transaction(force_rollback=True):
+            row = conn.execute(
+                """
+                insert into public.businesses (id, owner_id, name, slug)
+                values (%s, %s, 'Negocio Nuevo', 'negocio-nuevo')
+                returning id, name
+                """,
+                (nuevo, USER_B),
+            ).fetchone()
+
+    assert row[0] == nuevo
+    assert row[1] == "Negocio Nuevo"
+
+
 def test_los_horarios_del_negocio_a_estan_aislados(seeded_db) -> None:
     conn, _ = seeded_db
 
