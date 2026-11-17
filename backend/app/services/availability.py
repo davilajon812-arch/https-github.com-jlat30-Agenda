@@ -102,6 +102,7 @@ def compute_availability(
     service_id: str,
     day_value: str,
     staff_id: str | None = None,
+    now: datetime | None = None,
 ) -> AvailabilityResponse:
     """Devuelve los huecos libres del día para el servicio indicado."""
     service = _fetch_service(conn, business_id, service_id)
@@ -109,6 +110,7 @@ def compute_availability(
 
     timezone_name = _fetch_timezone(conn, business_id)
     tz = get_timezone(timezone_name)
+    reference = (now or datetime.now(tz)).astimezone(tz)
 
     day = date.fromisoformat(day_value)
     weekday = weekday_sunday_zero(day)
@@ -192,7 +194,7 @@ def compute_availability(
                     busy_start < slot_end and busy_end > cursor
                     for busy_start, busy_end in busy
                 )
-                if not overlaps:
+                if cursor > reference and not overlaps:
                     slots.append(
                         SlotRead(
                             starts_at=cursor.isoformat(),

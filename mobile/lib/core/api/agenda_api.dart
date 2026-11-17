@@ -41,8 +41,10 @@ class StaffAvailability {
           SlotRange(
             startsAt: DateTime.parse(
               (slot as Map<String, dynamic>)['starts_at'] as String,
-            ),
-            endsAt: DateTime.parse(slot['ends_at'] as String),
+            ).toLocal(),
+            endsAt: DateTime.parse(
+              slot['ends_at'] as String,
+            ).toLocal(),
           ),
       ],
     );
@@ -240,7 +242,7 @@ class AgendaApi {
         'client_id': clientId,
         'service_id': serviceId,
         'staff_id': staffId,
-        'starts_at': startsAt.toIso8601String(),
+        'starts_at': startsAt.toUtc().toIso8601String(),
         'price': price,
         'notes': notes,
       }),

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import time
 from collections.abc import Iterator
-from datetime import date
+from datetime import date, timedelta
 from typing import Any
 
 import jwt
@@ -31,9 +31,17 @@ SERVICE_ID = "51111111-1111-1111-1111-111111111111"
 CLIENT_ID = "c1111111-1111-1111-1111-111111111111"
 OTHER_CLIENT_ID = "c2222222-2222-2222-2222-222222222222"
 
-# Día de prueba: 15 de marzo de 2027 (America/Managua, UTC-6).
-TEST_DAY = date(2027, 3, 15)
-TEST_WEEKDAY = (TEST_DAY.weekday() + 1) % 7
+def _future_day(weekday: int, *, min_days_ahead: int = 30) -> date:
+    """Próxima fecha (con margen) que cae en ese día de la semana (0 = domingo)."""
+    start = date.today() + timedelta(days=min_days_ahead)
+    return start + timedelta(days=(weekday - (start.weekday() + 1) % 7) % 7)
+
+
+# Día de prueba: un lunes futuro. La fecha es relativa para que los huecos
+# nunca queden en el pasado (el backend descarta los que ya empezaron).
+TEST_WEEKDAY = 1  # lunes (0 = domingo)
+TEST_DAY = _future_day(TEST_WEEKDAY)
+OTHER_TEST_DAY = _future_day((TEST_WEEKDAY + 1) % 7)  # martes sin horario
 
 
 def make_token(user_id: str) -> str:

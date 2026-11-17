@@ -2,10 +2,18 @@
 
 from __future__ import annotations
 
-from fastapi.testclient import TestClient
+from datetime import datetime, time
+from zoneinfo import ZoneInfo
 
+import psycopg
+from fastapi.testclient import TestClient
+from psycopg.rows import dict_row
+
+from app.services.availability import compute_availability
 from tests.api.conftest import (
+    BUSINESS_ID,
     CLIENT_ID,
+    OTHER_TEST_DAY,
     SERVICE_ID,
     STAFF_MEMBER_ID,
     TEST_DAY,
@@ -36,10 +44,33 @@ def test_devuelve_huecos_del_horario(
     assert carlos["slots"][0]["starts_at"].startswith(f"{DAY}T09:00:00")
 
 
+def test_no_ofrece_huecos_que_ya_empezaron(seeded: str) -> None:
+    """Al pedir el día en curso, los huecos que ya pasaron no se ofrecen."""
+    ahora = datetime.combine(TEST_DAY, time(10, 20), tzinfo=ZoneInfo("America/Managua"))
+
+    with psycopg.connect(seeded, row_factory=dict_row) as conn:
+        body = compute_availability(
+            conn,
+            business_id=BUSINESS_ID,
+            service_id=SERVICE_ID,
+            day_value=DAY,
+            staff_id=STAFF_MEMBER_ID,
+            now=ahora,
+        )
+
+    huecos = [slot.starts_at for slot in body.staff[0].slots]
+    # De 09:00 a 12:00 quedan los de 10:30 en adelante.
+    assert len(huecos) == 5
+    assert huecos[0] == datetime.combine(
+        TEST_DAY, time(10, 30), tzinfo=ZoneInfo("America/Managua")
+    )
+    assert all(inicio > ahora for inicio in huecos)
+
+
 def test_sin_horario_no_hay_huecos(
     client: TestClient, owner_headers: dict[str, str], business_url: str
 ) -> None:
-    otro_dia = "2027-03-16"  # martes: el empleado no tiene horario cargado
+    otro_dia = OTHER_TEST_DAY.isoformat()  # martes: el empleado no tiene horario
     assert (TEST_DAY.weekday() + 1) % 7 == TEST_WEEKDAY
 
     body = client.get(
