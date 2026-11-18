@@ -127,7 +127,57 @@ el token no coincide.
 En cada notificación el backend **reconsulta la API de Play** para confirmar el
 estado real; el tipo de notificación solo se usa como respaldo si Play no responde.
 
-## 4. Probar con cuentas de prueba
+## 4. Firmar el AAB
+
+Play rechaza los paquetes firmados con la llave de debug, y cambiar de firma
+después obliga a subir una app nueva. La firma se configura una sola vez.
+
+### Crear el keystore de subida
+
+```powershell
+cd mobile\android
+keytool -genkey -v -keystore agendapro-upload.jks -keyalg RSA ^
+  -keysize 2048 -validity 10000 -alias agendapro
+```
+
+Guarda la contraseña en el gestor de secretos: **si se pierde, no se puede
+volver a firmar la app**.
+
+### `android/key.properties`
+
+```properties
+storeFile=agendapro-upload.jks
+storePassword=...
+keyAlias=agendapro
+keyPassword=...
+```
+
+El archivo `key.properties` y el `.jks` **no se versionan** (están en
+`.gitignore`). Si falta `key.properties`, la compilación de release **falla a
+propósito** con un mensaje claro: antes se firmaba en silencio con la llave de
+debug y Play lo rechazaba. `flutter run` en debug sigue funcionando sin keystore.
+
+### Compilar
+
+```powershell
+cd mobile
+flutter build appbundle --flavor prod -t lib/main_prod.dart ^
+  --dart-define-from-file=.env.prod
+```
+
+Salida: `build/app/outputs/bundle/prodRelease/app-prod-release.aab`.
+
+> Sube `versionCode` en `pubspec.yaml` (`version: 0.1.0+2`) antes de **cada**
+> envío a Play.
+
+Verificar la firma del paquete:
+
+```powershell
+& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" ^
+  -printcert -jarfile build\app\outputs\bundle\prodRelease\app-prod-release.aab
+```
+
+## 5. Probar con cuentas de prueba
 
 1. Play Console → **Configuración → Pruebas de licencia**: agrega los correos de
    Gmail que probarán. Estas cuentas pagan 0 y no se les cobra.
@@ -147,7 +197,7 @@ estado real; el tipo de notificación solo se usa como respaldo si Play no respo
 7. **Restaurar compras**: reinstala la app e inicia sesión con el mismo negocio y
    pulsa *Restaurar compras*.
 
-## 5. Modo simulado (desarrollo local)
+## 6. Modo simulado (desarrollo local)
 
 Con `BILLING_PROVIDER=fake` el backend usa un cliente que simula Play:
 
@@ -157,7 +207,7 @@ Con `BILLING_PROVIDER=fake` el backend usa un cliente que simula Play:
 
 No uses `fake` en producción: cualquiera podría activar un plan.
 
-## 6. Problemas comunes
+## 7. Problemas comunes
 
 | Síntoma | Causa probable |
 | ------- | -------------- |
@@ -170,8 +220,11 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 | RTDN devuelve 404 | El endpoint está mal escrito o el servicio está dormido (plan free de Render). |
 | Precio vacío en la app | El producto no está activo o la app no está instalada desde Play. |
 
-## 7. Checklist final
+## 8. Checklist final
 
+- [ ] `android/key.properties` y el `.jks` existen y están fuera del repositorio.
+- [ ] El AAB de release compila y `keytool -printcert` muestra tu llave, no la de debug.
+- [ ] `versionCode` incrementado respecto al envío anterior.
 - [ ] Producto `agendapro_pro_mensual` activo.
 - [ ] `plans.play_product_id` coincide con los IDs de Play.
 - [ ] Cuenta de servicio con permiso de suscripciones en Play Console.

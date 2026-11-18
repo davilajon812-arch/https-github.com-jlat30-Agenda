@@ -52,11 +52,10 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (hasReleaseKeystore) {
-                signingConfigs.getByName("release")
-            } else {
-                // Sin key.properties: build local firmado con debug (nunca para Play).
-                signingConfigs.getByName("debug")
+            // Sin credenciales el release queda sin firmar; la compilación
+            // falla más abajo antes de poder generar nada publicable.
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }
@@ -79,4 +78,25 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// Un release sin key.properties NO debe compilarse: antes se firmaba en silencio
+// con la llave de debug, Play lo rechaza y la huella de firma queda inservible
+// para futuras actualizaciones. El fallo se dispara solo al compilar un release,
+// así que `flutter run` en debug sigue funcionando sin keystore.
+if (!hasReleaseKeystore) {
+    tasks.configureEach {
+        val buildsRelease = name.contains("Release") &&
+            (name.startsWith("bundle") || name.startsWith("assemble") ||
+                name.startsWith("package"))
+        if (buildsRelease) {
+            doFirst {
+                throw GradleException(
+                    "Falta android/key.properties: no se puede firmar el build de " +
+                        "release. Consulta docs/play-billing-setup.md para crear el " +
+                        "keystore y el archivo de credenciales.",
+                )
+            }
+        }
+    }
 }
