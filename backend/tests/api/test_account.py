@@ -139,9 +139,14 @@ def test_elimina_negocio_clientes_y_citas(
         ), tabla
 
 
-def test_si_supabase_falla_no_se_borran_los_datos(
+def test_si_supabase_falla_los_datos_ya_quedaron_borrados(
     client: TestClient, postgres_uri: str, monkeypatch
 ) -> None:
+    """El borrado del negocio se confirma antes de llamar a Supabase.
+
+    Si la cuenta no se puede borrar, reintentar el endpoint termina el trabajo
+    (la segunda llamada ya no encuentra negocios).
+    """
     _seed_owner(postgres_uri)
     _enable_service_role(client, monkeypatch)
 
@@ -155,14 +160,13 @@ def test_si_supabase_falla_no_se_borran_los_datos(
     response = client.delete("/api/v1/account", headers=_auth_headers())
 
     assert response.status_code == 502
-    # La transacción se revirtió: el negocio sigue ahí.
     assert (
         _count(
             postgres_uri,
             "select count(*) from public.businesses where id = %s",
             (DELETE_BUSINESS_ID,),
         )
-        == 1
+        == 0
     )
 
 

@@ -65,8 +65,13 @@ def delete_account(
     El orden importa: `businesses.owner_id` es `on delete restrict`, así que el
     perfil no se puede borrar mientras el usuario siga siendo dueño de un
     negocio; y `appointments.client_id` es `restrict`, así que las citas van
-    antes que los clientes. Si el borrado en Supabase falla, la transacción se
-    revierte y no se pierde nada.
+    antes que los clientes.
+
+    Los borrados se confirman ANTES de llamar a Supabase Auth: si siguieran en
+    una transacción abierta, la cascada a `public.profiles` chocaría con
+    `businesses.owner_id` porque la otra conexión no vería el borrado. Si el
+    borrado de la cuenta falla, los datos del negocio ya no están y reintentar
+    el endpoint termina el trabajo.
     """
     settings = request.app.state.settings
     if not settings.supabase_service_role_key or not settings.supabase_url:
@@ -89,11 +94,11 @@ def delete_account(
         # Cascada: clients, services, staff, horarios, bloqueos, locations,
         # subscriptions, billing_events y business_members.
         conn.execute("delete from public.businesses where id = any(%s)", (owned,))
+        conn.commit()
 
     _delete_supabase_user(
         settings.supabase_url, settings.supabase_service_role_key, user.id
     )
-    conn.commit()
 
     logger.info("Cuenta eliminada: %s (%s negocios)", user.id, len(owned))
     return {"status": "deleted"}
