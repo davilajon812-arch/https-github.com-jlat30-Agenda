@@ -33,7 +33,11 @@ class AppConfig {
     this.privacyPolicyUrl =
         'https://agendapro-api-469f.onrender.com/privacidad',
     this.termsUrl = 'https://agendapro-api-469f.onrender.com/terminos',
+    this.admobBannerUnitId = defaultTestBannerUnitId,
   });
+
+  /// Bloque de anuncios de prueba de Google (nunca genera ingresos).
+  static const defaultTestBannerUnitId = 'ca-app-pub-3940256099942544/6300978111';
 
   factory AppConfig.fromEnvironment({AppFlavor? defaultFlavor}) {
     return AppConfig(
@@ -59,6 +63,10 @@ class AppConfig {
         'TERMS_URL',
         defaultValue: 'https://agendapro-api-469f.onrender.com/terminos',
       ),
+      admobBannerUnitId: const String.fromEnvironment(
+        'ADMOB_BANNER_UNIT_ID',
+        defaultValue: defaultTestBannerUnitId,
+      ),
     );
   }
 
@@ -70,6 +78,9 @@ class AppConfig {
   /// Páginas legales públicas servidas por el backend.
   final String privacyPolicyUrl;
   final String termsUrl;
+
+  /// Bloque de anuncios del plan Gratis.
+  final String admobBannerUnitId;
 
   /// applicationId de Android (necesario para el enlace de gestión de suscripción).
   final String androidPackageName;

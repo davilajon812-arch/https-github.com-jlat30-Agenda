@@ -28,15 +28,59 @@ de prueba.
    - **ID del plan base**: `mensual`.
    - **Tipo**: Renovación automática.
    - **Periodo de facturación**: Mensual.
-   - **Precio**: el que definas por país (Play muestra el precio local con
-     impuestos; la app lo lee de la tienda y **no lo escribe a mano**).
+   - **Precio base**: **USD 5.00** (suscripción mensual).
+     Play genera automáticamente el precio en cada país a partir del precio
+     base; puedes ajustarlo por país si conviene (por ejemplo, Nicaragua).
+     La app **nunca escribe el precio**: lo lee de la tienda y muestra la
+     moneda y los impuestos locales del usuario.
    - **Periodo de gracia**: 7 días (opcional, recomendado).
    - **Periodo de espera de cuenta** (*account hold*): 7 días.
 4. Activa el producto (**Activar**).
 
-> El catálogo tiene solo dos planes: **Gratis** (no comprable) y **Pro**.
+> El catálogo tiene solo dos planes: **Gratis** (no comprable, con anuncios) y
+> **Pro** (USD 5/mes, sin anuncios).
 > Si cambias el ID, actualiza la fila de `public.plans`
 > (`play_product_id`). El backend resuelve el plan a partir del producto.
+
+> **Cambiar el precio después**: se hace en Play Console, no en el código. Los
+> usuarios existentes conservan su precio hasta que cambien de plan; Play avisa
+> a quien corresponda. No hay que publicar una versión nueva de la app.
+
+## 1.1. Anuncios del plan Gratis (AdMob)
+
+El plan Gratis muestra un banner; el plan Pro no. La decisión la toma el
+backend con `plans.features.ads`, así que se puede apagar sin publicar una
+versión nueva.
+
+La app ya viene con los **IDs de prueba de Google**, que no generan ingresos y
+sirven para validar todo el flujo:
+
+| Dónde | Variable | Valor de prueba |
+| ----- | -------- | --------------- |
+| `AndroidManifest.xml` | `com.google.android.gms.ads.APPLICATION_ID` | `ca-app-pub-3940256099942544~3347511713` |
+| Compilación | `--dart-define=ADMOB_BANNER_UNIT_ID=...` | `ca-app-pub-3940256099942544/6300978111` |
+
+Para cobrar de verdad hace falta:
+
+1. Crear la app en <https://admob.google.com> y anotar el **App ID**.
+2. Crear un **bloque de anuncios → Banner** y anotar el **Ad unit ID**.
+3. Reemplazar el `android:value` del manifiesto por tu App ID.
+4. Compilar con `--dart-define=ADMOB_BANNER_UNIT_ID=ca-app-pub-XXXX/YYYY`
+   (o editar el valor por defecto en `.env.prod`).
+
+> Si el App ID del manifiesto no es válido, **la app se cierra al arrancar**.
+> Es el error más común al integrar AdMob.
+
+### Declaración obligatoria en Play Console
+
+Con anuncios, la ficha cambia:
+
+- **Seguridad de los datos**: declarar que la app muestra anuncios, que se
+  recopila el *identificador de publicidad* y los datos técnicos del
+  dispositivo por parte de Google AdMob.
+- **Clasificación de contenido**: marcar que la app contiene anuncios.
+- **Política de privacidad**: ya publica una sección de publicidad
+  (<https://agendapro-api-469f.onrender.com/privacidad>).
 
 ## 2. Crear la cuenta de servicio
 
@@ -225,7 +269,9 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 - [ ] `android/key.properties` y el `.jks` existen y están fuera del repositorio.
 - [ ] El AAB de release compila y `keytool -printcert` muestra tu llave, no la de debug.
 - [ ] `versionCode` incrementado respecto al envío anterior.
-- [ ] Producto `agendapro_pro_mensual` activo.
+- [ ] Producto `agendapro_pro_mensual` activo con precio base **USD 5.00**.
+- [ ] App ID y Ad unit ID reales de AdMob (no los de prueba) en manifiesto y compilación.
+- [ ] Seguridad de los datos y clasificación de contenido declaran los anuncios.
 - [ ] `plans.play_product_id` coincide con los IDs de Play.
 - [ ] Cuenta de servicio con permiso de suscripciones en Play Console.
 - [ ] `BILLING_PROVIDER=play` y `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` en Render.

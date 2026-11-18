@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,6 +11,16 @@ import 'app/app.dart';
 import 'core/config/app_config.dart';
 import 'core/providers/app_providers.dart';
 import 'l10n/app_localizations.dart';
+
+/// Inicializa el SDK de anuncios solo en Android; un fallo no rompe la app.
+Future<void> _initializeAds() async {
+  if (!Platform.isAndroid) return;
+  try {
+    await MobileAds.instance.initialize();
+  } catch (error) {
+    debugPrint('No se pudo inicializar Google Mobile Ads: $error');
+  }
+}
 
 /// Punto de arranque: valida la configuración e inicializa Supabase.
 Future<void> bootstrap({AppConfig? config}) async {
@@ -26,6 +40,10 @@ Future<void> bootstrap({AppConfig? config}) async {
   );
 
   final preferences = await SharedPreferences.getInstance();
+
+  // Los anuncios del plan Gratis necesitan el SDK inicializado. Se hace sin
+  // bloquear el arranque: si falla, la app sigue funcionando sin banner.
+  unawaited(_initializeAds());
 
   runApp(
     ProviderScope(

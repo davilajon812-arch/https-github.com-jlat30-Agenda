@@ -89,11 +89,18 @@ $entity actúa únicamente como encargado que los almacena por tu cuenta.</p>
 <p><strong>Datos de facturación.</strong> Cuando contratas el plan Pro, Google Play
 procesa el pago. Nosotros recibimos el identificador de la compra y su estado,
 nunca los datos de tu tarjeta.</p>
+<p><strong>Datos de publicidad (solo plan Gratis).</strong> El plan Gratis muestra
+anuncios servidos por Google AdMob, que puede acceder al identificador de
+publicidad del dispositivo y a datos técnicos (modelo, idioma, versión del
+sistema) para mostrar y medir los anuncios. Con el plan Pro no se muestra
+ningún anuncio.</p>
 
 <h2>3. Para qué los usamos</h2>
 <ul>
   <li>Prestar el servicio: autenticación, agenda, disponibilidad y recordatorios.</li>
   <li>Gestionar tu suscripción y los límites del plan.</li>
+  <li>Mostrar anuncios a las cuentas del plan Gratis, que es lo que financia el
+      servicio sin costo.</li>
   <li>Atender solicitudes de soporte y cumplir obligaciones legales.</li>
 </ul>
 <p>La base legal es la ejecución del contrato que aceptas al crear la cuenta.</p>
@@ -105,9 +112,18 @@ proveedores que actúan como encargados:</p>
   <li><strong>Supabase</strong> — base de datos y autenticación.</li>
   <li><strong>Render</strong> — alojamiento del servidor de la aplicación.</li>
   <li><strong>Google Play</strong> — procesamiento de las suscripciones.</li>
+  <li><strong>Google AdMob</strong> — entrega de los anuncios del plan Gratis.</li>
 </ul>
-<p>La aplicación <strong>no incluye publicidad ni herramientas de analítica de
-terceros</strong> y no rastrea tu actividad entre aplicaciones.</p>
+<p>La aplicación <strong>no incluye herramientas de analítica de terceros</strong>
+ajenas a la publicidad y no rastrea tu actividad entre otras aplicaciones.</p>
+
+<h2>4.1. Anuncios y tu elección</h2>
+<p>Los anuncios se muestran únicamente en el plan Gratis. La forma más simple de
+dejarlos de ver es contratar el plan Pro.</p>
+<p>Además, puedes limitar la personalización de anuncios desde los ajustes de
+Android (<em>Configuración → Google → Anuncios</em>), donde también puedes
+restablecer o eliminar tu identificador de publicidad. Ten en cuenta que los
+datos de tus clientes nunca se envían a la red publicitaria.</p>
 
 <h2>5. Cuánto tiempo los conservamos</h2>
 <p>Mientras tu cuenta esté activa. Si solicitas la eliminación, borramos tu
@@ -155,12 +171,15 @@ no solicitadas, intentar acceder a datos de otros negocios ni interferir con el
 funcionamiento de la plataforma.</p>
 
 <h2>5. Planes y pagos</h2>
-<p>El plan Gratis tiene límites de uso (por ejemplo, cantidad de empleados y de
-citas por mes). El plan Pro se contrata como suscripción mensual a través de
-Google Play, con el precio mostrado en la tienda en tu país.</p>
-<p>La renovación es automática salvo que la canceles al menos 24 horas antes del
-final del periodo. Puedes gestionarla o cancelarla desde Google Play. Los
-reembolsos se rigen por la política de Google Play.</p>
+<p>El plan Gratis es sin costo y se financia con anuncios; tiene límites de uso
+(por ejemplo, cantidad de empleados y de citas por mes).</p>
+<p>El plan Pro cuesta <strong>5 USD al mes</strong> como precio base. El importe
+final lo muestra Google Play en tu moneda y con los impuestos de tu país, y es
+el que se cobra al confirmar la compra.</p>
+<p>El plan Pro se contrata como suscripción mensual a través de Google Play y no
+muestra anuncios. La renovación es automática salvo que la canceles al menos 24
+horas antes del final del periodo. Puedes gestionarla o cancelarla desde Google
+Play. Los reembolsos se rigen por la política de Google Play.</p>
 
 <h2>6. Disponibilidad</h2>
 <p>Procuramos mantener el servicio disponible de forma continua, pero no

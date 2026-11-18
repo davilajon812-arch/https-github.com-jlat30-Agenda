@@ -32,6 +32,9 @@ def test_lista_los_planes_disponibles(client: TestClient) -> None:
     assert planes["pro"]["max_staff"] is None
     assert planes["pro"]["features"]["advanced_reports"] is True
     assert planes["free"]["play_product_id"] is None
+    # El plan Gratis se financia con anuncios; Pro no los muestra.
+    assert planes["free"]["features"]["ads"] is True
+    assert planes["pro"]["features"]["ads"] is False
 
 
 def test_entitlements_del_negocio_en_pro(

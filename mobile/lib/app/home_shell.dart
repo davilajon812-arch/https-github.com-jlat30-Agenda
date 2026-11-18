@@ -7,6 +7,7 @@ import '../features/clients/presentation/clients_screen.dart';
 import '../features/business/presentation/providers/business_providers.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../core/widgets/free_plan_ad_banner.dart';
 
 /// Contenedor principal con la navegación por pestañas.
 class HomeShell extends ConsumerStatefulWidget {
@@ -27,13 +28,21 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
     return Scaffold(
       appBar: AppBar(title: Text(businessName)),
-      body: IndexedStack(
-        index: _index,
-        children: const [
-          AppointmentsScreen(),
-          ClientsScreen(),
-          BillingScreen(),
-          SettingsScreen(),
+      body: Column(
+        children: [
+          Expanded(
+            child: IndexedStack(
+              index: _index,
+              children: const [
+                AppointmentsScreen(),
+                ClientsScreen(),
+                BillingScreen(),
+                SettingsScreen(),
+              ],
+            ),
+          ),
+          // Solo se pinta para el plan Gratis (ver free_plan_ad_banner.dart).
+          const FreePlanAdBanner(),
         ],
       ),
       bottomNavigationBar: NavigationBar(

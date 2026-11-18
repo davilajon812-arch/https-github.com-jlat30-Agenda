@@ -26,6 +26,14 @@ def test_la_politica_menciona_eliminacion_de_cuenta(client: TestClient) -> None:
     assert "no vendemos datos personales" in body.lower()
 
 
+def test_la_politica_declara_la_publicidad(client: TestClient) -> None:
+    body = client.get("/privacidad").text
+
+    assert "AdMob" in body
+    assert "identificador de publicidad" in body
+    assert "plan Pro no se muestra ningún anuncio" in body.replace("\n", " ")
+
+
 def test_la_pagina_de_eliminacion_explica_el_proceso(client: TestClient) -> None:
     body = client.get("/eliminar-cuenta").text
 
