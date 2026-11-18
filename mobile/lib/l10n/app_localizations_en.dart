@@ -239,6 +239,53 @@ class AppLocalizationsEn extends AppLocalizations {
       'We could not delete your account. Please try again.';
 
   @override
+  String get businessManageTitle => 'My business';
+
+  @override
+  String get businessNameLabel => 'Business name';
+
+  @override
+  String get businessPhoneLabel => 'Business phone';
+
+  @override
+  String get businessEdit => 'Edit details';
+
+  @override
+  String get businessEditTitle => 'Business details';
+
+  @override
+  String get businessNewTitle => 'New business';
+
+  @override
+  String get businessSave => 'Save changes';
+
+  @override
+  String get businessCreate => 'Create business';
+
+  @override
+  String get businessSwitch => 'Your businesses';
+
+  @override
+  String get businessSwitchHint =>
+      'Choose which business you want to work with.';
+
+  @override
+  String get businessAdd => 'Add business';
+
+  @override
+  String get businessAddProTitle => 'You need the Pro plan';
+
+  @override
+  String get businessAddProMessage =>
+      'The Free plan allows a single business. With Pro you can manage several from the same account.';
+
+  @override
+  String get businessAddProAction => 'See plans';
+
+  @override
+  String get validationPhoneLength => 'The phone must have at least 6 digits';
+
+  @override
   String get billingCurrentPlan => 'Current plan';
 
   @override

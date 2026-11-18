@@ -272,8 +272,31 @@ def test_el_dueno_puede_crear_su_negocio_con_returning(seeded_db) -> None:
     conn, _ = seeded_db
     nuevo = uuid.uuid4()
 
-    with act_as(conn, USER_B):
-        with conn.transaction(force_rollback=True):
+    with conn.transaction(force_rollback=True):
+        # El negocio que USER_B ya tiene pasa a Pro: el trigger
+        # `enforce_owned_business_limit` solo permite un segundo negocio con Pro.
+        actualizadas = conn.execute(
+            """
+            update public.subscriptions
+            set plan = 'pro', status = 'active', source = 'manual',
+                current_period_end = now() + interval '30 days'
+            where business_id = %s
+            """,
+            (BUSINESS_B,),
+        ).rowcount
+        if not actualizadas:
+            conn.execute(
+                """
+                insert into public.subscriptions
+                    (business_id, plan, status, source, current_period_start,
+                     current_period_end, auto_renewing)
+                values (%s, 'pro', 'active', 'manual', now(),
+                        now() + interval '30 days', false)
+                """,
+                (BUSINESS_B,),
+            )
+
+        with act_as(conn, USER_B):
             row = conn.execute(
                 """
                 insert into public.businesses (id, owner_id, name, slug)

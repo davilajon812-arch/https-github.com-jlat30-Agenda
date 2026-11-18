@@ -8,6 +8,7 @@ import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/billing/presentation/billing_screen.dart';
+import '../../features/business/presentation/business_manage_screen.dart';
 import '../../features/clients/presentation/client_detail_screen.dart';
 import '../../features/services/presentation/services_screen.dart';
 import '../../features/staff/presentation/staff_schedule_screen.dart';
@@ -66,6 +67,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/services',
         builder: (context, state) => const ServicesScreen(),
+      ),
+      GoRoute(
+        path: '/business',
+        builder: (context, state) => const BusinessManageScreen(),
       ),
       GoRoute(path: '/staff', builder: (context, state) => const StaffScreen()),
       GoRoute(

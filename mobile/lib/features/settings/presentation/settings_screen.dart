@@ -30,6 +30,8 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.storefront_outlined),
             title: Text(membership.business.name),
             subtitle: Text('${l10n.settingsBusiness} · ${membership.role}'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/business'),
           ),
         if (email != null)
           ListTile(

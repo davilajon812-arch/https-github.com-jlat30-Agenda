@@ -240,6 +240,53 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo eliminar la cuenta. Intenta de nuevo.';
 
   @override
+  String get businessManageTitle => 'Mi negocio';
+
+  @override
+  String get businessNameLabel => 'Nombre del negocio';
+
+  @override
+  String get businessPhoneLabel => 'Teléfono del negocio';
+
+  @override
+  String get businessEdit => 'Editar datos';
+
+  @override
+  String get businessEditTitle => 'Datos del negocio';
+
+  @override
+  String get businessNewTitle => 'Nuevo negocio';
+
+  @override
+  String get businessSave => 'Guardar cambios';
+
+  @override
+  String get businessCreate => 'Crear negocio';
+
+  @override
+  String get businessSwitch => 'Tus negocios';
+
+  @override
+  String get businessSwitchHint => 'Elige con qué negocio quieres trabajar.';
+
+  @override
+  String get businessAdd => 'Agregar negocio';
+
+  @override
+  String get businessAddProTitle => 'Necesitas el plan Pro';
+
+  @override
+  String get businessAddProMessage =>
+      'El plan Gratis permite un solo negocio. Con Pro puedes administrar varios desde la misma cuenta.';
+
+  @override
+  String get businessAddProAction => 'Ver planes';
+
+  @override
+  String get validationPhoneLength =>
+      'El teléfono debe tener al menos 6 dígitos';
+
+  @override
   String get billingCurrentPlan => 'Plan actual';
 
   @override

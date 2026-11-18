@@ -542,6 +542,96 @@ abstract class AppLocalizations {
   /// **'No se pudo eliminar la cuenta. Intenta de nuevo.'**
   String get deleteAccountError;
 
+  /// No description provided for @businessManageTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi negocio'**
+  String get businessManageTitle;
+
+  /// No description provided for @businessNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del negocio'**
+  String get businessNameLabel;
+
+  /// No description provided for @businessPhoneLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono del negocio'**
+  String get businessPhoneLabel;
+
+  /// No description provided for @businessEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar datos'**
+  String get businessEdit;
+
+  /// No description provided for @businessEditTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos del negocio'**
+  String get businessEditTitle;
+
+  /// No description provided for @businessNewTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo negocio'**
+  String get businessNewTitle;
+
+  /// No description provided for @businessSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get businessSave;
+
+  /// No description provided for @businessCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear negocio'**
+  String get businessCreate;
+
+  /// No description provided for @businessSwitch.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus negocios'**
+  String get businessSwitch;
+
+  /// No description provided for @businessSwitchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige con qué negocio quieres trabajar.'**
+  String get businessSwitchHint;
+
+  /// No description provided for @businessAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar negocio'**
+  String get businessAdd;
+
+  /// No description provided for @businessAddProTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitas el plan Pro'**
+  String get businessAddProTitle;
+
+  /// No description provided for @businessAddProMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'El plan Gratis permite un solo negocio. Con Pro puedes administrar varios desde la misma cuenta.'**
+  String get businessAddProMessage;
+
+  /// No description provided for @businessAddProAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver planes'**
+  String get businessAddProAction;
+
+  /// No description provided for @validationPhoneLength.
+  ///
+  /// In es, this message translates to:
+  /// **'El teléfono debe tener al menos 6 dígitos'**
+  String get validationPhoneLength;
+
   /// No description provided for @billingCurrentPlan.
   ///
   /// In es, this message translates to:

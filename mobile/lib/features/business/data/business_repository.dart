@@ -9,7 +9,7 @@ class BusinessRepository {
   BusinessRepository(this._client);
 
   static const _businessColumns =
-      'id, name, slug, industry, country_code, currency, timezone, '
+      'id, name, slug, industry, phone, country_code, currency, timezone, '
       'public_booking_enabled';
 
   final SupabaseClient _client;
@@ -33,12 +33,16 @@ class BusinessRepository {
   }
 
   /// Crea el negocio; el trigger de la base agrega al dueño como miembro.
+  ///
+  /// La base rechaza el alta si el usuario no tiene plan Pro y ya es dueño de
+  /// otro negocio (`plan_limit_reached`).
   Future<Business> createBusiness({
     required String name,
     required String? industry,
     required String countryCode,
     required String currency,
     required String timezone,
+    String? phone,
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) {
@@ -55,6 +59,7 @@ class BusinessRepository {
               'name': name.trim(),
               'slug': _buildSlug(name, attempt),
               'industry': industry,
+              'phone': _cleanPhone(phone),
               'country_code': countryCode,
               'currency': currency,
               'timezone': timezone,
@@ -69,6 +74,37 @@ class BusinessRepository {
       }
     }
     throw lastError!;
+  }
+
+  /// Actualiza los datos editables del negocio. El `slug` no cambia.
+  Future<Business> updateBusiness({
+    required String businessId,
+    required String name,
+    required String? industry,
+    required String countryCode,
+    required String currency,
+    required String timezone,
+    String? phone,
+  }) async {
+    final row = await _client
+        .from('businesses')
+        .update({
+          'name': name.trim(),
+          'industry': industry,
+          'phone': _cleanPhone(phone),
+          'country_code': countryCode,
+          'currency': currency,
+          'timezone': timezone,
+        })
+        .eq('id', businessId)
+        .select(_businessColumns)
+        .single();
+    return Business.fromJson(row);
+  }
+
+  static String? _cleanPhone(String? phone) {
+    final trimmed = phone?.trim();
+    return trimmed == null || trimmed.isEmpty ? null : trimmed;
   }
 
   static String _buildSlug(String name, int attempt) {

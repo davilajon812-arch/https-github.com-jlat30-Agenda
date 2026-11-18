@@ -8,6 +8,7 @@ class Business {
     required this.currency,
     required this.timezone,
     this.industry,
+    this.phone,
     this.publicBookingEnabled = false,
   });
 
@@ -17,6 +18,7 @@ class Business {
       name: json['name'] as String,
       slug: json['slug'] as String,
       industry: json['industry'] as String?,
+      phone: json['phone'] as String?,
       countryCode: json['country_code'] as String? ?? 'NI',
       currency: json['currency'] as String? ?? 'NIO',
       timezone: json['timezone'] as String? ?? 'America/Managua',
@@ -28,6 +30,7 @@ class Business {
   final String name;
   final String slug;
   final String? industry;
+  final String? phone;
   final String countryCode;
   final String currency;
   final String timezone;
