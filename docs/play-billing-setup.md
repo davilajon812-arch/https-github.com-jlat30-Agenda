@@ -259,6 +259,7 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 | `La suscripción no está vigente` (409) | La compra quedó `PENDING` (pago diferido) o expiró. |
 | Error 401/403 al verificar | La cuenta de servicio no tiene permisos en Play Console o aún no propagó. |
 | La compra se reembolsa sola a los 3 días | La app no llamó a `completePurchase` (o el backend no pudo verificar). |
+| «Ya se cobró tu compra, pero no pudimos verificarla» | El backend no respondió (Render dormido o sin red). La app guarda la compra y ofrece **Reintentar verificación**; también se reintenta sola al reabrir la app. |
 | Las RTDN no llegan | El tema no está configurado en *Configuración de monetización*, o falta el rol *Publicador* al servicio de Google. |
 | RTDN responde 401 | `GOOGLE_PUBSUB_RTDN_TOKEN` no coincide con el `?token=` de la URL de la suscripción push. |
 | RTDN devuelve 404 | El endpoint está mal escrito o el servicio está dormido (plan free de Render). |
