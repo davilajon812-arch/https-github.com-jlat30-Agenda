@@ -157,10 +157,14 @@ como secretos y verificar que `GET /health` responda 200.
 - [docs/phase-02-report.md](docs/phase-02-report.md): entrega de la fase 2.
 - [docs/phase-03-report.md](docs/phase-03-report.md): entrega de la fase 3.
 - [docs/play-billing-setup.md](docs/play-billing-setup.md): Play Console, cuenta de servicio y RTDN.
+- [docs/demo-account.md](docs/demo-account.md): cuenta demo con datos para la revisión de Play.
 
 ## Reglas de cumplimiento (Google Play)
 
 - El dominio es **citas y clientes**: nunca usar términos de salud.
 - La app no custodia dinero ni ofrece billeteras o préstamos.
 - La suscripción en Android se cobra únicamente con Google Play Billing.
+- La app permite **eliminar la cuenta y sus datos** desde Ajustes, y publica su
+  [política de privacidad](https://agendapro-api-469f.onrender.com/privacidad) y
+  la página de [eliminación de cuenta](https://agendapro-api-469f.onrender.com/eliminar-cuenta).
 - Solo se declaran los permisos estrictamente necesarios (`INTERNET`).
