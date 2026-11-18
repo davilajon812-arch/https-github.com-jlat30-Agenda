@@ -7,6 +7,9 @@ Latinoamérica.
 - Cliente que paga: **el dueño del negocio** (suscripción mensual).
 - Idioma: español neutro latinoamericano + inglés.
 - Moneda y zona horaria configurables por negocio.
+- Un usuario puede administrar **varios negocios** (función del plan Pro) y
+  cambiar entre ellos desde Ajustes.
+- Plataforma objetivo: **Android** (Google Play).
 
 ## Estructura del monorepo
 

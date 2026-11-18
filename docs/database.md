@@ -194,7 +194,8 @@ las tareas programadas.
 | Trigger | Tabla | Efecto |
 | ------- | ----- | ------ |
 | `on_auth_user_created` | `auth.users` | Crea el registro en `profiles` al registrarse. |
-| `on_business_created` | `businesses` | Agrega al dueño como miembro `owner`. |
+| `on_business_created` | `businesses` | Agrega al dueño como miembro `owner` y crea la suscripción Gratis. |
+| `enforce_owned_business_limit` | `businesses` | Un segundo negocio del mismo dueño exige plan Pro activo. |
 | `validate_appointment_consistency` | `appointments` | Cliente, servicio, sede y empleado deben ser del mismo negocio. |
 | `validate_appointment_no_overlap` | `appointments` | Impide dos citas activas del mismo empleado en horarios que se solapan. |
 | `validate_staff_child_consistency` | `staff_schedules`, `staff_blocks` | El empleado debe pertenecer al negocio. |
