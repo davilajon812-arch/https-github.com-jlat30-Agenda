@@ -3,6 +3,7 @@
 from fastapi import APIRouter
 
 from app.api.routes import (
+    account,
     appointments,
     availability,
     billing,
@@ -15,6 +16,7 @@ from app.api.routes import (
 
 api_router = APIRouter()
 api_router.include_router(me.router)
+api_router.include_router(account.router)
 api_router.include_router(services.router)
 api_router.include_router(clients.router)
 api_router.include_router(staff.router)

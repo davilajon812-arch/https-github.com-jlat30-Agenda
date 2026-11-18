@@ -11,10 +11,10 @@ from fastapi.testclient import TestClient
 from app.services.google_play import FakeGooglePlayClient
 from tests.api.conftest import BUSINESS_ID
 
-BASICO = "agendapro_basico_mensual"
+PRO = "agendapro_pro_mensual"
 
 
-def _verify(client: TestClient, headers: dict[str, str], token: str, product: str = BASICO):
+def _verify(client: TestClient, headers: dict[str, str], token: str, product: str = PRO):
     return client.post(
         "/api/v1/billing/verify",
         headers=headers,
@@ -60,21 +60,21 @@ def test_una_compra_valida_activa_el_plan(
     play_client: FakeGooglePlayClient,
     postgres_uri: str,
 ) -> None:
-    play_client.add_token("tok-basico", BASICO)
+    play_client.add_token("tok-pro", PRO)
 
-    response = _verify(client, owner_headers, "tok-basico")
+    response = _verify(client, owner_headers, "tok-pro")
 
     assert response.status_code == 200
     body = response.json()
-    assert body["plan"]["id"] == "basico"
+    assert body["plan"]["id"] == "pro"
     assert body["status"] == "active"
     assert body["source"] == "play"
     assert body["auto_renewing"] is True
     assert body["current_period_end"] is not None
 
     stored = _subscription(postgres_uri)
-    assert stored["plan"] == "basico"
-    assert stored["purchase_token"] == "tok-basico"
+    assert stored["plan"] == "pro"
+    assert stored["purchase_token"] == "tok-pro"
     assert stored["acknowledged_at"] is not None
     assert stored["google_order_id"] is not None
 
@@ -84,7 +84,7 @@ def test_la_compra_se_confirma_en_play(
     owner_headers: dict[str, str],
     play_client: FakeGooglePlayClient,
 ) -> None:
-    play_client.add_token("tok-ack", BASICO)
+    play_client.add_token("tok-ack", PRO)
 
     _verify(client, owner_headers, "tok-ack")
 
@@ -97,14 +97,14 @@ def test_el_plan_se_aplica_a_los_limites(
     business_url: str,
     play_client: FakeGooglePlayClient,
 ) -> None:
-    play_client.add_token("tok-limites", BASICO)
+    play_client.add_token("tok-limites", PRO)
     _verify(client, owner_headers, "tok-limites")
 
     body = client.get(f"{business_url}/entitlements", headers=owner_headers).json()
 
-    assert body["plan"]["id"] == "basico"
+    assert body["plan"]["id"] == "pro"
     assert body["remaining"]["appointments_per_month"] is None
-    assert body["upgrade_to"] == "pro"
+    assert body["upgrade_to"] is None
 
 
 def test_producto_desconocido_se_rechaza(
@@ -129,7 +129,7 @@ def test_suscripcion_expirada_no_activa_el_plan(
     client: TestClient, owner_headers: dict[str, str], play_client: FakeGooglePlayClient
 ) -> None:
     play_client.add_token(
-        "tok-expirado", BASICO, state="SUBSCRIPTION_STATE_EXPIRED", days=-1
+        "tok-expirado", PRO, state="SUBSCRIPTION_STATE_EXPIRED", days=-1
     )
 
     response = _verify(client, owner_headers, "tok-expirado")
@@ -142,7 +142,7 @@ def test_solo_el_dueno_activa_el_plan(
     staff_headers: dict[str, str],
     play_client: FakeGooglePlayClient,
 ) -> None:
-    play_client.add_token("tok-staff", BASICO)
+    play_client.add_token("tok-staff", PRO)
 
     response = _verify(client, staff_headers, "tok-staff")
 
@@ -155,7 +155,7 @@ def test_rtdn_registra_la_compra_y_actualiza_el_plan(
     play_client: FakeGooglePlayClient,
     postgres_uri: str,
 ) -> None:
-    play_client.add_token("tok-rtdn", BASICO)
+    play_client.add_token("tok-rtdn", PRO)
     _verify(client, owner_headers, "tok-rtdn")
 
     response = _rtdn(
@@ -167,7 +167,7 @@ def test_rtdn_registra_la_compra_y_actualiza_el_plan(
                 "version": "1.0",
                 "notificationType": 2,
                 "purchaseToken": "tok-rtdn",
-                "subscriptionId": BASICO,
+                "subscriptionId": PRO,
             },
         },
     )
@@ -184,12 +184,12 @@ def test_rtdn_de_cancelacion_conserva_el_plan_hasta_fin_de_periodo(
     play_client: FakeGooglePlayClient,
     postgres_uri: str,
 ) -> None:
-    play_client.add_token("tok-cancel", BASICO)
+    play_client.add_token("tok-cancel", PRO)
     _verify(client, owner_headers, "tok-cancel")
 
     # Play reporta la cancelación de la renovación automática.
     play_client.add_token(
-        "tok-cancel", BASICO, state="SUBSCRIPTION_STATE_CANCELED", auto_renewing=False
+        "tok-cancel", PRO, state="SUBSCRIPTION_STATE_CANCELED", auto_renewing=False
     )
     response = _rtdn(
         client,
@@ -197,7 +197,7 @@ def test_rtdn_de_cancelacion_conserva_el_plan_hasta_fin_de_periodo(
             "subscriptionNotification": {
                 "notificationType": 3,
                 "purchaseToken": "tok-cancel",
-                "subscriptionId": BASICO,
+                "subscriptionId": PRO,
             }
         },
     )
@@ -207,7 +207,7 @@ def test_rtdn_de_cancelacion_conserva_el_plan_hasta_fin_de_periodo(
 
     # El periodo ya pagado sigue dando acceso al plan.
     body = client.get(f"{business_url}/entitlements", headers=owner_headers).json()
-    assert body["plan"]["id"] == "basico"
+    assert body["plan"]["id"] == "pro"
 
 
 def test_rtdn_de_reembolso_degrada_el_plan(
@@ -216,17 +216,17 @@ def test_rtdn_de_reembolso_degrada_el_plan(
     business_url: str,
     play_client: FakeGooglePlayClient,
 ) -> None:
-    play_client.add_token("tok-rev", BASICO)
+    play_client.add_token("tok-rev", PRO)
     _verify(client, owner_headers, "tok-rev")
 
-    play_client.add_token("tok-rev", BASICO, state="SUBSCRIPTION_STATE_EXPIRED", days=-1)
+    play_client.add_token("tok-rev", PRO, state="SUBSCRIPTION_STATE_EXPIRED", days=-1)
     _rtdn(
         client,
         {
             "subscriptionNotification": {
                 "notificationType": 12,
                 "purchaseToken": "tok-rev",
-                "subscriptionId": BASICO,
+                "subscriptionId": PRO,
             }
         },
     )
@@ -244,7 +244,7 @@ def test_rtdn_con_token_desconocido_se_registra_sin_romper(
             "subscriptionNotification": {
                 "notificationType": 4,
                 "purchaseToken": "no-existe",
-                "subscriptionId": BASICO,
+                "subscriptionId": PRO,
             }
         },
     )
@@ -309,7 +309,7 @@ def test_cada_evento_queda_auditado(
     play_client: FakeGooglePlayClient,
     postgres_uri: str,
 ) -> None:
-    play_client.add_token("tok-audit", BASICO)
+    play_client.add_token("tok-audit", PRO)
     _verify(client, owner_headers, "tok-audit")
     _rtdn(
         client,
@@ -317,7 +317,7 @@ def test_cada_evento_queda_auditado(
             "subscriptionNotification": {
                 "notificationType": 2,
                 "purchaseToken": "tok-audit",
-                "subscriptionId": BASICO,
+                "subscriptionId": PRO,
             }
         },
     )

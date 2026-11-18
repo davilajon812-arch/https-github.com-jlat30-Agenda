@@ -30,6 +30,9 @@ class AppConfig {
     required this.supabaseAnonKey,
     required this.apiBaseUrl,
     this.androidPackageName = 'com.agendapro.agenda_pro',
+    this.privacyPolicyUrl =
+        'https://agendapro-api-469f.onrender.com/privacidad',
+    this.termsUrl = 'https://agendapro-api-469f.onrender.com/terminos',
   });
 
   factory AppConfig.fromEnvironment({AppFlavor? defaultFlavor}) {
@@ -48,6 +51,14 @@ class AppConfig {
         'APP_PACKAGE_NAME',
         defaultValue: 'com.agendapro.agenda_pro',
       ),
+      privacyPolicyUrl: const String.fromEnvironment(
+        'PRIVACY_POLICY_URL',
+        defaultValue: 'https://agendapro-api-469f.onrender.com/privacidad',
+      ),
+      termsUrl: const String.fromEnvironment(
+        'TERMS_URL',
+        defaultValue: 'https://agendapro-api-469f.onrender.com/terminos',
+      ),
     );
   }
 
@@ -55,6 +66,10 @@ class AppConfig {
   final String supabaseUrl;
   final String supabaseAnonKey;
   final String apiBaseUrl;
+
+  /// Páginas legales públicas servidas por el backend.
+  final String privacyPolicyUrl;
+  final String termsUrl;
 
   /// applicationId de Android (necesario para el enlace de gestión de suscripción).
   final String androidPackageName;

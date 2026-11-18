@@ -61,6 +61,10 @@ class Settings(BaseSettings):
     # Secreto para el endpoint de mantenimiento manual.
     maintenance_token: str = ""
 
+    # --- Legal (páginas públicas de privacidad y términos) ---
+    legal_entity_name: str = "AgendaPro"
+    support_email: str = "soporte@agendapro.app"
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:

@@ -169,7 +169,7 @@ curl.exe -s -o NUL -w "%{http_code}`n" -X POST `
 | Check | Respuesta |
 | ----- | --------- |
 | 1 | `{"status":"ok","service":"AgendaPro API","version":"0.1.0","environment":"prod"} [200]` |
-| 2 | Array con los tres planes (`free`, `basico`, `pro`) |
+| 2 | Array con los dos planes (`free`, `pro`) |
 | 3 | `{"result":"unknown_token"}` con código 200 |
 | 4 | `{"detail":"Token de RTDN inválido"}` con código 401 |
 

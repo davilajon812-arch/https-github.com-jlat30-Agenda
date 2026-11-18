@@ -494,6 +494,54 @@ abstract class AppLocalizations {
   /// **'Negocio'**
   String get settingsBusiness;
 
+  /// No description provided for @settingsPrivacy.
+  ///
+  /// In es, this message translates to:
+  /// **'Política de privacidad'**
+  String get settingsPrivacy;
+
+  /// No description provided for @settingsTerms.
+  ///
+  /// In es, this message translates to:
+  /// **'Términos del servicio'**
+  String get settingsTerms;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar tu cuenta?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Se borrarán tu cuenta, tu negocio, tus clientes, servicios, empleados y todas las citas. Esta acción no se puede deshacer.'**
+  String get deleteAccountMessage;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar definitivamente'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @deleteAccountSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cuenta fue eliminada.'**
+  String get deleteAccountSuccess;
+
+  /// No description provided for @deleteAccountError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo eliminar la cuenta. Intenta de nuevo.'**
+  String get deleteAccountError;
+
   /// No description provided for @billingCurrentPlan.
   ///
   /// In es, this message translates to:

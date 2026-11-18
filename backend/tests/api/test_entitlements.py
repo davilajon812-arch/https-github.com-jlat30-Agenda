@@ -21,16 +21,14 @@ def _set_free_plan(postgres_uri: str) -> None:
         )
 
 
-def test_lista_los_tres_planes(client: TestClient) -> None:
+def test_lista_los_planes_disponibles(client: TestClient) -> None:
     response = client.get("/api/v1/billing/plans")
 
     assert response.status_code == 200
     planes = {plan["id"]: plan for plan in response.json()}
-    assert set(planes) == {"free", "basico", "pro"}
+    assert set(planes) == {"free", "pro"}
     assert planes["free"]["max_staff"] == 1
     assert planes["free"]["max_appointments_per_month"] == 30
-    assert planes["basico"]["max_staff"] == 3
-    assert planes["basico"]["max_appointments_per_month"] is None
     assert planes["pro"]["max_staff"] is None
     assert planes["pro"]["features"]["advanced_reports"] is True
     assert planes["free"]["play_product_id"] is None
@@ -61,7 +59,7 @@ def test_entitlements_en_plan_gratis_muestra_cupos(
     assert body["plan"]["id"] == "free"
     assert body["remaining"]["staff"] == 0  # 1 permitido, 2 en uso
     assert body["remaining"]["appointments_per_month"] == 30
-    assert body["upgrade_to"] == "basico"
+    assert body["upgrade_to"] == "pro"
 
 
 def test_el_ajeno_no_consulta_entitlements(
@@ -90,7 +88,7 @@ def test_plan_gratis_bloquea_el_segundo_empleado(
     detail = response.json()["detail"]
     assert detail["code"] == "plan_limit_reached"
     assert detail["limit"] == "staff"
-    assert detail["upgrade_to"] == "basico"
+    assert detail["upgrade_to"] == "pro"
 
 
 def test_plan_gratis_bloquea_la_cita_numero_31(

@@ -6,7 +6,7 @@
 
 | Archivo | Contenido |
 | ------- | --------- |
-| `backend/supabase/migrations/20260101000700_plans_and_billing.sql` | Tabla `plans` con límites ajustables (free/basico/pro) y `play_product_id`; columnas nuevas en `subscriptions` (`google_order_id`, `acknowledged_at`, `grace_until`, `canceled_at`, `external_account_id`, `latest_event_type`, `raw_status`); tabla `billing_events` para auditoría; RLS; trigger que crea la suscripción Gratis al dar de alta el negocio. |
+| `backend/supabase/migrations/20260101000700_plans_and_billing.sql` | Tabla `plans` con límites ajustables (free/pro; el plan basico se retiro en la migracion 0009) y `play_product_id`; columnas nuevas en `subscriptions` (`google_order_id`, `acknowledged_at`, `grace_until`, `canceled_at`, `external_account_id`, `latest_event_type`, `raw_status`); tabla `billing_events` para auditoría; RLS; trigger que crea la suscripción Gratis al dar de alta el negocio. |
 
 ### Backend
 
@@ -60,11 +60,11 @@ $env:BILLING_PROVIDER="fake"
 # Con un JWT de un dueño de negocio:
 curl -X POST http://localhost:8000/api/v1/billing/verify ^
   -H "Authorization: Bearer <token>" -H "Content-Type: application/json" ^
-  -d "{\"business_id\":\"<uuid>\",\"product_id\":\"agendapro_basico_mensual\",\"purchase_token\":\"prueba-1\"}"
+  -d "{\"business_id\":\"<uuid>\",\"product_id\":\"agendapro_pro_mensual\",\"purchase_token\":\"prueba-1\"}"
 ```
 
-Cualquier token activa el plan Básico (30 días). Luego:
-`GET /api/v1/businesses/<uuid>/entitlements` muestra `plan.id = basico` y los
+Cualquier token activa el plan Pro (30 días). Luego:
+`GET /api/v1/businesses/<uuid>/entitlements` muestra `plan.id = pro` y los
 cupos ampliados.
 
 ### Con Play Console

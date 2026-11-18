@@ -20,10 +20,10 @@ de prueba.
 ## 1. Crear los productos de suscripción
 
 1. Play Console → tu app → **Monetizar con Play → Productos → Suscripciones**.
-2. Crea la suscripción **Básico**:
-   - **ID del producto**: `agendapro_basico_mensual` (debe coincidir con
+2. Crea la suscripción **Pro**:
+   - **ID del producto**: `agendapro_pro_mensual` (debe coincidir con
      `plans.play_product_id` en la base de datos).
-   - **Nombre**: `Básico`.
+   - **Nombre**: `Pro`.
 3. Dentro de la suscripción, crea el **plan base**:
    - **ID del plan base**: `mensual`.
    - **Tipo**: Renovación automática.
@@ -32,10 +32,10 @@ de prueba.
      impuestos; la app lo lee de la tienda y **no lo escribe a mano**).
    - **Periodo de gracia**: 7 días (opcional, recomendado).
    - **Periodo de espera de cuenta** (*account hold*): 7 días.
-4. Repite con **Pro**: ID `agendapro_pro_mensual`.
-5. Activa ambos productos (**Activar**).
+4. Activa el producto (**Activar**).
 
-> Si cambias un ID, actualiza la fila correspondiente en `public.plans`
+> El catálogo tiene solo dos planes: **Gratis** (no comprable) y **Pro**.
+> Si cambias el ID, actualiza la fila de `public.plans`
 > (`play_product_id`). El backend resuelve el plan a partir del producto.
 
 ## 2. Crear la cuenta de servicio
@@ -172,7 +172,7 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 
 ## 7. Checklist final
 
-- [ ] Productos `agendapro_basico_mensual` y `agendapro_pro_mensual` activos.
+- [ ] Producto `agendapro_pro_mensual` activo.
 - [ ] `plans.play_product_id` coincide con los IDs de Play.
 - [ ] Cuenta de servicio con permiso de suscripciones en Play Console.
 - [ ] `BILLING_PROVIDER=play` y `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` en Render.

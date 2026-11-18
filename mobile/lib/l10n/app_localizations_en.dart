@@ -213,6 +213,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsBusiness => 'Business';
 
   @override
+  String get settingsPrivacy => 'Privacy policy';
+
+  @override
+  String get settingsTerms => 'Terms of service';
+
+  @override
+  String get settingsDeleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountMessage =>
+      'Your account, business, clients, services, staff and appointments will be deleted. This cannot be undone.';
+
+  @override
+  String get deleteAccountConfirm => 'Delete permanently';
+
+  @override
+  String get deleteAccountSuccess => 'Your account was deleted.';
+
+  @override
+  String get deleteAccountError =>
+      'We could not delete your account. Please try again.';
+
+  @override
   String get billingCurrentPlan => 'Current plan';
 
   @override

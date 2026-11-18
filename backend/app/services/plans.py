@@ -23,20 +23,6 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
         },
         "sort_order": 1,
     },
-    "basico": {
-        "name": "Básico",
-        "play_product_id": "agendapro_basico_mensual",
-        "max_staff": 3,
-        "max_locations": 1,
-        "max_appointments_per_month": None,
-        "max_messages_per_month": 200,
-        "features": {
-            "reminders": True,
-            "advanced_reports": False,
-            "custom_branding": False,
-        },
-        "sort_order": 2,
-    },
     "pro": {
         "name": "Pro",
         "play_product_id": "agendapro_pro_mensual",
@@ -49,11 +35,11 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
             "advanced_reports": True,
             "custom_branding": True,
         },
-        "sort_order": 3,
+        "sort_order": 2,
     },
 }
 
-PLAN_ORDER = ("free", "basico", "pro")
+PLAN_ORDER = ("free", "pro")
 
 
 @dataclass(frozen=True, slots=True)

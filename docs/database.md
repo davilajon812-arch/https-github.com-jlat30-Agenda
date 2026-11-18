@@ -135,7 +135,7 @@ erDiagram
     SUBSCRIPTIONS {
         uuid id PK
         uuid business_id FK
-        text plan "free | basico | pro"
+        text plan "free | pro"
         text status "active | grace | pending | canceled | expired | paused"
         text source "play | stripe | manual"
         text product_id

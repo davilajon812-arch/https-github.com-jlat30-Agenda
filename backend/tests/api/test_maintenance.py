@@ -9,7 +9,7 @@ from app.jobs import daily_maintenance
 from app.services.google_play import FakeGooglePlayClient
 from tests.api.conftest import BUSINESS_ID
 
-BASICO = "agendapro_basico_mensual"
+PRO = "agendapro_pro_mensual"
 
 
 def test_expira_suscripciones_vencidas(postgres_uri: str) -> None:
@@ -17,7 +17,7 @@ def test_expira_suscripciones_vencidas(postgres_uri: str) -> None:
         conn.execute(
             """
             update public.subscriptions
-            set plan = 'basico', status = 'active', source = 'play',
+            set plan = 'pro', status = 'active', source = 'play',
                 purchase_token = 'tok-viejo',
                 current_period_end = now() - interval '1 day'
             where business_id = %s
@@ -60,18 +60,18 @@ def test_abre_el_contador_del_mes(postgres_uri: str) -> None:
 
 def test_reconcilia_contra_play(postgres_uri: str) -> None:
     cliente = FakeGooglePlayClient(known_tokens={})
-    cliente.add_token("tok-recon", BASICO, days=45)
+    cliente.add_token("tok-recon", PRO, days=45)
 
     with psycopg.connect(postgres_uri, autocommit=True) as conn:
         conn.execute(
             """
             update public.subscriptions
-            set plan = 'basico', status = 'active', source = 'play',
+            set plan = 'pro', status = 'active', source = 'play',
                 product_id = %s, purchase_token = 'tok-recon',
                 current_period_end = now() + interval '1 day'
             where business_id = %s
             """,
-            (BASICO, BUSINESS_ID),
+            (PRO, BUSINESS_ID),
         )
 
     with psycopg.connect(postgres_uri, autocommit=True, row_factory=psycopg.rows.dict_row) as conn:

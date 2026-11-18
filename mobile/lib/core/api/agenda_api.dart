@@ -96,6 +96,10 @@ class AgendaApi {
   final SupabaseClient _supabase;
   final http.Client _http;
 
+  /// Render (plan gratuito) tarda en despertar; sin límite, la petición puede
+  /// quedarse colgada para siempre.
+  static const _timeout = Duration(seconds: 30);
+
   Map<String, String> _authHeaders() {
     final token = _supabase.auth.currentSession?.accessToken;
     if (token == null) {
@@ -250,6 +254,14 @@ class AgendaApi {
     if (response.statusCode != 201) _throwFor(response);
 
     return jsonDecode(response.body) as Map<String, dynamic>;
+  }
+
+  /// Elimina la cuenta del usuario y los datos de sus negocios.
+  Future<void> deleteAccount() async {
+    final response = await _http
+        .delete(Uri.parse('$baseUrl/api/v1/account'), headers: _authHeaders())
+        .timeout(_timeout);
+    if (response.statusCode != 200) _throwFor(response);
   }
 
   static String _dateOnly(DateTime date) =>

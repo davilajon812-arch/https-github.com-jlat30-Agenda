@@ -55,7 +55,6 @@ Future<void> showPlanLimitDialog(
 }
 
 String _planName(String planId) => switch (planId) {
-      'basico' => 'Básico',
       'pro' => 'Pro',
       _ => planId,
     };
@@ -63,7 +62,7 @@ String _planName(String planId) => switch (planId) {
 String _limitLabel(PlanLimitException error, AppLocalizations l10n) {
   // El backend manda el límite en el mensaje; se usa un texto corto si falta.
   return switch (error.limit) {
-    'staff' => error.plan == 'free' ? '1' : '3',
+    'staff' => '1',
     'appointments_per_month' => '30',
     _ => l10n.billingUnlimited,
   };
