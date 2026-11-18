@@ -71,8 +71,10 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
         case PurchaseStatus.error:
           if (!mounted) return;
           setState(() => _purchaseError = purchase.error?.message);
-        case PurchaseStatus.canceled:
         case PurchaseStatus.pending:
+          // Pago diferido (efectivo, transferencia): Google aún no confirma.
+          ref.read(purchaseControllerProvider.notifier).markPaymentPending();
+        case PurchaseStatus.canceled:
           break;
       }
     }
@@ -109,6 +111,16 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     if (!mounted) return;
     setState(() => _restoring = false);
     _showMessage(l10n.billingRestoreStarted);
+  }
+
+  /// Reintenta verificar una compra que ya se cobró pero quedó sin completar.
+  Future<void> _retryVerification() async {
+    final l10n = AppLocalizations.of(context);
+    setState(() => _purchaseError = null);
+    final verified =
+        await ref.read(purchaseControllerProvider.notifier).retryVerification();
+    if (!mounted) return;
+    if (verified) _showMessage(l10n.billingPurchaseSuccess);
   }
 
   Future<void> _openPlaySubscriptions(Entitlements entitlements) async {
@@ -168,12 +180,45 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                 ],
               ),
             ),
-          if (_purchaseError != null)
+          if (_purchaseError != null || purchase.error != null)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                _purchaseError!,
+                _purchaseError ?? purchase.error!,
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          if (purchase.paymentPending)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.schedule,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(l10n.billingPurchaseWaiting)),
+                ],
+              ),
+            ),
+          if (purchase.hasPendingVerification)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.billingPendingVerificationHelp),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed:
+                        purchase.processing ? null : _retryVerification,
+                    icon: const Icon(Icons.refresh),
+                    label: Text(l10n.billingRetryVerification),
+                  ),
+                ],
               ),
             ),
           const SizedBox(height: 16),

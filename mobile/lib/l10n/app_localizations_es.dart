@@ -662,6 +662,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get billingPurchaseError => 'No se pudo completar la compra.';
 
   @override
+  String get billingPurchaseWaiting =>
+      'Tu pago está pendiente de confirmación por Google Play. El plan se activará en cuanto se apruebe.';
+
+  @override
+  String get billingPendingVerificationHelp =>
+      'Ya se cobró tu compra, pero no pudimos verificarla. Reintenta para activar el plan.';
+
+  @override
+  String get billingRetryVerification => 'Reintentar verificación';
+
+  @override
   String get billingRestoreStarted => 'Buscando compras anteriores...';
 
   @override

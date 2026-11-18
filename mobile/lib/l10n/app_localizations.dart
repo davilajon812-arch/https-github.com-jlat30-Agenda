@@ -1358,6 +1358,24 @@ abstract class AppLocalizations {
   /// **'No se pudo completar la compra.'**
   String get billingPurchaseError;
 
+  /// No description provided for @billingPurchaseWaiting.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu pago está pendiente de confirmación por Google Play. El plan se activará en cuanto se apruebe.'**
+  String get billingPurchaseWaiting;
+
+  /// No description provided for @billingPendingVerificationHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya se cobró tu compra, pero no pudimos verificarla. Reintenta para activar el plan.'**
+  String get billingPendingVerificationHelp;
+
+  /// No description provided for @billingRetryVerification.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar verificación'**
+  String get billingRetryVerification;
+
   /// No description provided for @billingRestoreStarted.
   ///
   /// In es, this message translates to:

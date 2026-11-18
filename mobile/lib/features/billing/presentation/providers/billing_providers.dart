@@ -50,28 +50,58 @@ class PurchaseState {
     this.processing = false,
     this.error,
     this.lastPlanId,
+    this.hasPendingVerification = false,
+    this.paymentPending = false,
   });
 
   final bool processing;
   final String? error;
   final String? lastPlanId;
 
+  /// Una compra se cobró pero no se pudo verificar; se puede reintentar.
+  final bool hasPendingVerification;
+
+  /// Google todavía no confirmó el pago (métodos diferidos).
+  final bool paymentPending;
+
   PurchaseState copyWith({
     bool? processing,
     String? error,
     String? lastPlanId,
+    bool? hasPendingVerification,
+    bool? paymentPending,
     bool clearError = false,
   }) {
     return PurchaseState(
       processing: processing ?? this.processing,
       error: clearError ? null : (error ?? this.error),
       lastPlanId: lastPlanId ?? this.lastPlanId,
+      hasPendingVerification:
+          hasPendingVerification ?? this.hasPendingVerification,
+      paymentPending: paymentPending ?? this.paymentPending,
     );
   }
 }
 
+/// Datos necesarios para revalidar una compra ya cobrada.
+class _PendingPurchase {
+  const _PendingPurchase({
+    required this.businessId,
+    required this.productId,
+    required this.purchaseToken,
+    required this.complete,
+  });
+
+  final String businessId;
+  final String productId;
+  final String purchaseToken;
+  final Future<void> Function() complete;
+}
+
 /// Orquesta la compra: Play -> verificación en backend -> completar.
 class PurchaseController extends Notifier<PurchaseState> {
+  _PendingPurchase? _pending;
+
   @override
   PurchaseState build() => const PurchaseState();
 
@@ -108,6 +138,9 @@ class PurchaseController extends Notifier<PurchaseState> {
   }
 
   /// Verifica la compra en el backend y, si es válida, la completa en Play.
+  ///
+  /// Si la verificación falla se guarda la compra para poder reintentarla: el
+  /// cobro ya ocurrió y no se debe descartar.
   Future<bool> verifyAndComplete({
     required String businessId,
     required String productId,
@@ -122,19 +155,61 @@ class PurchaseController extends Notifier<PurchaseState> {
             purchaseToken: purchaseToken,
           );
       await complete();
-      state = state.copyWith(processing: false, lastPlanId: entitlements.plan.id);
+      _pending = null;
+      state = state.copyWith(
+        processing: false,
+        lastPlanId: entitlements.plan.id,
+        hasPendingVerification: false,
+        paymentPending: false,
+      );
       ref.invalidate(entitelementsProvider);
       return true;
     } on AgendaApiException catch (error) {
+      _rememberPending(businessId, productId, purchaseToken, complete);
       state = state.copyWith(processing: false, error: error.message);
       return false;
     } catch (_) {
+      _rememberPending(businessId, productId, purchaseToken, complete);
       state = state.copyWith(
         processing: false,
         error: 'No se pudo verificar la compra.',
       );
       return false;
     }
+  }
+
+  /// Reintenta la verificación de una compra que quedó sin completar.
+  Future<bool> retryVerification() async {
+    final pending = _pending;
+    if (pending == null) return false;
+    return verifyAndComplete(
+      businessId: pending.businessId,
+      productId: pending.productId,
+      purchaseToken: pending.purchaseToken,
+      complete: pending.complete,
+    );
+  }
+
+  /// Marca que Google aún no confirmó el pago (no hay nada que verificar).
+  void markPaymentPending() {
+    state = state.copyWith(paymentPending: true, clearError: true);
+  }
+
+  void clearError() => state = state.copyWith(clearError: true);
+
+  void _rememberPending(
+    String businessId,
+    String productId,
+    String purchaseToken,
+    Future<void> Function() complete,
+  ) {
+    _pending = _PendingPurchase(
+      businessId: businessId,
+      productId: productId,
+      purchaseToken: purchaseToken,
+      complete: complete,
+    );
+    state = state.copyWith(hasPendingVerification: true);
   }
 }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -89,16 +90,41 @@ class AgendaApi {
     required this.baseUrl,
     required SupabaseClient supabaseClient,
     http.Client? httpClient,
+    Duration timeout = defaultTimeout,
+    Duration verifyTimeout = defaultVerifyTimeout,
   })  : _supabase = supabaseClient,
-        _http = httpClient ?? http.Client();
+        _http = httpClient ?? http.Client(),
+        _timeout = timeout,
+        _verifyTimeout = verifyTimeout;
 
   final String baseUrl;
   final SupabaseClient _supabase;
   final http.Client _http;
+  final Duration _timeout;
+  final Duration _verifyTimeout;
 
   /// Render (plan gratuito) tarda en despertar; sin límite, la petición puede
   /// quedarse colgada para siempre.
-  static const _timeout = Duration(seconds: 30);
+  static const defaultTimeout = Duration(seconds: 30);
+
+  /// Verificar una compra tiene un margen mayor: si se corta, el usuario ya
+  /// pagó y la compra quedaría sin completar (Google la reembolsa a los 3 días).
+  static const defaultVerifyTimeout = Duration(seconds: 60);
+
+  /// Envuelve la petición con un límite de tiempo y un error legible.
+  Future<http.Response> _send(
+    Future<http.Response> request, {
+    Duration? timeout,
+  }) async {
+    try {
+      return await request.timeout(timeout ?? _timeout);
+    } on TimeoutException {
+      throw AgendaApiException(
+        'La conexión tardó demasiado. Revisa tu internet e intenta de nuevo.',
+        statusCode: 408,
+      );
+    }
+  }
 
   Map<String, String> _authHeaders() {
     final token = _supabase.auth.currentSession?.accessToken;
@@ -156,7 +182,7 @@ class AgendaApi {
     final uri = Uri.parse('$baseUrl/api/v1/businesses/$businessId/availability')
         .replace(queryParameters: query);
 
-    final response = await _http.get(uri, headers: _authHeaders());
+    final response = await _send(_http.get(uri, headers: _authHeaders()));
     if (response.statusCode != 200) _throwFor(response);
 
     return DayAvailability.fromJson(
@@ -166,7 +192,9 @@ class AgendaApi {
 
   /// Catálogo de planes con sus límites.
   Future<List<Plan>> plans() async {
-    final response = await _http.get(Uri.parse('$baseUrl/api/v1/billing/plans'));
+    final response = await _send(
+      _http.get(Uri.parse('$baseUrl/api/v1/billing/plans')),
+    );
     if (response.statusCode != 200) _throwFor(response);
 
     return [
@@ -177,9 +205,11 @@ class AgendaApi {
 
   /// Plan activo y consumo del negocio.
   Future<Entitlements> entitlements(String businessId) async {
-    final response = await _http.get(
-      Uri.parse('$baseUrl/api/v1/businesses/$businessId/entitlements'),
-      headers: _authHeaders(),
+    final response = await _send(
+      _http.get(
+        Uri.parse('$baseUrl/api/v1/businesses/$businessId/entitlements'),
+        headers: _authHeaders(),
+      ),
     );
     if (response.statusCode != 200) _throwFor(response);
 
@@ -194,14 +224,17 @@ class AgendaApi {
     required String productId,
     required String purchaseToken,
   }) async {
-    final response = await _http.post(
-      Uri.parse('$baseUrl/api/v1/billing/verify'),
-      headers: {..._authHeaders(), 'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'business_id': businessId,
-        'product_id': productId,
-        'purchase_token': purchaseToken,
-      }),
+    final response = await _send(
+      _http.post(
+        Uri.parse('$baseUrl/api/v1/billing/verify'),
+        headers: {..._authHeaders(), 'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'business_id': businessId,
+          'product_id': productId,
+          'purchase_token': purchaseToken,
+        }),
+      ),
+      timeout: _verifyTimeout,
     );
     if (response.statusCode != 200) _throwFor(response);
 
@@ -216,13 +249,15 @@ class AgendaApi {
     required String displayName,
     String? phone,
   }) async {
-    final response = await _http.post(
-      Uri.parse('$baseUrl/api/v1/businesses/$businessId/staff'),
-      headers: {..._authHeaders(), 'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'display_name': displayName,
-        'phone': phone,
-      }),
+    final response = await _send(
+      _http.post(
+        Uri.parse('$baseUrl/api/v1/businesses/$businessId/staff'),
+        headers: {..._authHeaders(), 'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'display_name': displayName,
+          'phone': phone,
+        }),
+      ),
     );
     if (response.statusCode != 201) _throwFor(response);
 
@@ -239,17 +274,19 @@ class AgendaApi {
     double? price,
     String? notes,
   }) async {
-    final response = await _http.post(
-      Uri.parse('$baseUrl/api/v1/businesses/$businessId/appointments'),
-      headers: {..._authHeaders(), 'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'client_id': clientId,
-        'service_id': serviceId,
-        'staff_id': staffId,
-        'starts_at': startsAt.toUtc().toIso8601String(),
-        'price': price,
-        'notes': notes,
-      }),
+    final response = await _send(
+      _http.post(
+        Uri.parse('$baseUrl/api/v1/businesses/$businessId/appointments'),
+        headers: {..._authHeaders(), 'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'client_id': clientId,
+          'service_id': serviceId,
+          'staff_id': staffId,
+          'starts_at': startsAt.toUtc().toIso8601String(),
+          'price': price,
+          'notes': notes,
+        }),
+      ),
     );
     if (response.statusCode != 201) _throwFor(response);
 
@@ -258,9 +295,12 @@ class AgendaApi {
 
   /// Elimina la cuenta del usuario y los datos de sus negocios.
   Future<void> deleteAccount() async {
-    final response = await _http
-        .delete(Uri.parse('$baseUrl/api/v1/account'), headers: _authHeaders())
-        .timeout(_timeout);
+    final response = await _send(
+      _http.delete(
+        Uri.parse('$baseUrl/api/v1/account'),
+        headers: _authHeaders(),
+      ),
+    );
     if (response.statusCode != 200) _throwFor(response);
   }
 
