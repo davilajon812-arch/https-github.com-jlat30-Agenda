@@ -24,7 +24,7 @@ class BusinessRepository {
         .select('role, businesses($_businessColumns)')
         .eq('profile_id', user.id)
         .eq('is_active', true)
-        .order('created_at');
+        .order('created_at', ascending: true);
 
     return rows
         .where((row) => row['businesses'] != null)

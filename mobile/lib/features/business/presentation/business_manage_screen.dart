@@ -218,6 +218,7 @@ Future<bool> showBusinessFormSheet(
   final result = await showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
+    useSafeArea: true,
     builder: (sheetContext) => _BusinessFormSheet(business: business),
   );
   return result ?? false;

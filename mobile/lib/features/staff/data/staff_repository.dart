@@ -17,7 +17,7 @@ class StaffRepository {
         .select(_columns)
         .eq('business_id', businessId)
         .eq('is_active', true)
-        .order('display_name');
+        .order('display_name', ascending: true);
 
     return rows.map(StaffMember.fromJson).toList(growable: false);
   }
@@ -69,8 +69,8 @@ class StaffRepository {
         .select('id, staff_id, weekday, start_time, end_time')
         .eq('staff_id', staffId)
         .eq('is_active', true)
-        .order('weekday')
-        .order('start_time');
+        .order('weekday', ascending: true)
+        .order('start_time', ascending: true);
 
     return rows.map(ScheduleSlot.fromJson).toList(growable: false);
   }
@@ -100,7 +100,7 @@ class StaffRepository {
         .from('staff_blocks')
         .select('id, staff_id, starts_at, ends_at, kind, reason')
         .eq('staff_id', staffId)
-        .order('starts_at');
+        .order('starts_at', ascending: true);
 
     return rows.map(StaffBlock.fromJson).toList(growable: false);
   }

@@ -26,7 +26,7 @@ class ClientsRepository {
       query = query.or('full_name.ilike.%$trimmed%,phone.like.%$trimmed%');
     }
 
-    final rows = await query.order('full_name').limit(limit);
+    final rows = await query.order('full_name', ascending: true).limit(limit);
     return rows.map(Client.fromJson).toList(growable: false);
   }
 

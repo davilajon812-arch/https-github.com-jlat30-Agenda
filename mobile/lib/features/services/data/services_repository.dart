@@ -17,7 +17,7 @@ class ServicesRepository {
         .select(_columns)
         .eq('business_id', businessId)
         .eq('is_active', true)
-        .order('name');
+        .order('name', ascending: true);
 
     return rows.map(Service.fromJson).toList(growable: false);
   }

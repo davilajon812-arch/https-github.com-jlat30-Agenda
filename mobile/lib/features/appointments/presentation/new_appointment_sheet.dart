@@ -25,6 +25,9 @@ Future<void> showNewAppointmentSheet(
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
+    // La hoja puede crecer hasta pantalla completa: sin esto el título queda
+    // debajo de la barra de estado.
+    useSafeArea: true,
     builder: (_) => NewAppointmentSheet(
       businessId: businessId,
       initialDate: initialDate,

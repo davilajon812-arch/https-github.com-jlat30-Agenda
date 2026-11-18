@@ -33,7 +33,10 @@ class AppointmentsRepository {
       query = query.eq('status', status.code);
     }
 
-    final rows = await query.order('starts_at');
+    // `ascending` es explícito a propósito: en postgrest 2.x el valor por
+    // defecto es descendente, y la agenda del día debe leerse de 09:00 en
+    // adelante.
+    final rows = await query.order('starts_at', ascending: true);
     return rows.map(Appointment.fromJson).toList(growable: false);
   }
 
