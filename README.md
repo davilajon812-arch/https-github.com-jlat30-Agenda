@@ -15,7 +15,7 @@ Latinoamérica.
 
 ```
 /backend   API en Python 3.12 + FastAPI (Render) y migraciones de Supabase
-/mobile    App Flutter (Android/iOS/Web) con Riverpod, go_router y supabase_flutter
+/mobile    App Flutter para Android con Riverpod, go_router y supabase_flutter
 /docs      Documentación de arquitectura, base de datos y despliegue
 render.yaml  Blueprint de Render para el backend
 ```

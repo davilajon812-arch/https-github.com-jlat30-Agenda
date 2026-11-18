@@ -1,8 +1,8 @@
 """Eliminación de la cuenta y de todos los datos asociados.
 
-Obligatorio para publicar: Google Play (política de eliminación de cuentas) y
-Apple (5.1.1(v)). El usuario no puede borrarse a sí mismo con el SDK de
-Supabase, así que el borrado se hace aquí con la `service_role`.
+Obligatorio para publicar en Google Play (política de eliminación de cuentas).
+El usuario no puede borrarse a sí mismo con el SDK de Supabase, así que el
+borrado se hace aquí con la `service_role`.
 """
 
 from __future__ import annotations

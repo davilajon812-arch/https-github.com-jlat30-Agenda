@@ -26,7 +26,7 @@ _PAGE = Template(
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 2rem 1.25rem 4rem;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.65; color: #1f2937; background: #f8fafc;
   }
   main { max-width: 46rem; margin: 0 auto; }
