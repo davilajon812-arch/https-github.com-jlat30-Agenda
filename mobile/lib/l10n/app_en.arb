@@ -288,5 +288,21 @@
   "paymentAmountInvalid": "Enter an amount greater than zero.",
   "paymentMethodRequired": "Pick a payment method.",
   "paymentPaidOn": "Paid on {date}",
-  "@paymentPaidOn": { "placeholders": { "date": { "type": "String" } } }
+  "@paymentPaidOn": { "placeholders": { "date": { "type": "String" } } },
+  "publicLinkTitle": "Online booking",
+  "publicLinkIntro": "Your customers book by themselves from this link, without installing the app or calling you.",
+  "publicLinkEnabled": "Booking link active",
+  "publicLinkEnabledHint": "Anyone with the link can see your services and book.",
+  "publicLinkDisabledHint": "The link is off: nobody can book online.",
+  "publicLinkCopy": "Copy link",
+  "publicLinkCopied": "Link copied.",
+  "publicLinkShare": "Share",
+  "publicLinkShareText": "Book your appointment at {business} here: {link}",
+  "@publicLinkShareText": {
+    "placeholders": { "business": { "type": "String" }, "link": { "type": "String" } }
+  },
+  "publicLinkOpen": "Open in browser",
+  "publicLinkQrHint": "Print this code and put it in your shop",
+  "publicLinkHowToTitle": "How to use it",
+  "publicLinkHowTo": "Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer's name and phone."
 }

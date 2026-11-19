@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from psycopg_pool import ConnectionPool
 
 from app.api.router import api_router
-from app.api.routes import health, legal
+from app.api.routes import health, legal, public_page
 from app.core.billing_client import build_play_client
 from app.core.config import Settings, get_settings
 from app.core.db import DatabaseUnavailableError, close_pool, open_pool
@@ -85,6 +85,7 @@ def create_app(app_settings: Settings | None = None) -> FastAPI:
 
     application.include_router(health.router)
     application.include_router(legal.router)
+    application.include_router(public_page.router)
     application.include_router(api_router, prefix=settings.api_v1_prefix)
 
     return application

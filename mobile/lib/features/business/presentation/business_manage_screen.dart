@@ -43,6 +43,17 @@ class BusinessManageScreen extends ConsumerWidget {
                 membership: active,
                 onEdit: () => _edit(context, ref, active.business),
               ),
+              ListTile(
+                leading: const Icon(Icons.qr_code_2),
+                title: Text(l10n.publicLinkTitle),
+                subtitle: Text(
+                  active.business.publicBookingEnabled
+                      ? l10n.publicLinkEnabledHint
+                      : l10n.publicLinkDisabledHint,
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/business/public-link'),
+              ),
               const Divider(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),

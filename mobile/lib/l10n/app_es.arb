@@ -288,5 +288,21 @@
   "paymentAmountInvalid": "Ingresa un importe mayor que cero.",
   "paymentMethodRequired": "Elige un medio de pago.",
   "paymentPaidOn": "Cobrada el {date}",
-  "@paymentPaidOn": { "placeholders": { "date": { "type": "String" } } }
+  "@paymentPaidOn": { "placeholders": { "date": { "type": "String" } } },
+  "publicLinkTitle": "Reservas en línea",
+  "publicLinkIntro": "Tus clientes reservan solos desde este enlace, sin instalar la app y sin llamarte.",
+  "publicLinkEnabled": "Enlace de reservas activo",
+  "publicLinkEnabledHint": "Cualquiera con el enlace puede ver tus servicios y agendar.",
+  "publicLinkDisabledHint": "El enlace está apagado: nadie puede reservar por internet.",
+  "publicLinkCopy": "Copiar enlace",
+  "publicLinkCopied": "Enlace copiado.",
+  "publicLinkShare": "Compartir",
+  "publicLinkShareText": "Reserva tu cita en {business} aquí: {link}",
+  "@publicLinkShareText": {
+    "placeholders": { "business": { "type": "String" }, "link": { "type": "String" } }
+  },
+  "publicLinkOpen": "Abrir en el navegador",
+  "publicLinkQrHint": "Imprime este código y ponlo en tu local",
+  "publicLinkHowToTitle": "Cómo usarlo",
+  "publicLinkHowTo": "Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente."
 }

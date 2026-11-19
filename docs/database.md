@@ -212,6 +212,7 @@ solo considera `pendiente`, `confirmada` y `completada`.
 - `appointments (business_id, starts_at)`: agenda del día y de la semana.
 - `appointments (business_id, paid_at)` parcial `where paid_at is not null`:
   reporte de ingresos.
+- `appointments_public_token_key`: token único del enlace público de reservas.
 - `appointments (staff_id, starts_at)`: validación de choques de horario.
 - `clients (business_id, phone)` y `clients (business_id, lower(full_name))`: búsqueda.
 - `subscriptions (business_id, current_period_end)`: plan vigente.

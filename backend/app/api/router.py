@@ -10,6 +10,7 @@ from app.api.routes import (
     clients,
     internal,
     me,
+    public,
     services,
     staff,
 )
@@ -22,5 +23,6 @@ api_router.include_router(clients.router)
 api_router.include_router(staff.router)
 api_router.include_router(appointments.router)
 api_router.include_router(availability.router)
+api_router.include_router(public.router)
 api_router.include_router(billing.router)
 api_router.include_router(internal.router)

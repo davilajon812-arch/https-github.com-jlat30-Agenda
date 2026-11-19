@@ -1657,6 +1657,84 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cobrada el {date}'**
   String paymentPaidOn(String date);
+
+  /// No description provided for @publicLinkTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Reservas en línea'**
+  String get publicLinkTitle;
+
+  /// No description provided for @publicLinkIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus clientes reservan solos desde este enlace, sin instalar la app y sin llamarte.'**
+  String get publicLinkIntro;
+
+  /// No description provided for @publicLinkEnabled.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlace de reservas activo'**
+  String get publicLinkEnabled;
+
+  /// No description provided for @publicLinkEnabledHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Cualquiera con el enlace puede ver tus servicios y agendar.'**
+  String get publicLinkEnabledHint;
+
+  /// No description provided for @publicLinkDisabledHint.
+  ///
+  /// In es, this message translates to:
+  /// **'El enlace está apagado: nadie puede reservar por internet.'**
+  String get publicLinkDisabledHint;
+
+  /// No description provided for @publicLinkCopy.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar enlace'**
+  String get publicLinkCopy;
+
+  /// No description provided for @publicLinkCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlace copiado.'**
+  String get publicLinkCopied;
+
+  /// No description provided for @publicLinkShare.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir'**
+  String get publicLinkShare;
+
+  /// No description provided for @publicLinkShareText.
+  ///
+  /// In es, this message translates to:
+  /// **'Reserva tu cita en {business} aquí: {link}'**
+  String publicLinkShareText(String business, String link);
+
+  /// No description provided for @publicLinkOpen.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir en el navegador'**
+  String get publicLinkOpen;
+
+  /// No description provided for @publicLinkQrHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Imprime este código y ponlo en tu local'**
+  String get publicLinkQrHint;
+
+  /// No description provided for @publicLinkHowToTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo usarlo'**
+  String get publicLinkHowToTitle;
+
+  /// No description provided for @publicLinkHowTo.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.'**
+  String get publicLinkHowTo;
 }
 
 class _AppLocalizationsDelegate

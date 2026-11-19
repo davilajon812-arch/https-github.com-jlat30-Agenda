@@ -162,8 +162,9 @@ def _create_business(conn: psycopg.Connection, owner_id: str) -> str:
     row = conn.execute(
         """
         insert into public.businesses
-            (owner_id, name, slug, industry, country_code, currency, timezone, phone)
-        values (%s, %s, %s, 'barberia', %s, %s, %s, '50588880000')
+            (owner_id, name, slug, industry, country_code, currency, timezone,
+             phone, public_booking_enabled)
+        values (%s, %s, %s, 'barberia', %s, %s, %s, '50588880000', true)
         returning id
         """,
         (owner_id, DEMO_BUSINESS_NAME, DEMO_SLUG, DEMO_COUNTRY, DEMO_CURRENCY,

@@ -834,4 +834,49 @@ class AppLocalizationsEs extends AppLocalizations {
   String paymentPaidOn(String date) {
     return 'Cobrada el $date';
   }
+
+  @override
+  String get publicLinkTitle => 'Reservas en línea';
+
+  @override
+  String get publicLinkIntro =>
+      'Tus clientes reservan solos desde este enlace, sin instalar la app y sin llamarte.';
+
+  @override
+  String get publicLinkEnabled => 'Enlace de reservas activo';
+
+  @override
+  String get publicLinkEnabledHint =>
+      'Cualquiera con el enlace puede ver tus servicios y agendar.';
+
+  @override
+  String get publicLinkDisabledHint =>
+      'El enlace está apagado: nadie puede reservar por internet.';
+
+  @override
+  String get publicLinkCopy => 'Copiar enlace';
+
+  @override
+  String get publicLinkCopied => 'Enlace copiado.';
+
+  @override
+  String get publicLinkShare => 'Compartir';
+
+  @override
+  String publicLinkShareText(String business, String link) {
+    return 'Reserva tu cita en $business aquí: $link';
+  }
+
+  @override
+  String get publicLinkOpen => 'Abrir en el navegador';
+
+  @override
+  String get publicLinkQrHint => 'Imprime este código y ponlo en tu local';
+
+  @override
+  String get publicLinkHowToTitle => 'Cómo usarlo';
+
+  @override
+  String get publicLinkHowTo =>
+      'Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.';
 }

@@ -102,6 +102,20 @@ class BusinessRepository {
     return Business.fromJson(row);
   }
 
+  /// Activa o desactiva el enlace público de reservas del negocio.
+  Future<Business> setPublicBookingEnabled({
+    required String businessId,
+    required bool enabled,
+  }) async {
+    final row = await _client
+        .from('businesses')
+        .update({'public_booking_enabled': enabled})
+        .eq('id', businessId)
+        .select(_businessColumns)
+        .single();
+    return Business.fromJson(row);
+  }
+
   static String? _cleanPhone(String? phone) {
     final trimmed = phone?.trim();
     return trimmed == null || trimmed.isEmpty ? null : trimmed;

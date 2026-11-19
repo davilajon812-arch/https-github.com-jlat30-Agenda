@@ -831,4 +831,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String paymentPaidOn(String date) {
     return 'Paid on $date';
   }
+
+  @override
+  String get publicLinkTitle => 'Online booking';
+
+  @override
+  String get publicLinkIntro =>
+      'Your customers book by themselves from this link, without installing the app or calling you.';
+
+  @override
+  String get publicLinkEnabled => 'Booking link active';
+
+  @override
+  String get publicLinkEnabledHint =>
+      'Anyone with the link can see your services and book.';
+
+  @override
+  String get publicLinkDisabledHint =>
+      'The link is off: nobody can book online.';
+
+  @override
+  String get publicLinkCopy => 'Copy link';
+
+  @override
+  String get publicLinkCopied => 'Link copied.';
+
+  @override
+  String get publicLinkShare => 'Share';
+
+  @override
+  String publicLinkShareText(String business, String link) {
+    return 'Book your appointment at $business here: $link';
+  }
+
+  @override
+  String get publicLinkOpen => 'Open in browser';
+
+  @override
+  String get publicLinkQrHint => 'Print this code and put it in your shop';
+
+  @override
+  String get publicLinkHowToTitle => 'How to use it';
+
+  @override
+  String get publicLinkHowTo =>
+      'Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer\'s name and phone.';
 }
