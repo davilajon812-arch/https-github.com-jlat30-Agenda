@@ -49,6 +49,14 @@ reales de la semana y del mes en lugar del estado vacío.
 El plan Pro es `source = manual`, es decir **no se cobra**: el revisor ve la app
 sin límites y sin pasar por Google Play.
 
+El negocio demo también tiene el **enlace público de reservas encendido**
+(`docs/public-booking.md`), así que el revisor puede ver la experiencia del
+cliente final sin cuenta:
+
+```
+https://agendapro-api-469f.onrender.com/r/barberia-demo
+```
+
 ## Dónde se usan las credenciales
 
 Play Console → **Presencia en la tienda → Acceso a la app**:
@@ -60,7 +68,9 @@ Instrucciones:     Inicia sesión con estas credenciales. La app abre en la
                    agenda del negocio "Barbería El Buen Corte", con citas de
                    hoy y de los próximos días. Recorre las pestañas Agenda,
                    Clientes, Ingresos, Plan y Ajustes. La suscripción Pro ya
-                   está activa, así que no hace falta comprar nada.
+                   está activa, así que no hace falta comprar nada. En
+                   Ajustes → Mi negocio → Reservas en línea está el enlace
+                   público del negocio.
 ```
 
 ## Para poder probar la compra

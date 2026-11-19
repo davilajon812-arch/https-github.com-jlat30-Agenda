@@ -241,6 +241,12 @@ function dayLabel(iso) {
     bottom: d.toLocaleDateString("es", { day: "numeric", month: "short", timeZone: "UTC" }),
   };
 }
+// Fecha sin hora (YYYY-MM-DD): se formatea en UTC para no correr un día.
+function dayOnlyLabel(iso) {
+  return new Date(iso + "T12:00:00Z").toLocaleDateString("es", {
+    weekday: "long", day: "numeric", month: "long", timeZone: "UTC",
+  });
+}
 function bizDate(offset) {
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: bizTz, year: "numeric", month: "2-digit", day: "2-digit",
@@ -408,7 +414,7 @@ function goToData() {
   const currency = state.business.currency;
   el("picked").textContent = [
     state.service.name,
-    dateLabel(state.day),
+    dayOnlyLabel(state.day),
     timeLabel(state.slot.starts_at),
     money(state.service.price, currency),
   ].filter(Boolean).join(" · ");
@@ -490,6 +496,7 @@ function renderMine(appointment) {
 async function loadMine(token) {
   try {
     const appointment = await api("/appointments/" + encodeURIComponent(token));
+    el("loading").hidden = true;
     renderMine(appointment);
   } catch (e) {
     el("loading").hidden = true;
