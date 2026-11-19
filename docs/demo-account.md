@@ -41,6 +41,11 @@ Las citas se reparten con estados variados para que se vean todas las pantallas:
 - **Hoy**: `confirmada` por la mañana, `pendiente` por la tarde.
 - **Próximos días**: `confirmada` o `pendiente`.
 
+Las citas completadas del pasado llevan **cobro registrado** (`paid_at`,
+`amount_paid`, `payment_method`) en un 90 % de los casos y con importes que a
+veces incluyen descuento o propina. Así la pestaña **Ingresos** muestra datos
+reales de la semana y del mes en lugar del estado vacío.
+
 El plan Pro es `source = manual`, es decir **no se cobra**: el revisor ve la app
 sin límites y sin pasar por Google Play.
 
@@ -54,8 +59,8 @@ Contraseña:        AgendaDemo2026!
 Instrucciones:     Inicia sesión con estas credenciales. La app abre en la
                    agenda del negocio "Barbería El Buen Corte", con citas de
                    hoy y de los próximos días. Recorre las pestañas Agenda,
-                   Clientes, Plan y Ajustes. La suscripción Pro ya está activa,
-                   así que no hace falta comprar nada.
+                   Clientes, Ingresos, Plan y Ajustes. La suscripción Pro ya
+                   está activa, así que no hace falta comprar nada.
 ```
 
 ## Para poder probar la compra

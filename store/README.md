@@ -6,14 +6,15 @@ Todo lo necesario para publicar la ficha, con las medidas que exige Play Console
 | ------- | ------ | ------------- |
 | `icon-512.png` | 512×512, sin transparencia | Presencia en la tienda → Ícono de la app |
 | `feature-graphic.png` | 1024×500 | Presencia en la tienda → Gráfico destacado |
-| `screenshots/01-agenda-dia.png` | 1350×2700 | Capturas de teléfono (1 de 8) |
-| `screenshots/02-nueva-cita.png` | 1350×2700 | Capturas de teléfono (2 de 8) |
-| `screenshots/03-detalle-cita.png` | 1350×2700 | Capturas de teléfono (3 de 8) |
-| `screenshots/04-clientes.png` | 1350×2700 | Capturas de teléfono (4 de 8) |
-| `screenshots/05-detalle-cliente.png` | 1350×2700 | Capturas de teléfono (5 de 8) |
-| `screenshots/06-servicios.png` | 1350×2700 | Capturas de teléfono (6 de 8) |
-| `screenshots/07-horario-empleado.png` | 1350×2700 | Capturas de teléfono (7 de 8) |
-| `screenshots/08-agenda-semana.png` | 1350×2700 | Capturas de teléfono (8 de 8) |
+| `screenshots/01-agenda-dia.png` | 1350×2700 | Capturas de teléfono (1 de 9) |
+| `screenshots/02-nueva-cita.png` | 1350×2700 | Capturas de teléfono (2 de 9) |
+| `screenshots/03-detalle-cita.png` | 1350×2700 | Capturas de teléfono (3 de 9) |
+| `screenshots/04-clientes.png` | 1350×2700 | Capturas de teléfono (4 de 9) |
+| `screenshots/05-detalle-cliente.png` | 1350×2700 | Capturas de teléfono (5 de 9) |
+| `screenshots/06-servicios.png` | 1350×2700 | Capturas de teléfono (6 de 9) |
+| `screenshots/07-horario-empleado.png` | 1350×2700 | Capturas de teléfono (7 de 9) |
+| `screenshots/08-agenda-semana.png` | 1350×2700 | Capturas de teléfono (8 de 9) |
+| `screenshots/09-ingresos.png` | 1350×2700 | Capturas de teléfono (9 de 9) |
 
 ## Requisitos de Play que se respetaron
 
@@ -29,12 +30,14 @@ El orden importa: la primera captura es la que más se ve en la tienda.
 
 1. **Agenda del día** — el valor principal del producto.
 2. **Nueva cita** — muestra el cálculo de huecos reales por empleado.
-3. **Detalle de la cita** — estados y recordatorio por WhatsApp.
+3. **Detalle de la cita** — estados, cobro y recordatorio por WhatsApp.
 4. **Clientes** — buscador y datos de contacto.
 5. **Historial del cliente** — visitas, servicios y precios.
 6. **Servicios** — catálogo con duración y precio.
 7. **Horario del empleado** — turnos por día.
 8. **Agenda semanal** — vista de la semana completa.
+9. **Ingresos** — lo cobrado en la semana con desglose por día, medio y
+   servicio. Es la captura que explica el "para qué me sirve" del negocio.
 
 ## Cómo regenerarlas
 

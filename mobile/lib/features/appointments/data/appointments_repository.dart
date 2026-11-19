@@ -8,7 +8,8 @@ class AppointmentsRepository {
 
   static const _columns = 'id, business_id, client_id, clients(full_name, phone), '
       'service_id, services(name), staff_id, staff_members(display_name), '
-      'location_id, starts_at, ends_at, status, price, notes';
+      'location_id, starts_at, ends_at, status, price, notes, '
+      'paid_at, amount_paid, payment_method';
 
   final SupabaseClient _client;
 
@@ -94,6 +95,28 @@ class AppointmentsRepository {
     await _client
         .from('appointments')
         .update({'status': status.code}).eq('id', appointmentId);
+  }
+
+  /// Marca la cita como cobrada con su importe y medio de pago.
+  Future<void> registerPayment({
+    required String appointmentId,
+    required double amount,
+    required PaymentMethod method,
+  }) async {
+    await _client.from('appointments').update({
+      'paid_at': DateTime.now().toUtc().toIso8601String(),
+      'amount_paid': amount,
+      'payment_method': method.code,
+    }).eq('id', appointmentId);
+  }
+
+  /// Deshace el cobro (se registró por error).
+  Future<void> clearPayment(String appointmentId) async {
+    await _client.from('appointments').update({
+      'paid_at': null,
+      'amount_paid': null,
+      'payment_method': null,
+    }).eq('id', appointmentId);
   }
 
   Future<void> update({

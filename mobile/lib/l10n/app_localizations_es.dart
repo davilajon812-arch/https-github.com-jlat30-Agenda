@@ -730,4 +730,108 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get planLimitLater => 'Ahora no';
+
+  @override
+  String get navIncome => 'Ingresos';
+
+  @override
+  String get incomeToday => 'Hoy';
+
+  @override
+  String get incomeWeek => 'Semana';
+
+  @override
+  String get incomeMonth => 'Mes';
+
+  @override
+  String get incomeTotal => 'Total cobrado';
+
+  @override
+  String incomeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count citas cobradas',
+      one: '1 cita cobrada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get incomeAverage => 'Ticket promedio';
+
+  @override
+  String get incomeByDay => 'Por día';
+
+  @override
+  String get incomeByMethod => 'Por medio de pago';
+
+  @override
+  String get incomeByService => 'Por servicio';
+
+  @override
+  String get incomeByStaff => 'Por empleado';
+
+  @override
+  String get incomeEmpty => 'Aún no hay cobros en este periodo.';
+
+  @override
+  String get incomeEmptyHint =>
+      'Abre una cita y usa «Registrar pago» para anotar lo que cobraste.';
+
+  @override
+  String get incomeMethodCash => 'Efectivo';
+
+  @override
+  String get incomeMethodTransfer => 'Transferencia';
+
+  @override
+  String get incomeMethodCard => 'Tarjeta';
+
+  @override
+  String get incomeMethodOther => 'Otro';
+
+  @override
+  String get incomeMethodNone => 'Sin medio';
+
+  @override
+  String get paymentTitle => 'Pago';
+
+  @override
+  String get paymentStatusPaid => 'Cobrada';
+
+  @override
+  String get paymentStatusUnpaid => 'Sin cobrar';
+
+  @override
+  String get paymentRegister => 'Registrar pago';
+
+  @override
+  String get paymentUndo => 'Deshacer cobro';
+
+  @override
+  String get paymentAmountLabel => 'Importe';
+
+  @override
+  String get paymentMethodLabel => 'Medio de pago';
+
+  @override
+  String get paymentSave => 'Guardar pago';
+
+  @override
+  String get paymentSaved => 'Pago registrado.';
+
+  @override
+  String get paymentUndone => 'Cobro eliminado.';
+
+  @override
+  String get paymentAmountInvalid => 'Ingresa un importe mayor que cero.';
+
+  @override
+  String get paymentMethodRequired => 'Elige un medio de pago.';
+
+  @override
+  String paymentPaidOn(String date) {
+    return 'Cobrada el $date';
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/appointments/presentation/appointments_screen.dart';
+import '../features/appointments/presentation/income_screen.dart';
 import '../features/billing/presentation/billing_screen.dart';
 import '../features/clients/presentation/clients_screen.dart';
 import '../features/business/presentation/providers/business_providers.dart';
@@ -36,6 +37,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               children: const [
                 AppointmentsScreen(),
                 ClientsScreen(),
+                IncomeScreen(),
                 BillingScreen(),
                 SettingsScreen(),
               ],
@@ -58,6 +60,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             icon: const Icon(Icons.people_outline),
             selectedIcon: const Icon(Icons.people),
             label: l10n.navClients,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.insights_outlined),
+            selectedIcon: const Icon(Icons.insights),
+            label: l10n.navIncome,
           ),
           NavigationDestination(
             icon: const Icon(Icons.workspace_premium_outlined),

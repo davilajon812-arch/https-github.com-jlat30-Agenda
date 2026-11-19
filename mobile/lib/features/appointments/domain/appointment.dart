@@ -43,6 +43,26 @@ enum AppointmentStatus {
       };
 }
 
+/// Medio de pago de una cita cobrada.
+enum PaymentMethod {
+  efectivo('efectivo'),
+  transferencia('transferencia'),
+  tarjeta('tarjeta'),
+  otro('otro');
+
+  const PaymentMethod(this.code);
+
+  final String code;
+
+  static PaymentMethod? fromCode(String? code) {
+    if (code == null) return null;
+    for (final method in PaymentMethod.values) {
+      if (method.code == code) return method;
+    }
+    return null;
+  }
+}
+
 /// Cita agendada.
 class Appointment {
   const Appointment({
@@ -60,12 +80,16 @@ class Appointment {
     this.staffName,
     this.price,
     this.notes,
+    this.paidAt,
+    this.amountPaid,
+    this.paymentMethod,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     final client = json['clients'] as Map<String, dynamic>?;
     final service = json['services'] as Map<String, dynamic>?;
     final staff = json['staff_members'] as Map<String, dynamic>?;
+    final paidAt = json['paid_at'] as String?;
 
     return Appointment(
       id: json['id'] as String,
@@ -82,6 +106,9 @@ class Appointment {
       status: AppointmentStatus.fromCode(json['status'] as String),
       price: (json['price'] as num?)?.toDouble(),
       notes: json['notes'] as String?,
+      paidAt: paidAt == null ? null : DateTime.parse(paidAt).toLocal(),
+      amountPaid: (json['amount_paid'] as num?)?.toDouble(),
+      paymentMethod: PaymentMethod.fromCode(json['payment_method'] as String?),
     );
   }
 
@@ -100,7 +127,20 @@ class Appointment {
   final double? price;
   final String? notes;
 
+  /// Cuándo se registró el cobro; `null` si todavía no se cobró.
+  final DateTime? paidAt;
+
+  /// Importe cobrado (puede diferir del precio por descuentos o propina).
+  final double? amountPaid;
+
+  final PaymentMethod? paymentMethod;
+
   Duration get duration => endsAt.difference(startsAt);
+
+  bool get isPaid => paidAt != null;
+
+  /// Lo que cuenta para los ingresos: lo cobrado o, si no se anotó, el precio.
+  double get incomeAmount => amountPaid ?? price ?? 0;
 
   /// Teléfono listo para wa.me.
   String get whatsappNumber =>

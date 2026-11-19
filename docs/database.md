@@ -130,6 +130,9 @@ erDiagram
         numeric price
         text notes
         uuid created_by FK
+        timestamptz paid_at "null si aún no se cobró"
+        numeric amount_paid "lo cobrado; puede diferir del precio"
+        text payment_method "efectivo | transferencia | tarjeta | otro"
     }
 
     SUBSCRIPTIONS {
@@ -207,6 +210,8 @@ solo considera `pendiente`, `confirmada` y `completada`.
 ## Índices relevantes
 
 - `appointments (business_id, starts_at)`: agenda del día y de la semana.
+- `appointments (business_id, paid_at)` parcial `where paid_at is not null`:
+  reporte de ingresos.
 - `appointments (staff_id, starts_at)`: validación de choques de horario.
 - `clients (business_id, phone)` y `clients (business_id, lower(full_name))`: búsqueda.
 - `subscriptions (business_id, current_period_end)`: plan vigente.

@@ -727,4 +727,108 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planLimitLater => 'Not now';
+
+  @override
+  String get navIncome => 'Income';
+
+  @override
+  String get incomeToday => 'Today';
+
+  @override
+  String get incomeWeek => 'Week';
+
+  @override
+  String get incomeMonth => 'Month';
+
+  @override
+  String get incomeTotal => 'Collected';
+
+  @override
+  String incomeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count paid visits',
+      one: '1 paid visit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get incomeAverage => 'Average ticket';
+
+  @override
+  String get incomeByDay => 'By day';
+
+  @override
+  String get incomeByMethod => 'By payment method';
+
+  @override
+  String get incomeByService => 'By service';
+
+  @override
+  String get incomeByStaff => 'By staff';
+
+  @override
+  String get incomeEmpty => 'No payments recorded in this period.';
+
+  @override
+  String get incomeEmptyHint =>
+      'Open an appointment and use \"Register payment\" to log what you collected.';
+
+  @override
+  String get incomeMethodCash => 'Cash';
+
+  @override
+  String get incomeMethodTransfer => 'Transfer';
+
+  @override
+  String get incomeMethodCard => 'Card';
+
+  @override
+  String get incomeMethodOther => 'Other';
+
+  @override
+  String get incomeMethodNone => 'No method';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentStatusPaid => 'Paid';
+
+  @override
+  String get paymentStatusUnpaid => 'Unpaid';
+
+  @override
+  String get paymentRegister => 'Register payment';
+
+  @override
+  String get paymentUndo => 'Undo payment';
+
+  @override
+  String get paymentAmountLabel => 'Amount';
+
+  @override
+  String get paymentMethodLabel => 'Payment method';
+
+  @override
+  String get paymentSave => 'Save payment';
+
+  @override
+  String get paymentSaved => 'Payment recorded.';
+
+  @override
+  String get paymentUndone => 'Payment removed.';
+
+  @override
+  String get paymentAmountInvalid => 'Enter an amount greater than zero.';
+
+  @override
+  String get paymentMethodRequired => 'Pick a payment method.';
+
+  @override
+  String paymentPaidOn(String date) {
+    return 'Paid on $date';
+  }
 }

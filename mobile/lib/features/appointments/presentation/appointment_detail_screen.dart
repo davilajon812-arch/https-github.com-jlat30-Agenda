@@ -11,6 +11,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../business/presentation/providers/business_providers.dart';
 import '../domain/appointment.dart';
 import './providers/agenda_providers.dart';
+import 'widgets/payment_section.dart';
 import 'widgets/status_chip.dart';
 
 /// Detalle de una cita con acciones de estado y WhatsApp.
@@ -156,6 +157,11 @@ class _AppointmentBody extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
+        if (appointment.status != AppointmentStatus.cancelada ||
+            appointment.isPaid) ...[
+          PaymentSection(appointment: appointment),
+          const SizedBox(height: 12),
+        ],
         FilledButton.tonalIcon(
           onPressed: appointment.whatsappNumber.isEmpty
               ? null

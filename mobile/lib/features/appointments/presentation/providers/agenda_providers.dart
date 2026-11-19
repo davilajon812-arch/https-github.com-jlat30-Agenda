@@ -3,9 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/api/agenda_api.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../domain/appointment.dart';
+import '../../domain/income.dart';
 
 /// Rango consultado para la agenda.
 typedef AgendaQuery = ({String businessId, DateTime from, DateTime to});
+
+/// Parámetros del reporte de ingresos.
+typedef IncomeQuery = ({
+  String businessId,
+  IncomePeriod period,
+  DateTime anchor,
+});
 
 /// Parámetros de la consulta de disponibilidad.
 typedef AvailabilityQuery = ({
@@ -39,6 +47,25 @@ final clientVisitsProvider = FutureProvider.autoDispose
         businessId: query.businessId,
         clientId: query.clientId,
       ),
+);
+
+/// Ingresos del periodo elegido, a partir de las citas cobradas.
+final incomeProvider =
+    FutureProvider.autoDispose.family<IncomeSummary, IncomeQuery>(
+  (ref, query) async {
+    final range = incomeRange(query.period, query.anchor);
+    final appointments =
+        await ref.watch(appointmentsRepositoryProvider).listRange(
+              businessId: query.businessId,
+              from: range.from,
+              to: range.to,
+            );
+    return IncomeSummary.fromAppointments(
+      appointments,
+      from: range.from,
+      to: range.to,
+    );
+  },
 );
 
 /// Huecos libres calculados por el backend.

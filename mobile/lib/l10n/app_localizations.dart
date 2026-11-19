@@ -1471,6 +1471,192 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ahora no'**
   String get planLimitLater;
+
+  /// No description provided for @navIncome.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresos'**
+  String get navIncome;
+
+  /// No description provided for @incomeToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy'**
+  String get incomeToday;
+
+  /// No description provided for @incomeWeek.
+  ///
+  /// In es, this message translates to:
+  /// **'Semana'**
+  String get incomeWeek;
+
+  /// No description provided for @incomeMonth.
+  ///
+  /// In es, this message translates to:
+  /// **'Mes'**
+  String get incomeMonth;
+
+  /// No description provided for @incomeTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Total cobrado'**
+  String get incomeTotal;
+
+  /// No description provided for @incomeCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 cita cobrada} other{{count} citas cobradas}}'**
+  String incomeCount(int count);
+
+  /// No description provided for @incomeAverage.
+  ///
+  /// In es, this message translates to:
+  /// **'Ticket promedio'**
+  String get incomeAverage;
+
+  /// No description provided for @incomeByDay.
+  ///
+  /// In es, this message translates to:
+  /// **'Por día'**
+  String get incomeByDay;
+
+  /// No description provided for @incomeByMethod.
+  ///
+  /// In es, this message translates to:
+  /// **'Por medio de pago'**
+  String get incomeByMethod;
+
+  /// No description provided for @incomeByService.
+  ///
+  /// In es, this message translates to:
+  /// **'Por servicio'**
+  String get incomeByService;
+
+  /// No description provided for @incomeByStaff.
+  ///
+  /// In es, this message translates to:
+  /// **'Por empleado'**
+  String get incomeByStaff;
+
+  /// No description provided for @incomeEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay cobros en este periodo.'**
+  String get incomeEmpty;
+
+  /// No description provided for @incomeEmptyHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Abre una cita y usa «Registrar pago» para anotar lo que cobraste.'**
+  String get incomeEmptyHint;
+
+  /// No description provided for @incomeMethodCash.
+  ///
+  /// In es, this message translates to:
+  /// **'Efectivo'**
+  String get incomeMethodCash;
+
+  /// No description provided for @incomeMethodTransfer.
+  ///
+  /// In es, this message translates to:
+  /// **'Transferencia'**
+  String get incomeMethodTransfer;
+
+  /// No description provided for @incomeMethodCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Tarjeta'**
+  String get incomeMethodCard;
+
+  /// No description provided for @incomeMethodOther.
+  ///
+  /// In es, this message translates to:
+  /// **'Otro'**
+  String get incomeMethodOther;
+
+  /// No description provided for @incomeMethodNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin medio'**
+  String get incomeMethodNone;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Pago'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentStatusPaid.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrada'**
+  String get paymentStatusPaid;
+
+  /// No description provided for @paymentStatusUnpaid.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin cobrar'**
+  String get paymentStatusUnpaid;
+
+  /// No description provided for @paymentRegister.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar pago'**
+  String get paymentRegister;
+
+  /// No description provided for @paymentUndo.
+  ///
+  /// In es, this message translates to:
+  /// **'Deshacer cobro'**
+  String get paymentUndo;
+
+  /// No description provided for @paymentAmountLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe'**
+  String get paymentAmountLabel;
+
+  /// No description provided for @paymentMethodLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Medio de pago'**
+  String get paymentMethodLabel;
+
+  /// No description provided for @paymentSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar pago'**
+  String get paymentSave;
+
+  /// No description provided for @paymentSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Pago registrado.'**
+  String get paymentSaved;
+
+  /// No description provided for @paymentUndone.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobro eliminado.'**
+  String get paymentUndone;
+
+  /// No description provided for @paymentAmountInvalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un importe mayor que cero.'**
+  String get paymentAmountInvalid;
+
+  /// No description provided for @paymentMethodRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige un medio de pago.'**
+  String get paymentMethodRequired;
+
+  /// No description provided for @paymentPaidOn.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrada el {date}'**
+  String paymentPaidOn(String date);
 }
 
 class _AppLocalizationsDelegate

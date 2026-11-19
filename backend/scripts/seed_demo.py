@@ -187,8 +187,10 @@ def _create_business(conn: psycopg.Connection, owner_id: str) -> str:
     return business_id
 
 
-def _create_services(conn: psycopg.Connection, business_id: str) -> list[tuple[str, int]]:
-    created: list[tuple[str, int]] = []
+def _create_services(
+    conn: psycopg.Connection, business_id: str
+) -> list[tuple[str, int, float]]:
+    created: list[tuple[str, int, float]] = []
     for name, description, duration, price in SERVICES:
         row = conn.execute(
             """
@@ -199,7 +201,7 @@ def _create_services(conn: psycopg.Connection, business_id: str) -> list[tuple[s
             """,
             (business_id, name, description, duration, price),
         ).fetchone()
-        created.append((row[0], duration))
+        created.append((row[0], duration, float(price)))
     return created
 
 
@@ -262,7 +264,7 @@ def _create_appointments(
     conn: psycopg.Connection,
     business_id: str,
     owner_id: str,
-    services: list[tuple[str, int]],
+    services: list[tuple[str, int, float]],
     staff_ids: list[str],
     client_ids: list[str],
     today: date,
@@ -280,25 +282,40 @@ def _create_appointments(
             if day_offset > DAYS_AHEAD - 3 and rng.random() < 0.35:
                 continue  # los últimos días quedan medio libres
 
-            service_id, duration = rng.choice(services)
+            service_id, duration, price = rng.choice(services)
             client_id = rng.choice(client_ids)
             status = _status_for(day_offset, hour, rng)
 
             starts_local = datetime.combine(day, time(hour, 0), tzinfo=tz)
             ends_local = starts_local + timedelta(minutes=duration)
 
+            # Las citas completadas se cobran casi siempre; el importe a veces
+            # lleva descuento o propina para que el reporte no salga plano.
+            paid_at = None
+            amount_paid = None
+            payment_method = None
+            if status == "completada" and rng.random() < 0.9:
+                paid_at = ends_local + timedelta(minutes=rng.randint(0, 15))
+                factor = rng.choices([1.0, 0.9, 1.1], weights=[7, 2, 1])[0]
+                amount_paid = round(price * factor, 2)
+                payment_method = rng.choices(
+                    ["efectivo", "tarjeta", "transferencia"],
+                    weights=[6, 3, 2],
+                )[0]
+
             conn.execute(
                 """
                 insert into public.appointments
                     (business_id, client_id, service_id, staff_id, starts_at,
                      ends_at, status, price, created_by, confirmed_at,
-                     canceled_reason)
+                     canceled_reason, paid_at, amount_paid, payment_method)
                 values (%s, %s, %s, %s, %s, %s, %s,
                         (select price from public.services where id = %s), %s,
                         case when %s in ('confirmada', 'completada')
                              then %s::timestamptz else null end,
                         case when %s = 'cancelada'
-                             then 'Cancelada por el cliente' else null end)
+                             then 'Cancelada por el cliente' else null end,
+                        %s, %s, %s)
                 """,
                 (
                     business_id,
@@ -313,6 +330,9 @@ def _create_appointments(
                     status,
                     starts_local.astimezone(ZoneInfo("UTC")),
                     status,
+                    paid_at.astimezone(ZoneInfo("UTC")) if paid_at else None,
+                    amount_paid,
+                    payment_method,
                 ),
             )
             total += 1
