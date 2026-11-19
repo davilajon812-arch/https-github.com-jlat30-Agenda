@@ -20,3 +20,6 @@ desktop.ini
 
 # Logs
 *.log
+
+# Temporales de verificación en el dispositivo
+.tmp/
