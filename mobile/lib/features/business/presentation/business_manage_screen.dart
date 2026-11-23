@@ -202,6 +202,12 @@ class _BusinessSummary extends StatelessWidget {
             ].join(' · '),
           ),
         ),
+        if (business.address != null)
+          ListTile(
+            leading: const Icon(Icons.place_outlined),
+            title: Text(business.address!),
+            subtitle: Text(l10n.businessAddressShownOnLink),
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SizedBox(
@@ -269,6 +275,7 @@ class _BusinessFormSheetState extends ConsumerState<_BusinessFormSheet> {
           currency: draft.currency,
           timezone: draft.timezone,
           phone: draft.phone,
+          address: draft.address,
         );
         await ref.read(selectedBusinessIdProvider.notifier).select(created.id);
       } else {
@@ -280,6 +287,7 @@ class _BusinessFormSheetState extends ConsumerState<_BusinessFormSheet> {
           currency: draft.currency,
           timezone: draft.timezone,
           phone: draft.phone,
+          address: draft.address,
         );
       }
       if (!mounted) return;

@@ -304,5 +304,8 @@
   "publicLinkOpen": "Abrir en el navegador",
   "publicLinkQrHint": "Imprime este código y ponlo en tu local",
   "publicLinkHowToTitle": "Cómo usarlo",
-  "publicLinkHowTo": "Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente."
+  "publicLinkHowTo": "Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.",
+  "businessAddressLabel": "Dirección",
+  "businessAddressHint": "Se muestra a tus clientes en el enlace de reservas",
+  "businessAddressShownOnLink": "Visible en el enlace de reservas"
 }

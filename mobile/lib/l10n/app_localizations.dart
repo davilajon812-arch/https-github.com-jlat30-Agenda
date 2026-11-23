@@ -1735,6 +1735,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.'**
   String get publicLinkHowTo;
+
+  /// No description provided for @businessAddressLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección'**
+  String get businessAddressLabel;
+
+  /// No description provided for @businessAddressHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Se muestra a tus clientes en el enlace de reservas'**
+  String get businessAddressHint;
+
+  /// No description provided for @businessAddressShownOnLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Visible en el enlace de reservas'**
+  String get businessAddressShownOnLink;
 }
 
 class _AppLocalizationsDelegate

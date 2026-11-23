@@ -876,4 +876,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get publicLinkHowTo =>
       'Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer\'s name and phone.';
+
+  @override
+  String get businessAddressLabel => 'Address';
+
+  @override
+  String get businessAddressHint =>
+      'Shown to your customers on the booking link';
+
+  @override
+  String get businessAddressShownOnLink => 'Visible on the booking link';
 }

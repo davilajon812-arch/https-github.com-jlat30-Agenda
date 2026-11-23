@@ -879,4 +879,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get publicLinkHowTo =>
       'Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.';
+
+  @override
+  String get businessAddressLabel => 'Dirección';
+
+  @override
+  String get businessAddressHint =>
+      'Se muestra a tus clientes en el enlace de reservas';
+
+  @override
+  String get businessAddressShownOnLink => 'Visible en el enlace de reservas';
 }

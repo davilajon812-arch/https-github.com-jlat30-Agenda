@@ -199,6 +199,19 @@ def _reset(postgres_uri: str) -> None:
             "delete from public.staff_members where id <> all(%s)",
             ([STAFF_MEMBER_ID, OTHER_STAFF_ID],),
         )
+        # Horarios: solo Carlos, activo. Las pruebas que los tocan no deben
+        # dejar sin cupo a las que vienen después.
+        conn.execute(
+            "delete from public.staff_schedules where staff_id <> %s",
+            (STAFF_MEMBER_ID,),
+        )
+        conn.execute("update public.staff_schedules set is_active = true")
+        conn.execute(
+            """
+            update public.businesses
+            set address = null, public_booking_enabled = false
+            """
+        )
         conn.execute(
             """
             update public.plans

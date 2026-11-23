@@ -35,6 +35,19 @@ Cliente  →  https://<api>/r/<slug>          (página web, HTML + JS)
 | `backend/supabase/migrations/20260101001300_public_booking.sql` | `public_token` y `booked_online` |
 | `mobile/lib/features/business/presentation/public_link_screen.dart` | Pantalla "Reservas en línea" (QR, copiar, compartir) |
 
+## Qué ve el cliente
+
+| Bloque | Contenido |
+| ------ | --------- |
+| Cabecera | Nombre del negocio, rubro, **horario de atención** resumido, **dirección**, botón de llamada y "Cómo llegar" (Google Maps) |
+| Servicios | Menú completo con duración, descripción y precio |
+| Profesional | "Cualquiera" (por defecto) o un empleado concreto |
+| Horarios | Una fila por hora real: con "Cualquiera" muestra cuántos profesionales están libres a esa hora |
+| Confirmación | Resumen con servicio, fecha, con quién, precio y **dónde** (con enlace al mapa) |
+
+Si el negocio no tiene ningún empleado con horario, la página no ofrece servicios:
+muestra un aviso y un botón para escribirle por WhatsApp.
+
 ## Reglas aplicadas
 
 1. **Solo huecos reales.** La reserva se valida contra
@@ -44,10 +57,22 @@ Cliente  →  https://<api>/r/<slug>          (página web, HTML + JS)
    (`402 plan_limit_reached`, igual que en la app).
 3. **Cliente reutilizado.** Si el teléfono ya existe en el negocio, la cita se
    cuelga de ese cliente en vez de duplicarlo.
-4. **Anti-abuso.** 6 reservas por minuto y por IP, 90 lecturas por minuto, y un
+4. **Reparto automático.** Cuando el cliente elige "Cualquiera", la cita va al
+   empleado libre con menos citas ese día, no siempre al primero de la lista.
+5. **Anti-abuso.** 6 reservas por minuto y por IP, 90 lecturas por minuto, y un
    máximo de 3 citas activas del mismo teléfono en el mismo día.
-5. **Zona horaria.** La página muestra siempre la hora del negocio, aunque el
+6. **Zona horaria.** La página muestra siempre la hora del negocio, aunque el
    visitante esté en otro país.
+
+## La dirección
+
+Vive en `businesses.address` (migración 0014) y se edita en **Ajustes → Mi
+negocio → Editar datos**. Se usa para el bloque "Dónde" de la cita y para el
+botón "Cómo llegar", que abre una búsqueda de Google Maps con el nombre y la
+dirección: no hace falta geocodificar ni guardar coordenadas.
+
+Se eligió el negocio y no la tabla `locations` porque el plan solo permite una
+sede y la app nunca llegó a usar esa tabla.
 
 ## Activarlo
 

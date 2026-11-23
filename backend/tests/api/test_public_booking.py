@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 from app.core.ratelimit import BOOKING_LIMITER, READ_LIMITER
 from tests.api.conftest import (
     BUSINESS_ID,
+    OTHER_STAFF_ID,
     SERVICE_ID,
     STAFF_MEMBER_ID,
     TEST_DAY,
@@ -35,10 +36,15 @@ def _enable(seeded: str, enabled: bool = True) -> None:
         )
 
 
-def _booking_payload(hour: int = 9, phone: str = "50577770000", minute: int = 0) -> dict[str, object]:
+def _booking_payload(
+    hour: int = 9,
+    phone: str = "50577770000",
+    minute: int = 0,
+    staff_id: str | None = STAFF_MEMBER_ID,
+) -> dict[str, object]:
     return {
         "service_id": SERVICE_ID,
-        "staff_id": STAFF_MEMBER_ID,
+        "staff_id": staff_id,
         "starts_at": f"{DAY}T{hour:02d}:{minute:02d}:00-06:00",
         "client_name": "Marta Ruiz",
         "client_phone": phone,
@@ -59,6 +65,81 @@ def test_devuelve_negocio_servicios_y_personal(
     assert [service["name"] for service in body["services"]] == ["Corte"]
     assert {person["display_name"] for person in body["staff"]} == {"Carlos", "María"}
     assert body["days_ahead"] > 0
+
+
+def test_expone_direccion_y_horario_de_atencion(
+    client: TestClient, seeded: str
+) -> None:
+    _enable(seeded)
+    with psycopg.connect(seeded, autocommit=True) as conn:
+        conn.execute(
+            "update public.businesses set address = %s where id = %s",
+            ("Frente al parque central, Managua", BUSINESS_ID),
+        )
+
+    body = client.get(BASE).json()
+
+    assert body["business"]["address"] == "Frente al parque central, Managua"
+    assert body["bookable"] is True
+    # Carlos trabaja los lunes de 09:00 a 12:00; María no tiene horario.
+    assert body["hours"] == [
+        {"weekday": TEST_WEEKDAY, "opens_at": "09:00", "closes_at": "12:00"}
+    ]
+
+
+def test_sin_horarios_el_negocio_no_es_reservable(
+    client: TestClient, seeded: str
+) -> None:
+    _enable(seeded)
+    with psycopg.connect(seeded, autocommit=True) as conn:
+        conn.execute(
+            "update public.staff_schedules set is_active = false where business_id = %s",
+            (BUSINESS_ID,),
+        )
+
+    body = client.get(BASE).json()
+
+    assert body["bookable"] is False
+    assert body["hours"] == []
+
+
+def test_sin_empleado_elegido_reparte_al_menos_ocupado(
+    client: TestClient, seeded: str
+) -> None:
+    """Dos empleados libres: la segunda cita va al que tenía la agenda vacía."""
+    _enable(seeded)
+    with psycopg.connect(seeded, autocommit=True) as conn:
+        # María también atiende los lunes.
+        conn.execute(
+            """
+            insert into public.staff_schedules
+                (business_id, staff_id, weekday, start_time, end_time)
+            values (%s, %s, %s, '09:00', '12:00')
+            """,
+            (BUSINESS_ID, OTHER_STAFF_ID, TEST_WEEKDAY),
+        )
+
+    first = client.post(
+        f"{BASE}/appointments", json=_booking_payload(hour=9, staff_id=None)
+    )
+    second = client.post(
+        f"{BASE}/appointments",
+        json=_booking_payload(hour=10, phone="50577770001", staff_id=None),
+    )
+
+    assert first.status_code == 201
+    assert second.status_code == 201
+    assert first.json()["staff_name"] != second.json()["staff_name"]
+
+
+def test_el_empleado_elegido_se_respeta(
+    client: TestClient, seeded: str
+) -> None:
+    _enable(seeded)
+
+    body = client.post(f"{BASE}/appointments", json=_booking_payload()).json()
+
+    assert body["staff_name"] == "Carlos"
 
 
 def test_el_enlace_apagado_da_404(client: TestClient, seeded: str) -> None:

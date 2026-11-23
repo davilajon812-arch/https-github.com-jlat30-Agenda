@@ -9,6 +9,7 @@ class BusinessDraft {
   const BusinessDraft({
     required this.name,
     required this.phone,
+    required this.address,
     required this.industry,
     required this.countryCode,
     required this.currency,
@@ -17,6 +18,7 @@ class BusinessDraft {
 
   final String name;
   final String? phone;
+  final String? address;
   final String industry;
   final String countryCode;
   final String currency;
@@ -41,6 +43,7 @@ class BusinessFormFieldsState extends State<BusinessFormFields> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _phoneController;
+  late final TextEditingController _addressController;
 
   late String _industry;
   late String _countryCode;
@@ -53,6 +56,7 @@ class BusinessFormFieldsState extends State<BusinessFormFields> {
     final initial = widget.initial;
     _nameController = TextEditingController(text: initial?.name ?? '');
     _phoneController = TextEditingController(text: initial?.phone ?? '');
+    _addressController = TextEditingController(text: initial?.address ?? '');
     _industry = initial?.industry ?? 'barberia';
     _countryCode = initial?.countryCode ?? 'NI';
     _currency = initial?.currency ?? 'NIO';
@@ -63,6 +67,7 @@ class BusinessFormFieldsState extends State<BusinessFormFields> {
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -72,6 +77,7 @@ class BusinessFormFieldsState extends State<BusinessFormFields> {
     return BusinessDraft(
       name: _nameController.text.trim(),
       phone: _phoneController.text.trim(),
+      address: _addressController.text.trim(),
       industry: _industry,
       countryCode: _countryCode,
       currency: _currency,
@@ -119,6 +125,18 @@ class BusinessFormFieldsState extends State<BusinessFormFields> {
               if (phone.length < 6) return l10n.validationPhoneLength;
               return null;
             },
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _addressController,
+            textCapitalization: TextCapitalization.sentences,
+            maxLines: 2,
+            minLines: 1,
+            decoration: InputDecoration(
+              labelText: l10n.businessAddressLabel,
+              helperText: l10n.businessAddressHint,
+              prefixIcon: const Icon(Icons.place_outlined),
+            ),
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(

@@ -39,6 +39,7 @@ class _BusinessOnboardingScreenState
             currency: draft.currency,
             timezone: draft.timezone,
             phone: draft.phone,
+            address: draft.address,
           );
       ref.invalidate(myBusinessesProvider);
     } catch (error) {

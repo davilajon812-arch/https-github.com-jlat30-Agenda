@@ -9,8 +9,8 @@ class BusinessRepository {
   BusinessRepository(this._client);
 
   static const _businessColumns =
-      'id, name, slug, industry, phone, country_code, currency, timezone, '
-      'public_booking_enabled';
+      'id, name, slug, industry, phone, address, country_code, currency, '
+      'timezone, public_booking_enabled';
 
   final SupabaseClient _client;
 
@@ -43,6 +43,7 @@ class BusinessRepository {
     required String currency,
     required String timezone,
     String? phone,
+    String? address,
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) {
@@ -60,6 +61,7 @@ class BusinessRepository {
               'slug': _buildSlug(name, attempt),
               'industry': industry,
               'phone': _cleanPhone(phone),
+              'address': _cleanText(address),
               'country_code': countryCode,
               'currency': currency,
               'timezone': timezone,
@@ -85,6 +87,7 @@ class BusinessRepository {
     required String currency,
     required String timezone,
     String? phone,
+    String? address,
   }) async {
     final row = await _client
         .from('businesses')
@@ -92,6 +95,7 @@ class BusinessRepository {
           'name': name.trim(),
           'industry': industry,
           'phone': _cleanPhone(phone),
+          'address': _cleanText(address),
           'country_code': countryCode,
           'currency': currency,
           'timezone': timezone,
@@ -118,6 +122,11 @@ class BusinessRepository {
 
   static String? _cleanPhone(String? phone) {
     final trimmed = phone?.trim();
+    return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  static String? _cleanText(String? value) {
+    final trimmed = value?.trim();
     return trimmed == null || trimmed.isEmpty ? null : trimmed;
   }
 

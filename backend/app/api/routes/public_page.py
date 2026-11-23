@@ -62,6 +62,20 @@ _PAGE = Template(
   }
   header .kicker { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
   header h1 { margin: .35rem 0 0; font-size: 1.4rem; line-height: 1.2; }
+  .meta-line { font-size: .85rem; color: #d1fae5; margin-top: .3rem; }
+  .header-actions { display: flex; gap: .5rem; margin-top: .85rem; }
+  .hbtn {
+    flex: 1; text-align: center; text-decoration: none; font-size: .85rem; font-weight: 600;
+    color: #fff; border: 1px solid rgba(255,255,255,.55); border-radius: .65rem;
+    padding: .5rem .4rem;
+  }
+  .chips { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: .3rem; margin-bottom: .8rem; }
+  .chip {
+    flex: 0 0 auto; border: 1px solid var(--line); background: #fff;
+    border-radius: 999px; padding: .35rem .75rem; font-size: .82rem; font-weight: 600;
+  }
+  .chip.on { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); }
+  .slot .count { display: block; font-size: .6rem; color: var(--muted); margin-top: .1rem; }
   main { max-width: 32rem; margin: 0 auto; padding: 1.25rem 1rem 0; }
   .card {
     background: var(--card);
@@ -142,7 +156,13 @@ _PAGE = Template(
 <header>
   <div class="kicker">Reserva en línea</div>
   <h1 id="biz-name">$business_name</h1>
-  <div class="muted" id="biz-sub" style="color:#d1fae5"></div>
+  <div class="meta-line" id="biz-sub"></div>
+  <div class="meta-line" id="biz-hours" hidden></div>
+  <div class="meta-line" id="biz-address" hidden></div>
+  <div class="header-actions" id="biz-actions" hidden>
+    <a class="hbtn" id="btn-call" hidden>Llamar</a>
+    <a class="hbtn" id="btn-map" target="_blank" rel="noopener" hidden>Cómo llegar</a>
+  </div>
 </header>
 <main>
   <div class="steps" id="steps"><span></span><span></span><span></span></div>
@@ -151,6 +171,14 @@ _PAGE = Template(
   <div id="fatal" class="card" hidden>
     <h2>Este enlace no está disponible</h2>
     <p class="muted" id="fatal-msg">Pide al negocio un enlace nuevo.</p>
+  </div>
+
+  <div id="not-bookable" class="card" hidden>
+    <h2>Todavía no hay horarios publicados</h2>
+    <p class="muted" id="not-bookable-msg">
+      Este negocio aún no abrió su agenda en línea. Escríbele o llámalo para reservar.
+    </p>
+    <a class="cta" id="not-bookable-wa" style="display:block;text-align:center;text-decoration:none;margin-top:.8rem" hidden>Escribir por WhatsApp</a>
   </div>
 
   <section id="step-service" hidden>
@@ -163,6 +191,10 @@ _PAGE = Template(
   <section id="step-time" hidden>
     <div class="card">
       <h2>¿Cuándo te queda bien?</h2>
+      <div id="staff-filter" hidden>
+        <div class="muted" style="margin-bottom:.4rem">¿Con quién?</div>
+        <div class="chips" id="staff-chips"></div>
+      </div>
       <div class="days" id="days"></div>
       <div id="slots-empty" class="muted" hidden></div>
       <div class="slots" id="slots"></div>
@@ -218,12 +250,60 @@ _PAGE = Template(
 <script>
 const SLUG = $slug_json;
 const API = "/api/v1/public/" + encodeURIComponent(SLUG);
-const state = { business: null, services: [], staff: [], daysAhead: 21,
-                service: null, day: null, days: [], slot: null, token: null };
+const state = { business: null, services: [], staff: [], hours: [], daysAhead: 21,
+                service: null, day: null, days: [], slot: null, token: null,
+                staffFilter: null };
 const el = (id) => document.getElementById(id);
 const esc = (text) => String(text == null ? "" : text)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;");
+
+const INDUSTRIES = {
+  barberia: "Barbería", salon_belleza: "Salón de belleza",
+  taller_mecanico: "Taller mecánico", veterinaria: "Veterinaria",
+  gimnasio: "Gimnasio", academia: "Academia", fotografia: "Fotografía",
+  otro: "Servicios",
+};
+const WEEKDAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+
+function industryLabel(code) {
+  if (!code) return "";
+  return INDUSTRIES[code] || String(code).replace(/_/g, " ");
+}
+function phoneLabel(raw) {
+  const digits = String(raw || "").replace(/[^0-9]/g, "");
+  if (digits.length === 11 && digits.startsWith("505")) {
+    return "+505 " + digits.slice(3, 7) + " " + digits.slice(7);
+  }
+  if (digits.length === 8) return digits.slice(0, 4) + " " + digits.slice(4);
+  return raw || "";
+}
+// Resume los días con atención en una sola línea legible.
+function hoursLabel(hours) {
+  if (!hours || !hours.length) return "";
+  const byWeekday = {};
+  hours.forEach((h) => { byWeekday[h.weekday] = h; });
+  const groups = [];
+  [1, 2, 3, 4, 5, 6, 0].forEach((weekday) => {
+    const h = byWeekday[weekday];
+    if (!h) return;
+    const text = h.opens_at + "–" + h.closes_at;
+    const last = groups[groups.length - 1];
+    if (last && last.text === text) last.days.push(weekday);
+    else groups.push({ text, days: [weekday] });
+  });
+  return groups.map((group) => {
+    const names = group.days.map((d) => WEEKDAYS[d].slice(0, 3));
+    const label = names.length > 1
+      ? names[0] + "–" + names[names.length - 1]
+      : names[0];
+    return label + " " + group.text;
+  }).join(" · ");
+}
+function mapsUrl(address, name) {
+  const query = [name, address].filter(Boolean).join(", ");
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(query);
+}
 
 function money(value, currency) {
   if (value == null) return "";
@@ -319,15 +399,40 @@ function renderServices() {
 function selectService(id) {
   state.service = state.services.find((s) => s.id === id) || null;
   state.slot = null;
+  state.staffFilter = null;
   el("services").querySelectorAll("[data-service]").forEach((button) => {
     button.classList.toggle("on", button.dataset.service === id);
   });
+  renderStaffChips();
   loadDays();
+}
+
+// "Cualquier profesional" (null) o un empleado concreto.
+function renderStaffChips() {
+  if (state.staff.length < 2) {
+    el("staff-filter").hidden = true;
+    return;
+  }
+  el("staff-filter").hidden = false;
+  const options = [{ id: null, name: "Cualquiera" }].concat(state.staff);
+  el("staff-chips").innerHTML = options.map((person) => `
+    <button class="chip${state.staffFilter === person.id ? " on" : ""}"
+            data-staff="${esc(person.id || "")}">${esc(person.name || person.display_name)}</button>`
+  ).join("");
+  el("staff-chips").querySelectorAll("[data-staff]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.staffFilter = button.dataset.staff || null;
+      state.slot = null;
+      renderStaffChips();
+      loadSlots(state.day);
+    });
+  });
 }
 
 async function loadDays() {
   state.days = [];
-  for (let i = 0; i < 14; i += 1) {
+  const total = Math.max(1, Math.min(state.daysAhead || 14, 21));
+  for (let i = 0; i < total; i += 1) {
     state.days.push(bizDate(i));
   }
   el("days").innerHTML = state.days.map((iso) => {
@@ -362,8 +467,10 @@ async function loadDays() {
 }
 
 async function availability(iso) {
-  const data = await api("/availability?service_id=" + encodeURIComponent(state.service.id)
-    + "&date=" + encodeURIComponent(iso));
+  let url = "/availability?service_id=" + encodeURIComponent(state.service.id)
+    + "&date=" + encodeURIComponent(iso);
+  if (state.staffFilter) url += "&staff_id=" + encodeURIComponent(state.staffFilter);
+  const data = await api(url);
   const flat = [];
   (data.staff || []).forEach((person) => {
     (person.slots || []).forEach((slot) => {
@@ -373,6 +480,17 @@ async function availability(iso) {
   });
   flat.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
   return flat;
+}
+
+// Agrupa por hora cuando no se eligió profesional: una fila por hora real.
+function groupByTime(slots) {
+  const byTime = new Map();
+  slots.forEach((slot) => {
+    const group = byTime.get(slot.starts_at);
+    if (group) group.push(slot);
+    else byTime.set(slot.starts_at, [slot]);
+  });
+  return Array.from(byTime.values());
 }
 
 async function loadSlots(iso, preloaded) {
@@ -392,16 +510,23 @@ async function loadSlots(iso, preloaded) {
     el("slots-empty").textContent = "Este día ya no tiene horarios libres.";
     return;
   }
-  el("slots").innerHTML = slots.map((slot) => `
-    <button class="slot" data-slot="${esc(slot.starts_at)}"
-            data-staff="${esc(slot.staff_id)}" data-staff-name="${esc(slot.staff_name)}">
-      ${esc(timeLabel(slot.starts_at))}<small>${esc(slot.staff_name)}</small>
-    </button>`).join("");
+  el("slots").innerHTML = groupByTime(slots).map((group) => {
+    const first = group[0];
+    const count = group.length;
+    const subtitle = count > 1
+      ? `<span class="count">${count} disponibles</span>`
+      : `<small>${esc(first.staff_name)}</small>`;
+    return `<button class="slot" data-slot="${esc(first.starts_at)}"
+            data-staff="${count === 1 ? esc(first.staff_id) : ""}"
+            data-staff-name="${count === 1 ? esc(first.staff_name) : ""}">
+      ${esc(timeLabel(first.starts_at))}${subtitle}
+    </button>`;
+  }).join("");
   el("slots").querySelectorAll("[data-slot]").forEach((button) => {
     button.addEventListener("click", () => {
       state.slot = { starts_at: button.dataset.slot,
-                     staff_id: button.dataset.staff,
-                     staff_name: button.dataset.staffName };
+                     staff_id: button.dataset.staff || null,
+                     staff_name: button.dataset.staffName || "" };
       el("slots").querySelectorAll("[data-slot]").forEach((other) => {
         other.classList.toggle("on", other === button);
       });
@@ -416,6 +541,7 @@ function goToData() {
     state.service.name,
     dayOnlyLabel(state.day),
     timeLabel(state.slot.starts_at),
+    state.slot.staff_name || "con quien esté libre",
     money(state.service.price, currency),
   ].filter(Boolean).join(" · ");
   show("step-data");
@@ -454,12 +580,19 @@ async function confirmBooking() {
 
 function summaryRows(appointment) {
   const currency = appointment.currency;
+  const address = appointment.business_address;
+  const mapRow = address
+    ? `<dt>Dónde</dt><dd>${esc(address)}<br>
+         <a href="${esc(mapsUrl(address, appointment.business_name))}" target="_blank"
+            rel="noopener" style="font-weight:600">Ver en el mapa</a></dd>`
+    : "";
   return `
     <dt>Negocio</dt><dd>${esc(appointment.business_name)}</dd>
     <dt>Servicio</dt><dd>${esc(appointment.service_name || "—")}</dd>
     <dt>Fecha</dt><dd>${esc(dateLabel(appointment.starts_at))} · ${esc(timeLabel(appointment.starts_at))}</dd>
     <dt>Con</dt><dd>${esc(appointment.staff_name || "Cualquier empleado")}</dd>
-    <dt>Precio</dt><dd>${esc(money(appointment.price, currency))}</dd>`;
+    <dt>Precio</dt><dd>${esc(money(appointment.price, currency))}</dd>
+    ${mapRow}`;
 }
 
 function myLink(token) {
@@ -539,10 +672,59 @@ el("copy-link").addEventListener("click", copyLink);
 el("cancel-booking").addEventListener("click", cancelMine);
 el("new-booking").addEventListener("click", () => {
   state.token = null;
+  state.staffFilter = null;
   history.replaceState({}, "", "/r/" + encodeURIComponent(SLUG));
   el("step-mine").hidden = true;
   renderServices();
 });
+
+function renderHeader(data) {
+  const business = data.business;
+  el("biz-name").textContent = business.name;
+  el("biz-sub").textContent = industryLabel(business.industry);
+
+  const hours = hoursLabel(data.hours);
+  if (hours) {
+    el("biz-hours").hidden = false;
+    el("biz-hours").textContent = "🕘 " + hours;
+  }
+
+  if (business.address) {
+    el("biz-address").hidden = false;
+    el("biz-address").textContent = "📍 " + business.address;
+  }
+
+  const actions = [];
+  if (business.phone) {
+    const call = el("btn-call");
+    call.hidden = false;
+    call.href = "tel:" + business.phone.replace(/[^0-9+]/g, "");
+    call.textContent = phoneLabel(business.phone);
+    actions.push(call);
+  }
+  if (business.address) {
+    const map = el("btn-map");
+    map.hidden = false;
+    map.href = mapsUrl(business.address, business.name);
+    actions.push(map);
+  }
+  if (actions.length) el("biz-actions").hidden = false;
+
+  document.title = "Reservar cita · " + business.name;
+}
+
+function notBookable(data) {
+  el("loading").hidden = true;
+  el("steps").hidden = true;
+  el("not-bookable").hidden = false;
+  const phone = (data.business.phone || "").replace(/[^0-9]/g, "");
+  if (phone) {
+    const wa = el("not-bookable-wa");
+    wa.hidden = false;
+    wa.href = "https://wa.me/" + phone + "?text="
+      + encodeURIComponent("Hola, quiero reservar una cita.");
+  }
+}
 
 (async function boot() {
   const params = new URLSearchParams(location.search);
@@ -554,12 +736,16 @@ el("new-booking").addEventListener("click", () => {
     state.business = data.business;
     state.services = data.services || [];
     state.staff = data.staff || [];
+    state.hours = data.hours || [];
     state.daysAhead = data.days_ahead || 21;
     bizTz = data.business.timezone;
-    el("biz-name").textContent = data.business.name;
-    el("biz-sub").textContent = [data.business.industry, data.business.phone]
-      .filter(Boolean).join(" · ");
-    document.title = "Reservar cita · " + data.business.name;
+    renderHeader(data);
+
+    if (!data.bookable || !state.services.length) {
+      notBookable(data);
+      return;
+    }
+
     el("loading").hidden = true;
     renderServices();
   } catch (e) {

@@ -17,6 +17,15 @@ class PublicBusiness(BaseModel):
     currency: str
     timezone: str
     phone: str | None = None
+    address: str | None = None
+
+
+class PublicDayHours(BaseModel):
+    """Horario de atención de un día, ya agregado de todo el personal."""
+
+    weekday: int = Field(ge=0, le=6, description="0 = domingo")
+    opens_at: str = Field(description="Hora local HH:MM")
+    closes_at: str = Field(description="Hora local HH:MM")
 
 
 class PublicService(BaseModel):
@@ -38,6 +47,13 @@ class PublicBusinessResponse(BaseModel):
     business: PublicBusiness
     services: list[PublicService]
     staff: list[PublicStaff]
+    hours: list[PublicDayHours] = Field(
+        default_factory=list,
+        description="Días con atención; vacío si aún no hay horarios cargados",
+    )
+    bookable: bool = Field(
+        description="false si ningún empleado tiene horario: no hay nada que reservar"
+    )
     days_ahead: int = Field(description="Días hacia adelante que se pueden reservar")
 
 
@@ -74,6 +90,7 @@ class PublicAppointment(BaseModel):
     token: str
     business_name: str
     business_phone: str | None = None
+    business_address: str | None = None
     service_name: str | None = None
     staff_name: str | None = None
     starts_at: datetime

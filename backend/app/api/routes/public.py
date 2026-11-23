@@ -20,6 +20,7 @@ from app.schemas.public import (
     PublicBookingCreate,
     PublicBusiness,
     PublicBusinessResponse,
+    PublicDayHours,
     PublicService,
     PublicStaff,
 )
@@ -67,6 +68,10 @@ def get_business(
             PublicService(**row) for row in booking.list_services(conn, business_id)
         ],
         staff=[PublicStaff(**row) for row in booking.list_staff(conn, business_id)],
+        hours=[
+            PublicDayHours(**row) for row in booking.business_hours(conn, business_id)
+        ],
+        bookable=booking.is_bookable(conn, business_id),
         days_ahead=booking.DAYS_AHEAD,
     )
 

@@ -304,5 +304,8 @@
   "publicLinkOpen": "Open in browser",
   "publicLinkQrHint": "Print this code and put it in your shop",
   "publicLinkHowToTitle": "How to use it",
-  "publicLinkHowTo": "Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer's name and phone."
+  "publicLinkHowTo": "Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer's name and phone.",
+  "businessAddressLabel": "Address",
+  "businessAddressHint": "Shown to your customers on the booking link",
+  "businessAddressShownOnLink": "Visible on the booking link"
 }
