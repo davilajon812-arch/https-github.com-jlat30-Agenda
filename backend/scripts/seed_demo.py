@@ -42,6 +42,7 @@ DEMO_BUSINESS_NAME = "Barbería El Buen Corte"
 DEMO_TIMEZONE = "America/Managua"
 DEMO_CURRENCY = "NIO"
 DEMO_COUNTRY = "NI"
+DEMO_ADDRESS = "Frente al Parque Central, Managua"
 
 DEFAULT_EMAIL = "demo@agendapro.app"
 DEFAULT_PASSWORD = "AgendaDemo2026!"
@@ -163,12 +164,12 @@ def _create_business(conn: psycopg.Connection, owner_id: str) -> str:
         """
         insert into public.businesses
             (owner_id, name, slug, industry, country_code, currency, timezone,
-             phone, public_booking_enabled)
-        values (%s, %s, %s, 'barberia', %s, %s, %s, '50588880000', true)
+             phone, public_booking_enabled, address)
+        values (%s, %s, %s, 'barberia', %s, %s, %s, '50588880000', true, %s)
         returning id
         """,
         (owner_id, DEMO_BUSINESS_NAME, DEMO_SLUG, DEMO_COUNTRY, DEMO_CURRENCY,
-         DEMO_TIMEZONE),
+         DEMO_TIMEZONE, DEMO_ADDRESS),
     ).fetchone()
     business_id = row[0]
 
