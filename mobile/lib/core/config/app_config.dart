@@ -29,6 +29,7 @@ class AppConfig {
     required this.supabaseUrl,
     required this.supabaseAnonKey,
     required this.apiBaseUrl,
+    this.publicBaseUrl = '',
     this.androidPackageName = 'com.agendapro.agenda_pro',
     this.privacyPolicyUrl =
         'https://agendapro-api-469f.onrender.com/privacidad',
@@ -51,6 +52,7 @@ class AppConfig {
         'API_BASE_URL',
         defaultValue: 'http://10.0.2.2:8000',
       ),
+      publicBaseUrl: const String.fromEnvironment('PUBLIC_BASE_URL'),
       androidPackageName: const String.fromEnvironment(
         'APP_PACKAGE_NAME',
         defaultValue: 'com.agendapro.agenda_pro',
@@ -74,6 +76,19 @@ class AppConfig {
   final String supabaseUrl;
   final String supabaseAnonKey;
   final String apiBaseUrl;
+
+  /// Base de las páginas públicas que se comparten con los clientes.
+  ///
+  /// Vacía significa "el mismo host que la API". El día que haya dominio
+  /// propio basta con definir `PUBLIC_BASE_URL` al compilar: el enlace que
+  /// comparte el negocio y el que abre el cliente salen de aquí.
+  final String publicBaseUrl;
+
+  /// Host público sin barra final, listo para concatenar `/r/{slug}`.
+  String get publicBase {
+    final value = publicBaseUrl.trim().isNotEmpty ? publicBaseUrl : apiBaseUrl;
+    return value.trim().replaceAll(RegExp(r'/+$'), '');
+  }
 
   /// Páginas legales públicas servidas por el backend.
   final String privacyPolicyUrl;

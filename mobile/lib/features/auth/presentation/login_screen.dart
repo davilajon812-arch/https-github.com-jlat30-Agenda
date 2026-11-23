@@ -135,6 +135,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ],
             ),
+            TextButton.icon(
+              onPressed: _submitting ? null : () => context.push('/book'),
+              icon: const Icon(Icons.event_available_outlined, size: 18),
+              label: Text(l10n.authJustBooking),
+            ),
           ],
         ),
       ),

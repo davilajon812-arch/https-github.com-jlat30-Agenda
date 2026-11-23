@@ -9,11 +9,12 @@ teléfono, y recibe un enlace propio para consultar o cancelar su cita.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from string import Template
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from psycopg import Connection
 
 from app.core.db import get_connection
@@ -22,6 +23,8 @@ from app.services.public_booking import load_business
 router = APIRouter(tags=["public"])
 
 ConnectionDep = Annotated[Connection[Any], Depends(get_connection)]
+
+_STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
 
 _PAGE = Template(
     """<!DOCTYPE html>
@@ -32,6 +35,18 @@ _PAGE = Template(
 <meta name="theme-color" content="#0F766E">
 <meta name="robots" content="noindex">
 <title>Reservar cita · $business_name</title>
+<meta name="description" content="$og_description">
+<link rel="canonical" href="$public_url">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="$business_name">
+<meta property="og:title" content="$og_title">
+<meta property="og:description" content="$og_description">
+<meta property="og:url" content="$public_url">
+<meta property="og:image" content="$og_image">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="500">
+<meta property="og:locale" content="es_NI">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root {
     --brand: #0F766E;
@@ -782,8 +797,32 @@ def public_booking_page(
     except HTTPException:
         name = "Reservar cita"
 
+    base = str(request.base_url).rstrip("/")
+    public_url = f"{base}/r/{slug}"
+    description = (
+        f"Reserva tu cita en {name} en menos de un minuto. "
+        "Mira servicios, precios y horarios disponibles."
+    )
+
     return HTMLResponse(
-        _PAGE.safe_substitute(business_name=_escape(name), slug_json=json.dumps(slug))
+        _PAGE.safe_substitute(
+            business_name=_escape(name),
+            slug_json=json.dumps(slug),
+            og_title=_escape(f"{name} · Reserva en línea"),
+            og_description=_escape(description),
+            public_url=_escape(public_url),
+            og_image=_escape(f"{base}/og-cover.png"),
+        )
+    )
+
+
+@router.get("/og-cover.png", include_in_schema=False)
+def og_cover() -> FileResponse:
+    """Imagen que se ve al compartir el enlace por WhatsApp o redes."""
+    return FileResponse(
+        _STATIC_DIR / "og-cover.png",
+        media_type="image/png",
+        headers={"Cache-Control": "public, max-age=604800"},
     )
 
 

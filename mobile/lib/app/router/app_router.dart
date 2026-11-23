@@ -10,6 +10,7 @@ import '../../features/auth/presentation/register_screen.dart';
 import '../../features/billing/presentation/billing_screen.dart';
 import '../../features/business/presentation/business_manage_screen.dart';
 import '../../features/business/presentation/public_link_screen.dart';
+import '../../features/client_booking/presentation/client_booking_screen.dart';
 import '../../features/clients/presentation/client_detail_screen.dart';
 import '../../features/services/presentation/services_screen.dart';
 import '../../features/staff/presentation/staff_schedule_screen.dart';
@@ -19,7 +20,7 @@ import '../app_gate.dart';
 import 'router_refresh.dart';
 
 /// Rutas públicas (no requieren sesión).
-const _publicRoutes = {'/login', '/register', '/forgot-password'};
+const _publicRoutes = {'/login', '/register', '/forgot-password', '/book'};
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(supabaseClientProvider).auth;
@@ -52,6 +53,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/book',
+        builder: (context, state) => const ClientBookingScreen(),
       ),
       GoRoute(
         path: '/appointments/:id',

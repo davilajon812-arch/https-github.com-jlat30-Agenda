@@ -1753,6 +1753,60 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Visible en el enlace de reservas'**
   String get businessAddressShownOnLink;
+
+  /// No description provided for @authJustBooking.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo quiero reservar una cita'**
+  String get authJustBooking;
+
+  /// No description provided for @clientBookingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Reservar una cita'**
+  String get clientBookingTitle;
+
+  /// No description provided for @clientBookingIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Reserva sin crear cuenta. Pega el enlace que te compartió el negocio y te llevamos a su página de reservas.'**
+  String get clientBookingIntro;
+
+  /// No description provided for @clientBookingLinkLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlace o código del negocio'**
+  String get clientBookingLinkLabel;
+
+  /// No description provided for @clientBookingLinkHint.
+  ///
+  /// In es, this message translates to:
+  /// **'https://…/r/mi-barberia'**
+  String get clientBookingLinkHint;
+
+  /// No description provided for @clientBookingOpen.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir reservas'**
+  String get clientBookingOpen;
+
+  /// No description provided for @clientBookingInvalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese enlace no parece de reservas. Pídele al negocio el suyo.'**
+  String get clientBookingInvalid;
+
+  /// No description provided for @clientBookingLast.
+  ///
+  /// In es, this message translates to:
+  /// **'Última reserva'**
+  String get clientBookingLast;
+
+  /// No description provided for @clientBookingWhy.
+  ///
+  /// In es, this message translates to:
+  /// **'¿No tienes el enlace? Pídeselo al negocio. Si ya reservaste, tu enlace personal aparece arriba.'**
+  String get clientBookingWhy;
 }
 
 class _AppLocalizationsDelegate

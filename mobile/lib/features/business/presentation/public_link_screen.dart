@@ -55,11 +55,8 @@ class _PublicLinkScreenState extends ConsumerState<PublicLinkScreen> {
     }
 
     final business = membership.business;
-    final base = ref.watch(appConfigProvider).apiBaseUrl.replaceAll(
-          RegExp(r'/+$'),
-          '',
-        );
-    final link = '$base/r/${business.slug}';
+    final link =
+        '${ref.watch(appConfigProvider).publicBase}/r/${business.slug}';
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.publicLinkTitle)),

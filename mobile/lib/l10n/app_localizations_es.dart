@@ -889,4 +889,34 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get businessAddressShownOnLink => 'Visible en el enlace de reservas';
+
+  @override
+  String get authJustBooking => 'Solo quiero reservar una cita';
+
+  @override
+  String get clientBookingTitle => 'Reservar una cita';
+
+  @override
+  String get clientBookingIntro =>
+      'Reserva sin crear cuenta. Pega el enlace que te compartió el negocio y te llevamos a su página de reservas.';
+
+  @override
+  String get clientBookingLinkLabel => 'Enlace o código del negocio';
+
+  @override
+  String get clientBookingLinkHint => 'https://…/r/mi-barberia';
+
+  @override
+  String get clientBookingOpen => 'Abrir reservas';
+
+  @override
+  String get clientBookingInvalid =>
+      'Ese enlace no parece de reservas. Pídele al negocio el suyo.';
+
+  @override
+  String get clientBookingLast => 'Última reserva';
+
+  @override
+  String get clientBookingWhy =>
+      '¿No tienes el enlace? Pídeselo al negocio. Si ya reservaste, tu enlace personal aparece arriba.';
 }

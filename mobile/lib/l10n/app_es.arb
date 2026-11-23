@@ -307,5 +307,14 @@
   "publicLinkHowTo": "Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.",
   "businessAddressLabel": "Dirección",
   "businessAddressHint": "Se muestra a tus clientes en el enlace de reservas",
-  "businessAddressShownOnLink": "Visible en el enlace de reservas"
+  "businessAddressShownOnLink": "Visible en el enlace de reservas",
+  "authJustBooking": "Solo quiero reservar una cita",
+  "clientBookingTitle": "Reservar una cita",
+  "clientBookingIntro": "Reserva sin crear cuenta. Pega el enlace que te compartió el negocio y te llevamos a su página de reservas.",
+  "clientBookingLinkLabel": "Enlace o código del negocio",
+  "clientBookingLinkHint": "https://…/r/mi-barberia",
+  "clientBookingOpen": "Abrir reservas",
+  "clientBookingInvalid": "Ese enlace no parece de reservas. Pídele al negocio el suyo.",
+  "clientBookingLast": "Última reserva",
+  "clientBookingWhy": "¿No tienes el enlace? Pídeselo al negocio. Si ya reservaste, tu enlace personal aparece arriba."
 }

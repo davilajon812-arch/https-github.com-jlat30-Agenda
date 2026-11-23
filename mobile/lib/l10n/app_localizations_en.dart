@@ -886,4 +886,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get businessAddressShownOnLink => 'Visible on the booking link';
+
+  @override
+  String get authJustBooking => 'I just want to book an appointment';
+
+  @override
+  String get clientBookingTitle => 'Book an appointment';
+
+  @override
+  String get clientBookingIntro =>
+      'Book without creating an account. Paste the link the business shared with you and we\'ll take you to their booking page.';
+
+  @override
+  String get clientBookingLinkLabel => 'Business link or code';
+
+  @override
+  String get clientBookingLinkHint => 'https://…/r/my-barbershop';
+
+  @override
+  String get clientBookingOpen => 'Open booking';
+
+  @override
+  String get clientBookingInvalid =>
+      'That doesn\'t look like a booking link. Ask the business for theirs.';
+
+  @override
+  String get clientBookingLast => 'Last booking';
+
+  @override
+  String get clientBookingWhy =>
+      'Don\'t have the link? Ask the business. If you already booked, your personal link shows above.';
 }

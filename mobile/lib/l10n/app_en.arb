@@ -307,5 +307,14 @@
   "publicLinkHowTo": "Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer's name and phone.",
   "businessAddressLabel": "Address",
   "businessAddressHint": "Shown to your customers on the booking link",
-  "businessAddressShownOnLink": "Visible on the booking link"
+  "businessAddressShownOnLink": "Visible on the booking link",
+  "authJustBooking": "I just want to book an appointment",
+  "clientBookingTitle": "Book an appointment",
+  "clientBookingIntro": "Book without creating an account. Paste the link the business shared with you and we'll take you to their booking page.",
+  "clientBookingLinkLabel": "Business link or code",
+  "clientBookingLinkHint": "https://…/r/my-barbershop",
+  "clientBookingOpen": "Open booking",
+  "clientBookingInvalid": "That doesn't look like a booking link. Ask the business for theirs.",
+  "clientBookingLast": "Last booking",
+  "clientBookingWhy": "Don't have the link? Ask the business. If you already booked, your personal link shows above."
 }

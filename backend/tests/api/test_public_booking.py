@@ -323,6 +323,27 @@ def test_la_pagina_publica_responde_html(client: TestClient, seeded: str) -> Non
     assert "Confirmar cita" in response.text
 
 
+def test_la_pagina_trae_tarjeta_para_compartir(client: TestClient, seeded: str) -> None:
+    """Sin Open Graph, el enlace se ve como texto pelado en WhatsApp."""
+    _enable(seeded)
+
+    page = client.get(f"/r/{SLUG}").text
+
+    assert 'property="og:title"' in page
+    assert "Barbería Test" in page
+    assert 'property="og:image"' in page
+    assert "/og-cover.png" in page
+    assert f'rel="canonical" href="http://testserver/r/{SLUG}"' in page
+
+
+def test_la_imagen_para_compartir_se_sirve(client: TestClient) -> None:
+    response = client.get("/og-cover.png")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/png"
+    assert response.content[:8] == b"\x89PNG\r\n\x1a\n"
+
+
 def test_la_pagina_avisa_si_el_enlace_no_existe(client: TestClient, seeded: str) -> None:
     response = client.get("/r/enlace-que-no-existe")
 
