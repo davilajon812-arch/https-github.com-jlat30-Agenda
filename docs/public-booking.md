@@ -34,6 +34,7 @@ Cliente  →  https://<api>/r/<slug>          (página web, HTML + JS)
 | `backend/app/schemas/public.py` | Contratos de entrada y salida |
 | `backend/supabase/migrations/20260101001300_public_booking.sql` | `public_token` y `booked_online` |
 | `mobile/lib/features/business/presentation/public_link_screen.dart` | Pantalla "Reservas en línea" (QR, copiar, compartir) |
+| `mobile/lib/features/client_booking/` | Entrada pública del cliente (`/book`) y parser del enlace |
 
 ## Qué ve el cliente
 
@@ -84,6 +85,30 @@ Para el negocio demo ya viene encendido y el enlace es:
 ```
 https://agendapro-api-469f.onrender.com/r/barberia-demo
 ```
+
+## El cliente sin cuenta, desde la app
+
+La pantalla de login tiene un enlace discreto **"Solo quiero reservar una cita"**
+que abre `/book`: el cliente pega el enlace (o el código) del negocio y la app
+lo lleva a su página de reservas. No hay pantallas de reserva en Flutter: la web
+sigue siendo el único lugar donde se agenda, así que no hay lógica duplicada.
+
+El último enlace usado se guarda en `SharedPreferences`
+(`client_last_booking_url`) para volver con un toque.
+
+## Cambiar a un dominio propio
+
+Toda la base de los enlaces sale de `PUBLIC_BASE_URL` (con respaldo en
+`API_BASE_URL`). El día que haya dominio:
+
+1. Apuntar el dominio a Render y añadirlo en el panel del servicio.
+2. Compilar con `--dart-define=PUBLIC_BASE_URL=https://tudominio` (o en
+   `.env.prod`).
+3. Actualizar `PRIVACY_POLICY_URL` y `TERMS_URL` si cambian de host.
+
+La página se sirve igual en el dominio nuevo: sus enlaces internos son relativos
+y `myLink()` arma la URL del cliente con `location.origin`, así que no hay nada
+que reescribir.
 
 ## Límite conocido
 

@@ -132,6 +132,7 @@ class _ClientBookingScreenState extends ConsumerState<ClientBookingScreen> {
               prefixIcon: const Icon(Icons.link),
               border: const OutlineInputBorder(),
               errorText: _error,
+              errorMaxLines: 2,
             ),
             onSubmitted: _open,
             onChanged: (_) {
