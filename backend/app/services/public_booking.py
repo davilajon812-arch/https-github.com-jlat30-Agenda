@@ -31,7 +31,8 @@ MAX_SAME_DAY_BOOKINGS = 3
 ACTIVE_STATUSES = ("pendiente", "confirmada", "completada")
 
 BUSINESS_SELECT = """
-    select id, name, slug, industry, currency, timezone, phone, address
+    select id, name, slug, industry, currency, timezone, phone, address,
+           country_code
     from public.businesses
     where slug = %s and public_booking_enabled
 """

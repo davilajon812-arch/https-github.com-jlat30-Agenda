@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from psycopg import Connection
 
 from app.core.db import get_connection
+from app.core.countries import dial_code
 from app.core.ratelimit import BOOKING_LIMITER, READ_LIMITER
 from app.schemas.availability import AvailabilityResponse
 from app.schemas.public import (
@@ -63,7 +64,9 @@ def get_business(
     business_id = str(business["id"])
 
     return PublicBusinessResponse(
-        business=PublicBusiness(**business),
+        business=PublicBusiness(
+            **business, dial_code=dial_code(business.get("country_code"))
+        ),
         services=[
             PublicService(**row) for row in booking.list_services(conn, business_id)
         ],

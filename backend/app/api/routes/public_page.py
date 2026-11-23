@@ -288,13 +288,20 @@ function industryLabel(code) {
   if (!code) return "";
   return INDUSTRIES[code] || String(code).replace(/_/g, " ");
 }
-function phoneLabel(raw) {
+function phoneLabel(raw, dialCode) {
   const digits = String(raw || "").replace(/[^0-9]/g, "");
-  if (digits.length === 11 && digits.startsWith("505")) {
-    return "+505 " + digits.slice(3, 7) + " " + digits.slice(7);
+  if (!digits) return "";
+  if (dialCode && digits.startsWith(dialCode)) {
+    return "+" + dialCode + " " + groupDigits(digits.slice(dialCode.length));
   }
-  if (digits.length === 8) return digits.slice(0, 4) + " " + digits.slice(4);
-  return raw || "";
+  return raw || digits;
+}
+// Agrupa en bloques legibles: los fijos de 8 dígitos en 4+4, el resto en 3.
+function groupDigits(text) {
+  if (text.length === 8) return text.slice(0, 4) + " " + text.slice(4);
+  const parts = [];
+  for (let i = 0; i < text.length; i += 3) parts.push(text.slice(i, i + 3));
+  return parts.join(" ");
 }
 // Resume los días con atención en una sola línea legible.
 function hoursLabel(hours) {
@@ -717,7 +724,7 @@ function renderHeader(data) {
     const call = el("btn-call");
     call.hidden = false;
     call.href = "tel:" + business.phone.replace(/[^0-9+]/g, "");
-    call.textContent = phoneLabel(business.phone);
+    call.textContent = phoneLabel(business.phone, business.dial_code);
     actions.push(call);
   }
   if (business.address) {

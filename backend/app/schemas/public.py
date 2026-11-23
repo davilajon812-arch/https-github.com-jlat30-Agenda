@@ -18,6 +18,10 @@ class PublicBusiness(BaseModel):
     timezone: str
     phone: str | None = None
     address: str | None = None
+    country_code: str | None = None
+    dial_code: str | None = Field(
+        default=None, description="Prefijo telefónico para mostrar el número"
+    )
 
 
 class PublicDayHours(BaseModel):

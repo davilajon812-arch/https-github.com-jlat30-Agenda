@@ -87,6 +87,31 @@ def test_expone_direccion_y_horario_de_atencion(
     ]
 
 
+def test_expone_el_prefijo_del_pais_para_formatear_el_telefono(
+    client: TestClient, seeded: str
+) -> None:
+    _enable(seeded)
+
+    business = client.get(BASE).json()["business"]
+
+    assert business["country_code"] == "NI"
+    assert business["dial_code"] == "505"
+
+
+def test_un_pais_sin_prefijo_conocido_no_rompe(client: TestClient, seeded: str) -> None:
+    _enable(seeded)
+    with psycopg.connect(seeded, autocommit=True) as conn:
+        conn.execute(
+            "update public.businesses set country_code = 'ZZ' where id = %s",
+            (BUSINESS_ID,),
+        )
+
+    business = client.get(BASE).json()["business"]
+
+    assert business["country_code"] == "ZZ"
+    assert business["dial_code"] is None
+
+
 def test_sin_horarios_el_negocio_no_es_reservable(
     client: TestClient, seeded: str
 ) -> None:
