@@ -73,6 +73,7 @@ _PAGE = Template(
   .chip {
     flex: 0 0 auto; border: 1px solid var(--line); background: #fff;
     border-radius: 999px; padding: .35rem .75rem; font-size: .82rem; font-weight: 600;
+    color: var(--ink);
   }
   .chip.on { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); }
   .slot .count { display: block; font-size: .6rem; color: var(--muted); margin-top: .1rem; }
@@ -105,6 +106,7 @@ _PAGE = Template(
   .day {
     flex: 0 0 auto; border: 1px solid var(--line); background: #fff;
     border-radius: .75rem; padding: .45rem .7rem; text-align: center; min-width: 3.6rem;
+    color: var(--ink);
   }
   .day small { display: block; font-size: .68rem; color: var(--muted); text-transform: uppercase; }
   .day b { font-size: .95rem; }
@@ -114,6 +116,7 @@ _PAGE = Template(
   .slot {
     border: 1px solid var(--line); background: #fff; border-radius: .7rem;
     padding: .55rem .3rem; text-align: center; font-variant-numeric: tabular-nums;
+    color: var(--ink);
   }
   .slot small { display: block; font-size: .65rem; color: var(--muted); }
   .slot.on { border-color: var(--brand); background: var(--brand); color: #fff; }
