@@ -881,9 +881,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get publicLinkQrHint => 'Imprime este código y ponlo en tu local';
 
   @override
-  String get publicLinkQuotaTitle => 'Enlace público este mes';
-
-  @override
   String get publicLinkQuotaExhausted =>
       'Alcanzaste las reservas en línea de este mes: tus clientes no podrán reservar hasta el próximo.';
 

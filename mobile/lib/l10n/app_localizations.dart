@@ -1730,12 +1730,6 @@ abstract class AppLocalizations {
   /// **'Imprime este código y ponlo en tu local'**
   String get publicLinkQrHint;
 
-  /// No description provided for @publicLinkQuotaTitle.
-  ///
-  /// In es, this message translates to:
-  /// **'Enlace público este mes'**
-  String get publicLinkQuotaTitle;
-
   /// No description provided for @publicLinkQuotaExhausted.
   ///
   /// In es, this message translates to:

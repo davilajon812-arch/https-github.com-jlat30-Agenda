@@ -155,8 +155,6 @@ class _OnlineQuotaCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.publicLinkQuotaTitle, style: theme.textTheme.titleSmall),
-            const SizedBox(height: 6),
             Text(l10n.billingUsageOnlineBookings(used, limit.toString())),
             const SizedBox(height: 8),
             LinearProgressIndicator(
