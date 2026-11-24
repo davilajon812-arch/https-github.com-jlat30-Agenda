@@ -18,8 +18,7 @@ from app.core.timeutils import day_bounds_utc, get_timezone
 from app.schemas.public import PublicBookingCreate
 from app.services.availability import compute_availability
 from app.services.entitlements import (
-    LIMIT_APPOINTMENTS,
-    ensure_capacity,
+    LIMIT_ONLINE_BOOKINGS,
     load_entitlements,
 )
 
@@ -27,6 +26,14 @@ from app.services.entitlements import (
 DAYS_AHEAD = 21
 # Reservas activas que un mismo teléfono puede tener en un día.
 MAX_SAME_DAY_BOOKINGS = 3
+
+# Motivos por los que el enlace no acepta reservas en este momento.
+SCHEDULE_REASON = "schedule"
+QUOTA_REASON = "quota"
+QUOTA_MESSAGE = (
+    "Este negocio ya recibió todas sus reservas en línea de este mes. "
+    "Escríbele o llámalo para agendar."
+)
 
 ACTIVE_STATUSES = ("pendiente", "confirmada", "completada")
 
@@ -119,6 +126,34 @@ def is_bookable(conn: Connection[Any], business_id: str) -> bool:
         )
     ).fetchone()
     return bool(row["bookable"]) if row else False
+
+
+def online_bookings_remaining(
+    conn: Connection[Any], business_id: str
+) -> int | None:
+    """Reservas en línea que le quedan al negocio; `None` si son ilimitadas.
+
+    Es un cupo aparte del de la agenda: estas citas no descuentan las 100 del
+    plan Gratis, y las que agenda el negocio tampoco descuentan de aquí.
+    """
+    return load_entitlements(conn, business_id).remaining(LIMIT_ONLINE_BOOKINGS)
+
+
+def booking_status(
+    conn: Connection[Any], business_id: str
+) -> tuple[bool, str | None]:
+    """Si el enlace acepta reservas ahora y, si no, el motivo.
+
+    La página lo usa para explicar qué pasa antes de que el cliente elija un
+    horario: `schedule` cuando no hay horarios publicados y `quota` cuando el
+    negocio agotó sus reservas en línea del mes.
+    """
+    if not is_bookable(conn, business_id):
+        return False, SCHEDULE_REASON
+    remaining = online_bookings_remaining(conn, business_id)
+    if remaining is not None and remaining <= 0:
+        return False, QUOTA_REASON
+    return True, None
 
 
 def _normalize_phone(phone: str) -> str:
@@ -340,15 +375,20 @@ def book(
     starts_at = payload.starts_at.astimezone(ZoneInfo("UTC"))
     ends_at = starts_at + timedelta(minutes=service["duration_minutes"])
 
+    # El cupo se revisa antes que los horarios: si el negocio ya no recibe
+    # reservas en línea, el cliente debe leer eso y no "ese horario no está
+    # disponible", que lo haría probar hueco tras hueco.
+    remaining = online_bookings_remaining(conn, business_id)
+    if remaining is not None and remaining <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=QUOTA_MESSAGE
+        )
+
     candidates = _slot_candidates(conn, business, payload, timezone_name)
     staff_id = (
         str(payload.staff_id)
         if payload.staff_id
         else _pick_staff(conn, business_id, candidates, starts_at, timezone_name)
-    )
-
-    ensure_capacity(
-        load_entitlements(conn, business_id), LIMIT_APPOINTMENTS
     )
 
     client_id = _upsert_client(

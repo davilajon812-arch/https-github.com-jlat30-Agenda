@@ -21,6 +21,7 @@ from app.services.subscriptions import SubscriptionSnapshot, grants_paid_plan, n
 LIMIT_STAFF = "staff"
 LIMIT_LOCATIONS = "locations"
 LIMIT_APPOINTMENTS = "appointments_per_month"
+LIMIT_ONLINE_BOOKINGS = "online_bookings_per_month"
 LIMIT_MESSAGES = "messages_per_month"
 
 # Estados que no consumen cupo: la cita no se llegó a atender.
@@ -34,6 +35,7 @@ class UsageSnapshot:
     staff_count: int
     appointments_this_month: int
     messages_this_month: int
+    online_bookings_this_month: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,11 +59,16 @@ class Entitlements:
         used = self._used_for(kind)
         return max(limit - used, 0)
 
+    def limit_for(self, kind: str) -> int | None:
+        """Tope del plan para un recurso; `None` si es ilimitado."""
+        return self._limit_for(kind)
+
     def _limit_for(self, kind: str) -> int | None:
         return {
             LIMIT_STAFF: self.plan.max_staff,
             LIMIT_LOCATIONS: self.plan.max_locations,
             LIMIT_APPOINTMENTS: self.plan.max_appointments_per_month,
+            LIMIT_ONLINE_BOOKINGS: self.plan.max_online_bookings_per_month,
             LIMIT_MESSAGES: self.plan.max_messages_per_month,
         }[kind]
 
@@ -70,6 +77,7 @@ class Entitlements:
             LIMIT_STAFF: self.usage.staff_count,
             LIMIT_LOCATIONS: self.usage.staff_count,  # se ajusta en la Fase 4
             LIMIT_APPOINTMENTS: self.usage.appointments_this_month,
+            LIMIT_ONLINE_BOOKINGS: self.usage.online_bookings_this_month,
             LIMIT_MESSAGES: self.usage.messages_this_month,
         }[kind]
 
@@ -144,10 +152,15 @@ def _sync_usage_counter(
 def load_entitlements(conn: Connection[Any], business_id: str | None) -> Entitlements:
     """Calcula el plan efectivo y el consumo del negocio.
 
-    El cupo de citas cuenta las citas **atendibles del mes en curso** (por su
-    `starts_at`, en la zona horaria del negocio) y descarta las canceladas y los
-    no-shows. Antes se contaban las citas *creadas*, así que una cancelación
+    Los dos cupos de citas cuentan las **citas atendibles del mes en curso** (por
+    su `starts_at`, en la zona horaria del negocio) y descartan las canceladas y
+    los no-shows. Antes se contaban las citas *creadas*, así que una cancelación
     gastaba cupo y una cita agendada para el mes siguiente descontaba del actual.
+
+    Además son bolsas separadas: `appointments_this_month` cuenta solo las citas
+    que agendó el negocio desde la app y `online_bookings_this_month` solo las
+    que entraron por el enlace público. Así el link no le come el cupo a la
+    agenda ni al revés.
     """
     if not business_id:
         plan = get_plan(conn, "free")
@@ -175,9 +188,14 @@ def load_entitlements(conn: Connection[Any], business_id: str | None) -> Entitle
     tz = get_timezone(timezone_name)
     start_local, end_local = _month_bounds(now_utc().astimezone(tz))
 
-    appointments_row = conn.execute(
+    counts_row = conn.execute(
         """
-        select count(*) as total
+        select count(*) filter (
+                   where coalesce(booked_online, false)
+               ) as online,
+               count(*) filter (
+                   where coalesce(booked_online, false) is not true
+               ) as agenda
         from public.appointments
         where business_id = %s
           and status <> all(%s)
@@ -185,7 +203,8 @@ def load_entitlements(conn: Connection[Any], business_id: str | None) -> Entitle
         """,
         (business_id, list(QUOTA_EXCLUDED_STATUSES), start_local, end_local),
     ).fetchone()
-    appointments_used = appointments_row["total"] if appointments_row else 0
+    online_used = counts_row["online"] if counts_row else 0
+    appointments_used = counts_row["agenda"] if counts_row else 0
     messages_used = _sync_usage_counter(
         conn, business_id, start_local, end_local, appointments_used
     )
@@ -199,6 +218,7 @@ def load_entitlements(conn: Connection[Any], business_id: str | None) -> Entitle
             staff_count=staff_row["total"] if staff_row else 0,
             appointments_this_month=appointments_used,
             messages_this_month=messages_used,
+            online_bookings_this_month=online_used,
         ),
         upgrade_to=upgrade.id if upgrade else None,
     )
@@ -211,6 +231,7 @@ def plan_limit_error(entitlements: Entitlements, kind: str) -> HTTPException:
         detail={
             "code": "plan_limit_reached",
             "limit": kind,
+            "limit_value": entitlements.limit_for(kind),
             "plan": entitlements.plan.id,
             "upgrade_to": entitlements.upgrade_to,
             "message": "Alcanzaste el límite de tu plan actual",

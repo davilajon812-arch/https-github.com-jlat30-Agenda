@@ -32,6 +32,7 @@ from app.services.entitlements import (
     LIMIT_APPOINTMENTS,
     LIMIT_LOCATIONS,
     LIMIT_MESSAGES,
+    LIMIT_ONLINE_BOOKINGS,
     LIMIT_STAFF,
     load_entitlements,
 )
@@ -52,6 +53,7 @@ def _to_plan_read(plan: plans.PlanLimit) -> PlanRead:
         max_staff=plan.max_staff,
         max_locations=plan.max_locations,
         max_appointments_per_month=plan.max_appointments_per_month,
+        max_online_bookings_per_month=plan.max_online_bookings_per_month,
         max_messages_per_month=plan.max_messages_per_month,
         features=plan.features,
     )
@@ -90,11 +92,13 @@ def get_entitlements(
             staff_count=entitlements.usage.staff_count,
             appointments_this_month=entitlements.usage.appointments_this_month,
             messages_this_month=entitlements.usage.messages_this_month,
+            online_bookings_this_month=entitlements.usage.online_bookings_this_month,
         ),
         remaining={
             LIMIT_STAFF: entitlements.remaining(LIMIT_STAFF),
             LIMIT_LOCATIONS: entitlements.remaining(LIMIT_LOCATIONS),
             LIMIT_APPOINTMENTS: entitlements.remaining(LIMIT_APPOINTMENTS),
+            LIMIT_ONLINE_BOOKINGS: entitlements.remaining(LIMIT_ONLINE_BOOKINGS),
             LIMIT_MESSAGES: entitlements.remaining(LIMIT_MESSAGES),
         },
         upgrade_to=entitlements.upgrade_to,

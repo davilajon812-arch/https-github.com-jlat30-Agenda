@@ -36,6 +36,26 @@ def _enable(seeded: str, enabled: bool = True) -> None:
         )
 
 
+def _free_plan(
+    seeded: str, *, appointments: int | None, online: int | None
+) -> None:
+    """Deja el negocio en el plan Gratis con los dos cupos que pida la prueba."""
+    with psycopg.connect(seeded, autocommit=True) as conn:
+        conn.execute(
+            "delete from public.subscriptions where business_id = %s",
+            (BUSINESS_ID,),
+        )
+        conn.execute(
+            """
+            update public.plans
+            set max_appointments_per_month = %s,
+                max_online_bookings_per_month = %s
+            where id = 'free'
+            """,
+            (appointments, online),
+        )
+
+
 def _booking_payload(
     hour: int = 9,
     phone: str = "50577770000",
@@ -274,16 +294,55 @@ def test_el_limite_del_plan_gratis_frena_las_reservas(
     client: TestClient, seeded: str
 ) -> None:
     _enable(seeded)
-    with psycopg.connect(seeded, autocommit=True) as conn:
-        conn.execute(
-            "delete from public.subscriptions where business_id = %s", (BUSINESS_ID,)
-        )
-        conn.execute("update public.plans set max_appointments_per_month = 0 where id = 'free'")
+    _free_plan(seeded, appointments=100, online=0)
 
     response = client.post(f"{BASE}/appointments", json=_booking_payload())
 
-    assert response.status_code == 402
-    assert response.json()["detail"]["code"] == "plan_limit_reached"
+    # El mensaje es para el cliente final: no puede mejorar el plan del negocio.
+    assert response.status_code == 409
+    assert "reservas en línea de este mes" in response.json()["detail"]
+
+
+def test_la_pagina_avisa_cuando_se_acabo_el_cupo(client: TestClient, seeded: str) -> None:
+    """Mejor decirlo antes de elegir horario que fallar al confirmar."""
+    _enable(seeded)
+    _free_plan(seeded, appointments=100, online=0)
+
+    body = client.get(BASE).json()
+
+    assert body["bookable"] is False
+    assert body["closed_reason"] == "quota"
+
+
+def test_sin_horarios_el_motivo_es_la_agenda(client: TestClient, seeded: str) -> None:
+    _enable(seeded)
+    with psycopg.connect(seeded, autocommit=True) as conn:
+        conn.execute("update public.staff_schedules set is_active = false")
+
+    body = client.get(BASE).json()
+
+    assert body["bookable"] is False
+    assert body["closed_reason"] == "schedule"
+
+
+def test_el_cupo_del_enlace_es_aparte_del_de_la_agenda(
+    client: TestClient,
+    seeded: str,
+    owner_headers: dict[str, str],
+    business_url: str,
+) -> None:
+    """Una reserva del link no gasta el cupo de citas del negocio."""
+    _enable(seeded)
+    _free_plan(seeded, appointments=0, online=50)
+
+    reserva = client.post(f"{BASE}/appointments", json=_booking_payload())
+
+    # La agenda está en cero y aun así el enlace deja reservar: son dos bolsas.
+    assert reserva.status_code == 201
+    body = client.get(f"{business_url}/entitlements", headers=owner_headers).json()
+    assert body["plan"]["id"] == "free"
+    assert body["remaining"]["appointments_per_month"] == 0
+    assert body["remaining"]["online_bookings_per_month"] == 50
 
 
 def test_consulta_y_cancela_con_el_token(client: TestClient, seeded: str) -> None:

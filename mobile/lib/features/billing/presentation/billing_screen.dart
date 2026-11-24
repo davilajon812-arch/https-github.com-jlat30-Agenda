@@ -287,6 +287,7 @@ class _CurrentPlanCard extends StatelessWidget {
 
     final staffLimit = entitlements.plan.maxStaff;
     final appointmentsLimit = entitlements.plan.maxAppointmentsPerMonth;
+    final onlineLimit = entitlements.plan.maxOnlineBookingsPerMonth;
 
     return Card(
       child: Padding(
@@ -341,6 +342,14 @@ class _CurrentPlanCard extends StatelessWidget {
               ),
               used: entitlements.usage.appointmentsThisMonth,
               limit: appointmentsLimit,
+            ),
+            _UsageRow(
+              label: l10n.billingUsageOnlineBookings(
+                entitlements.usage.onlineBookingsThisMonth,
+                onlineLimit?.toString() ?? l10n.billingUnlimited,
+              ),
+              used: entitlements.usage.onlineBookingsThisMonth,
+              limit: onlineLimit,
             ),
             if (entitlements.isPaid && entitlements.source == 'play') ...[
               const SizedBox(height: 12),
@@ -412,6 +421,10 @@ class _PlanCard extends ConsumerWidget {
         ? (product?.value?.price ?? l10n.billingPriceUnavailable)
         : l10n.billingPlanFree;
 
+    String monthly(int? limit) => limit == null
+        ? l10n.billingUnlimited
+        : l10n.billingMonthlyLimit(limit.toString());
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
@@ -447,9 +460,13 @@ class _PlanCard extends ConsumerWidget {
             ),
             _FeatureLine(
               enabled: plan.maxAppointmentsPerMonth == null,
-              text: plan.maxAppointmentsPerMonth == null
-                  ? '${l10n.navAppointments}: ${l10n.billingUnlimited}'
-                  : '${l10n.navAppointments}: ${plan.maxAppointmentsPerMonth} / mes',
+              text: '${l10n.navAppointments}: '
+                  '${monthly(plan.maxAppointmentsPerMonth)}',
+            ),
+            _FeatureLine(
+              enabled: plan.maxOnlineBookingsPerMonth == null,
+              text: '${l10n.billingOnlineBookings}: '
+                  '${monthly(plan.maxOnlineBookingsPerMonth)}',
             ),
             _FeatureLine(
               enabled: !plan.feature('ads'),

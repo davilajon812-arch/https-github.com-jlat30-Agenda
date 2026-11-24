@@ -54,8 +54,11 @@ muestra un aviso y un botón para escribirle por WhatsApp.
 1. **Solo huecos reales.** La reserva se valida contra
    `compute_availability`: horario del empleado, citas y bloqueos existentes, y
    nada en el pasado. Si el hueco desapareció, responde `409`.
-2. **Plan del negocio.** Respeta el tope de citas por mes del plan Gratis
-   (`402 plan_limit_reached`, igual que en la app).
+2. **Cupo propio del enlace.** Las reservas del link tienen su propia bolsa
+   (`max_online_bookings_per_month`, 50 al mes en el plan Gratis) y **no**
+   consumen las citas de la agenda del negocio: son cupos independientes. Al
+   agotarse responde `409` con un mensaje para el cliente final, y la página
+   deja de ofrecer el formulario antes de que elija horario.
 3. **Cliente reutilizado.** Si el teléfono ya existe en el negocio, la cita se
    cuelga de ese cliente en vez de duplicarlo.
 4. **Reparto automático.** Cuando el cliente elige "Cualquiera", la cita va al
@@ -115,3 +118,8 @@ que reescribir.
 El limitador de peticiones vive en memoria del proceso. Render ejecuta una sola
 instancia, así que es suficiente; si se escala a varias instancias hay que
 moverlo a un almacén compartido (Redis o una tabla en Postgres).
+
+El cupo del enlace se cuenta por mes calendario en la zona horaria del negocio.
+Si un negocio agota sus 50 reservas un día 20, el enlace avisa hasta el día 1
+siguiente; el dueño puede seguir agendando a mano porque su cupo de agenda es
+otro.

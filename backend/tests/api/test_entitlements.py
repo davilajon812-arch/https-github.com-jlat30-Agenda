@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 import psycopg
 from fastapi.testclient import TestClient
 
-from tests.api.conftest import BUSINESS_ID
+from tests.api.conftest import BUSINESS_ID, CLIENT_ID, SERVICE_ID, STAFF_MEMBER_ID
 
 BUSINESS_TZ = ZoneInfo("America/Managua")
 
@@ -30,6 +30,15 @@ def _set_quota(postgres_uri: str, limit: int | None) -> None:
     with psycopg.connect(postgres_uri, autocommit=True) as conn:
         conn.execute(
             "update public.plans set max_appointments_per_month = %s where id = 'free'",
+            (limit,),
+        )
+
+
+def _set_online_quota(postgres_uri: str, limit: int | None) -> None:
+    with psycopg.connect(postgres_uri, autocommit=True) as conn:
+        conn.execute(
+            "update public.plans set max_online_bookings_per_month = %s "
+            "where id = 'free'",
             (limit,),
         )
 
@@ -64,6 +73,7 @@ def test_lista_los_planes_disponibles(client: TestClient) -> None:
     assert set(planes) == {"free", "pro"}
     assert planes["free"]["max_staff"] == 1
     assert planes["free"]["max_appointments_per_month"] == 100
+    assert planes["free"]["max_online_bookings_per_month"] == 50
     assert planes["pro"]["max_staff"] is None
     assert planes["pro"]["features"]["advanced_reports"] is True
     assert planes["free"]["play_product_id"] is None
@@ -97,6 +107,7 @@ def test_entitlements_en_plan_gratis_muestra_cupos(
     assert body["plan"]["id"] == "free"
     assert body["remaining"]["staff"] == 0  # 1 permitido, 2 en uso
     assert body["remaining"]["appointments_per_month"] == 100
+    assert body["remaining"]["online_bookings_per_month"] == 50
     assert body["upgrade_to"] == "pro"
 
 
@@ -184,6 +195,70 @@ def test_una_cita_de_otro_mes_no_consume_el_cupo_actual(
 
     assert _book(client, owner_headers, business_url, _month_day(1, hour=9)).status_code == 201
     assert _book(client, owner_headers, business_url, _month_day(0, hour=10)).status_code == 201
+
+
+def _insert_appointment(
+    postgres_uri: str, starts_at: str, *, booked_online: bool
+) -> None:
+    """Cita directa en la base: sirve para inventar consumo del mes."""
+    with psycopg.connect(postgres_uri, autocommit=True) as conn:
+        conn.execute(
+            """
+            insert into public.appointments (
+                business_id, client_id, service_id, staff_id,
+                starts_at, ends_at, status, price, booked_online
+            )
+            values (%s, %s, %s, %s, %s::timestamptz,
+                    %s::timestamptz + interval '30 minutes', 'confirmada', 10, %s)
+            """,
+            (
+                BUSINESS_ID,
+                CLIENT_ID,
+                SERVICE_ID,
+                STAFF_MEMBER_ID,
+                starts_at,
+                starts_at,
+                booked_online,
+            ),
+        )
+
+
+def test_las_dos_bolsas_de_citas_se_cuentan_por_separado(
+    client: TestClient,
+    owner_headers: dict[str, str],
+    business_url: str,
+    postgres_uri: str,
+) -> None:
+    """La agenda y el enlace público tienen cupos independientes."""
+    _set_free_plan(postgres_uri)
+    _insert_appointment(postgres_uri, _month_day(hour=9), booked_online=False)
+    _insert_appointment(postgres_uri, _month_day(hour=10), booked_online=True)
+    _insert_appointment(postgres_uri, _month_day(hour=11), booked_online=True)
+
+    body = client.get(f"{business_url}/entitlements", headers=owner_headers).json()
+
+    assert body["usage"]["appointments_this_month"] == 1
+    assert body["usage"]["online_bookings_this_month"] == 2
+    assert body["remaining"]["appointments_per_month"] == 99
+    assert body["remaining"]["online_bookings_per_month"] == 48
+
+
+def test_la_agenda_no_consume_el_cupo_del_enlace(
+    client: TestClient,
+    owner_headers: dict[str, str],
+    business_url: str,
+    postgres_uri: str,
+) -> None:
+    """Agendar a mano no debe gastar las reservas en línea del mes."""
+    _set_free_plan(postgres_uri)
+    _set_online_quota(postgres_uri, 1)
+
+    assert _book(client, owner_headers, business_url, _month_day(hour=9)).status_code == 201
+
+    body = client.get(f"{business_url}/entitlements", headers=owner_headers).json()
+    assert body["usage"]["appointments_this_month"] == 1
+    assert body["usage"]["online_bookings_this_month"] == 0
+    assert body["remaining"]["online_bookings_per_month"] == 1
 
 
 def test_el_plan_pro_no_limita_empleados(

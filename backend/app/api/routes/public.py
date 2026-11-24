@@ -62,6 +62,7 @@ def get_business(
 
     business = booking.load_business(conn, slug)
     business_id = str(business["id"])
+    bookable, closed_reason = booking.booking_status(conn, business_id)
 
     return PublicBusinessResponse(
         business=PublicBusiness(
@@ -74,7 +75,8 @@ def get_business(
         hours=[
             PublicDayHours(**row) for row in booking.business_hours(conn, business_id)
         ],
-        bookable=booking.is_bookable(conn, business_id),
+        bookable=bookable,
+        closed_reason=closed_reason,
         days_ahead=booking.DAYS_AHEAD,
     )
 

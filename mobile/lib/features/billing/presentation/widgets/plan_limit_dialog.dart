@@ -14,6 +14,8 @@ Future<void> showPlanLimitDialog(
     'staff' => l10n.planLimitStaff(_limitLabel(error, l10n)),
     'appointments_per_month' =>
       l10n.planLimitAppointments(_limitLabel(error, l10n)),
+    'online_bookings_per_month' =>
+      l10n.planLimitOnlineBookings(_limitLabel(error, l10n)),
     _ => l10n.planLimitGeneric,
   };
 
@@ -60,10 +62,7 @@ String _planName(String planId) => switch (planId) {
     };
 
 String _limitLabel(PlanLimitException error, AppLocalizations l10n) {
-  // El backend manda el límite en el mensaje; se usa un texto corto si falta.
-  return switch (error.limit) {
-    'staff' => '1',
-    'appointments_per_month' => '30',
-    _ => l10n.billingUnlimited,
-  };
+  // El backend manda el tope en el detalle; el texto genérico es el respaldo.
+  final value = error.limitValue;
+  return value == null ? l10n.billingUnlimited : value.toString();
 }

@@ -17,6 +17,7 @@ class PlanRead(BaseModel):
     max_staff: int | None = None
     max_locations: int | None = None
     max_appointments_per_month: int | None = None
+    max_online_bookings_per_month: int | None = None
     max_messages_per_month: int | None = None
     features: dict[str, Any] = Field(default_factory=dict)
 
@@ -25,6 +26,7 @@ class UsageRead(BaseModel):
     staff_count: int
     appointments_this_month: int
     messages_this_month: int
+    online_bookings_this_month: int = 0
 
 
 class EntitlementsRead(BaseModel):

@@ -690,6 +690,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String billingUsageOnlineBookings(int used, String limit) {
+    return 'Public link this month: $used of $limit';
+  }
+
+  @override
+  String get billingOnlineBookings => 'Online bookings';
+
+  @override
+  String billingMonthlyLimit(String limit) {
+    return '$limit / month';
+  }
+
+  @override
   String get billingUnlimited => 'Unlimited';
 
   @override
@@ -706,6 +719,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String planLimitAppointments(String limit) {
     return 'You reached the $limit appointment limit this month.';
+  }
+
+  @override
+  String planLimitOnlineBookings(String limit) {
+    return 'You reached the $limit online booking limit this month.';
   }
 
   @override
@@ -858,6 +876,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get publicLinkQrHint => 'Print this code and put it in your shop';
+
+  @override
+  String get publicLinkQuotaTitle => 'Public link this month';
+
+  @override
+  String get publicLinkQuotaExhausted =>
+      'You used up this month\'s online bookings: clients can\'t book until next month.';
 
   @override
   String get publicLinkHowToTitle => 'How to use it';

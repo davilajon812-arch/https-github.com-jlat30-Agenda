@@ -11,6 +11,7 @@ void main() {
         'max_staff': null,
         'max_locations': null,
         'max_appointments_per_month': null,
+        'max_online_bookings_per_month': null,
         'max_messages_per_month': 1000,
         'features': {'reminders': true, 'advanced_reports': true},
       });
@@ -20,6 +21,19 @@ void main() {
       expect(plan.maxAppointmentsPerMonth, isNull);
       expect(plan.feature('reminders'), isTrue);
       expect(plan.feature('advanced_reports'), isTrue);
+    });
+
+    test('lee el cupo del enlace público aparte del de la agenda', () {
+      final plan = Plan.fromJson({
+        'id': 'free',
+        'name': 'Gratis',
+        'max_appointments_per_month': 100,
+        'max_online_bookings_per_month': 50,
+        'features': <String, dynamic>{},
+      });
+
+      expect(plan.maxAppointmentsPerMonth, 100);
+      expect(plan.maxOnlineBookingsPerMonth, 50);
     });
 
     test('el plan gratis no es comprable', () {
@@ -54,10 +68,12 @@ void main() {
           'staff_count': 1,
           'appointments_this_month': 12,
           'messages_this_month': 0,
+          'online_bookings_this_month': 3,
         },
         'remaining': {
           'staff': 0,
           'appointments_per_month': 18,
+          'online_bookings_per_month': 47,
           'messages_per_month': 0,
         },
         'upgrade_to': 'pro',
@@ -65,7 +81,9 @@ void main() {
 
       expect(ent.isPaid, isFalse);
       expect(ent.usage.appointmentsThisMonth, 12);
+      expect(ent.usage.onlineBookingsThisMonth, 3);
       expect(ent.remainingOf('appointments_per_month'), 18);
+      expect(ent.remainingOf('online_bookings_per_month'), 47);
       expect(ent.remainingOf('staff'), 0);
       expect(ent.upgradeTo, 'pro');
       expect(ent.autoRenewing, isTrue);
@@ -78,12 +96,14 @@ void main() {
       final error = PlanLimitException.fromDetail({
         'code': 'plan_limit_reached',
         'limit': 'appointments_per_month',
+        'limit_value': 100,
         'plan': 'free',
         'upgrade_to': 'pro',
         'message': 'Alcanzaste el límite de tu plan actual',
       });
 
       expect(error.limit, 'appointments_per_month');
+      expect(error.limitValue, 100);
       expect(error.upgradeTo, 'pro');
       expect(error.toString(), contains('límite'));
     });

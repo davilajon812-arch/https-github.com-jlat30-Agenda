@@ -222,13 +222,19 @@ solo considera `pendiente`, `confirmada` y `completada`.
 
 `plans` guarda los cupos y se puede ajustar sin redesplegar.
 
-| Plan | Empleados | Citas al mes | Anuncios |
-| ---- | --------- | ------------ | -------- |
-| `free` | 1 | **100** | sí |
-| `pro` | ilimitados | ilimitadas | no |
+| Plan | Empleados | Citas al mes | Reservas en línea | Anuncios |
+| ---- | --------- | ------------ | ----------------- | -------- |
+| `free` | 1 | **100** | **50** | sí |
+| `pro` | ilimitados | ilimitadas | ilimitadas | no |
 
-El cupo de citas cuenta las **citas atendibles del mes en curso**: se mira
-`starts_at` (convertido a la zona horaria del negocio) y se descartan
+Son **dos bolsas separadas**: `max_appointments_per_month` cuenta las citas que
+agenda el negocio desde la app y `max_online_bookings_per_month` las que entran
+por el enlace público (`booked_online = true`). Así una reserva del link no le
+come el cupo a la agenda ni al revés; el plan Gratis permite 150 citas al mes en
+total.
+
+Las dos usan la misma regla de conteo: **citas atendibles del mes en curso**. Se
+mira `starts_at` (convertido a la zona horaria del negocio) y se descartan
 `cancelada` y `no_asistio`. Una cita cancelada devuelve el cupo y agendar para el
 mes siguiente no descuenta del actual. El cálculo vive en
 `backend/app/services/entitlements.py`.

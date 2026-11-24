@@ -56,7 +56,14 @@ class PublicBusinessResponse(BaseModel):
         description="Días con atención; vacío si aún no hay horarios cargados",
     )
     bookable: bool = Field(
-        description="false si ningún empleado tiene horario: no hay nada que reservar"
+        description=(
+            "false si el negocio no tiene horarios publicados o si agotó sus "
+            "reservas en línea del mes"
+        )
+    )
+    closed_reason: str | None = Field(
+        default=None,
+        description="Por qué no se puede reservar: 'schedule' o 'quota'",
     )
     days_ahead: int = Field(description="Días hacia adelante que se pueden reservar")
 

@@ -236,6 +236,15 @@
   "@billingUsageAppointments": {
     "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
   },
+  "billingUsageOnlineBookings": "Public link this month: {used} of {limit}",
+  "@billingUsageOnlineBookings": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingOnlineBookings": "Online bookings",
+  "billingMonthlyLimit": "{limit} / month",
+  "@billingMonthlyLimit": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
   "billingUnlimited": "Unlimited",
   "billingFeatureNoAds": "No ads",
   "planLimitTitle": "Plan limit",
@@ -245,6 +254,10 @@
   },
   "planLimitAppointments": "You reached the {limit} appointment limit this month.",
   "@planLimitAppointments": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
+  "planLimitOnlineBookings": "You reached the {limit} online booking limit this month.",
+  "@planLimitOnlineBookings": {
     "placeholders": { "limit": { "type": "String" } }
   },
   "planLimitGeneric": "You reached your current plan limit.",
@@ -297,6 +310,8 @@
   },
   "publicLinkOpen": "Open in browser",
   "publicLinkQrHint": "Print this code and put it in your shop",
+  "publicLinkQuotaTitle": "Public link this month",
+  "publicLinkQuotaExhausted": "You used up this month's online bookings: clients can't book until next month.",
   "publicLinkHowToTitle": "How to use it",
   "publicLinkHowTo": "Share the link on WhatsApp, social media or your Google profile. Bookings arrive confirmed in your calendar with the customer's name and phone.",
   "businessAddressLabel": "Address",

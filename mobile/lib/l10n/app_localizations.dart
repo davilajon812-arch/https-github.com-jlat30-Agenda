@@ -1406,6 +1406,24 @@ abstract class AppLocalizations {
   /// **'Citas este mes: {used} de {limit}'**
   String billingUsageAppointments(int used, String limit);
 
+  /// No description provided for @billingUsageOnlineBookings.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlace público este mes: {used} de {limit}'**
+  String billingUsageOnlineBookings(int used, String limit);
+
+  /// No description provided for @billingOnlineBookings.
+  ///
+  /// In es, this message translates to:
+  /// **'Reservas en línea'**
+  String get billingOnlineBookings;
+
+  /// No description provided for @billingMonthlyLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'{limit} / mes'**
+  String billingMonthlyLimit(String limit);
+
   /// No description provided for @billingUnlimited.
   ///
   /// In es, this message translates to:
@@ -1435,6 +1453,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Llegaste al límite de {limit} citas este mes.'**
   String planLimitAppointments(String limit);
+
+  /// No description provided for @planLimitOnlineBookings.
+  ///
+  /// In es, this message translates to:
+  /// **'Llegaste al límite de {limit} reservas en línea este mes.'**
+  String planLimitOnlineBookings(String limit);
 
   /// No description provided for @planLimitGeneric.
   ///
@@ -1705,6 +1729,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Imprime este código y ponlo en tu local'**
   String get publicLinkQrHint;
+
+  /// No description provided for @publicLinkQuotaTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlace público este mes'**
+  String get publicLinkQuotaTitle;
+
+  /// No description provided for @publicLinkQuotaExhausted.
+  ///
+  /// In es, this message translates to:
+  /// **'Alcanzaste las reservas en línea de este mes: tus clientes no podrán reservar hasta el próximo.'**
+  String get publicLinkQuotaExhausted;
 
   /// No description provided for @publicLinkHowToTitle.
   ///

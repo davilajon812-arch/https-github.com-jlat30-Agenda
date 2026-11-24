@@ -7,6 +7,7 @@ class Plan {
     this.maxStaff,
     this.maxLocations,
     this.maxAppointmentsPerMonth,
+    this.maxOnlineBookingsPerMonth,
     this.maxMessagesPerMonth,
     this.features = const {},
   });
@@ -20,6 +21,8 @@ class Plan {
       maxLocations: (json['max_locations'] as num?)?.toInt(),
       maxAppointmentsPerMonth:
           (json['max_appointments_per_month'] as num?)?.toInt(),
+      maxOnlineBookingsPerMonth:
+          (json['max_online_bookings_per_month'] as num?)?.toInt(),
       maxMessagesPerMonth: (json['max_messages_per_month'] as num?)?.toInt(),
       features: Map<String, dynamic>.from(
         (json['features'] as Map?) ?? const {},
@@ -33,6 +36,9 @@ class Plan {
   final int? maxStaff;
   final int? maxLocations;
   final int? maxAppointmentsPerMonth;
+
+  /// Reservas que entran por el enlace público, aparte de la agenda.
+  final int? maxOnlineBookingsPerMonth;
   final int? maxMessagesPerMonth;
   final Map<String, dynamic> features;
 
@@ -47,6 +53,7 @@ class PlanUsage {
     required this.staffCount,
     required this.appointmentsThisMonth,
     required this.messagesThisMonth,
+    this.onlineBookingsThisMonth = 0,
   });
 
   factory PlanUsage.fromJson(Map<String, dynamic> json) {
@@ -54,12 +61,17 @@ class PlanUsage {
       staffCount: (json['staff_count'] as num).toInt(),
       appointmentsThisMonth: (json['appointments_this_month'] as num).toInt(),
       messagesThisMonth: (json['messages_this_month'] as num).toInt(),
+      onlineBookingsThisMonth:
+          (json['online_bookings_this_month'] as num?)?.toInt() ?? 0,
     );
   }
 
   final int staffCount;
   final int appointmentsThisMonth;
   final int messagesThisMonth;
+
+  /// Reservas recibidas por el enlace público este mes.
+  final int onlineBookingsThisMonth;
 }
 
 /// Plan efectivo del negocio tal como lo calcula el backend.
@@ -116,6 +128,7 @@ class PlanLimitException implements Exception {
   const PlanLimitException({
     required this.limit,
     required this.plan,
+    this.limitValue,
     this.upgradeTo,
     this.message,
   });
@@ -124,6 +137,7 @@ class PlanLimitException implements Exception {
     return PlanLimitException(
       limit: detail['limit'] as String? ?? 'unknown',
       plan: detail['plan'] as String? ?? 'free',
+      limitValue: (detail['limit_value'] as num?)?.toInt(),
       upgradeTo: detail['upgrade_to'] as String?,
       message: detail['message'] as String?,
     );
@@ -131,6 +145,9 @@ class PlanLimitException implements Exception {
 
   final String limit;
   final String plan;
+
+  /// Tope que impuso el plan (null si el backend no lo mandó).
+  final int? limitValue;
   final String? upgradeTo;
   final String? message;
 

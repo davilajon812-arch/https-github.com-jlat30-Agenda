@@ -215,7 +215,8 @@ def _reset(postgres_uri: str) -> None:
         conn.execute(
             """
             update public.plans
-            set max_appointments_per_month = case id when 'free' then 100 else null end
+            set max_appointments_per_month = case id when 'free' then 100 else null end,
+                max_online_bookings_per_month = case id when 'free' then 50 else null end
             """
         )
         conn.execute(

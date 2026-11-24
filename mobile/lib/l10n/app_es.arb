@@ -236,6 +236,15 @@
   "@billingUsageAppointments": {
     "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
   },
+  "billingUsageOnlineBookings": "Enlace público este mes: {used} de {limit}",
+  "@billingUsageOnlineBookings": {
+    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
+  },
+  "billingOnlineBookings": "Reservas en línea",
+  "billingMonthlyLimit": "{limit} / mes",
+  "@billingMonthlyLimit": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
   "billingUnlimited": "Ilimitado",
   "billingFeatureNoAds": "Sin anuncios",
   "planLimitTitle": "Límite de tu plan",
@@ -245,6 +254,10 @@
   },
   "planLimitAppointments": "Llegaste al límite de {limit} citas este mes.",
   "@planLimitAppointments": {
+    "placeholders": { "limit": { "type": "String" } }
+  },
+  "planLimitOnlineBookings": "Llegaste al límite de {limit} reservas en línea este mes.",
+  "@planLimitOnlineBookings": {
     "placeholders": { "limit": { "type": "String" } }
   },
   "planLimitGeneric": "Alcanzaste el límite de tu plan actual.",
@@ -297,6 +310,8 @@
   },
   "publicLinkOpen": "Abrir en el navegador",
   "publicLinkQrHint": "Imprime este código y ponlo en tu local",
+  "publicLinkQuotaTitle": "Enlace público este mes",
+  "publicLinkQuotaExhausted": "Alcanzaste las reservas en línea de este mes: tus clientes no podrán reservar hasta el próximo.",
   "publicLinkHowToTitle": "Cómo usarlo",
   "publicLinkHowTo": "Comparte el enlace por WhatsApp, redes o en tu perfil de Google. Las citas llegan confirmadas a tu agenda con el nombre y el teléfono del cliente.",
   "businessAddressLabel": "Dirección",

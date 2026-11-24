@@ -192,7 +192,7 @@ _PAGE = Template(
   </div>
 
   <div id="not-bookable" class="card" hidden>
-    <h2>Todavía no hay horarios publicados</h2>
+    <h2 id="not-bookable-title">Todavía no hay horarios publicados</h2>
     <p class="muted" id="not-bookable-msg">
       Este negocio aún no abrió su agenda en línea. Escríbele o llámalo para reservar.
     </p>
@@ -742,6 +742,12 @@ function notBookable(data) {
   el("loading").hidden = true;
   el("steps").hidden = true;
   el("not-bookable").hidden = false;
+  if (data.closed_reason === "quota") {
+    el("not-bookable-title").textContent = "Sin reservas en línea este mes";
+    el("not-bookable-msg").textContent =
+      "Este negocio ya recibió todas sus reservas en línea del mes. "
+      + "Escríbele o llámalo para agendar.";
+  }
   const phone = (data.business.phone || "").replace(/[^0-9]/g, "");
   if (phone) {
     const wa = el("not-bookable-wa");

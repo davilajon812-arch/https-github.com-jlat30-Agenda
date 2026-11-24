@@ -15,6 +15,7 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
         "max_staff": 1,
         "max_locations": None,
         "max_appointments_per_month": 100,
+        "max_online_bookings_per_month": 50,
         "max_messages_per_month": None,
         "features": {
             "reminders": False,
@@ -30,6 +31,7 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
         "max_staff": None,
         "max_locations": None,
         "max_appointments_per_month": None,
+        "max_online_bookings_per_month": None,
         "max_messages_per_month": None,
         "features": {
             "reminders": True,
@@ -54,6 +56,7 @@ class PlanLimit:
     max_staff: int | None
     max_locations: int | None
     max_appointments_per_month: int | None
+    max_online_bookings_per_month: int | None
     max_messages_per_month: int | None
     features: dict[str, Any] = field(default_factory=dict)
     sort_order: int = 0
@@ -67,6 +70,7 @@ def _to_limit(plan_id: str, row: dict[str, Any]) -> PlanLimit:
         max_staff=row.get("max_staff"),
         max_locations=row.get("max_locations"),
         max_appointments_per_month=row.get("max_appointments_per_month"),
+        max_online_bookings_per_month=row.get("max_online_bookings_per_month"),
         max_messages_per_month=row.get("max_messages_per_month"),
         features=row.get("features") or {},
         sort_order=row.get("sort_order") or 0,
@@ -82,7 +86,9 @@ def list_plans(conn: Connection[Any] | None) -> list[PlanLimit]:
                 conn.execute(
                     """
                     select id, name, play_product_id, max_staff, max_locations,
-                           max_appointments_per_month, max_messages_per_month,
+                           max_appointments_per_month,
+                           max_online_bookings_per_month,
+                           max_messages_per_month,
                            features, sort_order
                     from public.plans
                     where is_active

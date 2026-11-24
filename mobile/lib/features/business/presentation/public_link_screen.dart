@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/providers/app_providers.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../billing/presentation/providers/billing_providers.dart';
 import '../domain/business.dart';
 import 'providers/business_providers.dart';
 
@@ -90,6 +91,8 @@ class _PublicLinkScreenState extends ConsumerState<PublicLinkScreen> {
           ),
           const SizedBox(height: 16),
           if (business.publicBookingEnabled) ...[
+            _OnlineQuotaCard(),
+            const SizedBox(height: 16),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -126,6 +129,51 @@ class _PublicLinkScreenState extends ConsumerState<PublicLinkScreen> {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Cuántas reservas del enlace público le quedan al negocio este mes.
+class _OnlineQuotaCard extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final entitlements = ref.watch(entitelementsProvider).value;
+    final limit = entitlements?.plan.maxOnlineBookingsPerMonth;
+    // En Pro el enlace es ilimitado: no hay nada que contar.
+    if (entitlements == null || limit == null) return const SizedBox.shrink();
+
+    final used = entitlements.usage.onlineBookingsThisMonth;
+    final remaining =
+        entitlements.remainingOf('online_bookings_per_month') ?? 0;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.publicLinkQuotaTitle, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 6),
+            Text(l10n.billingUsageOnlineBookings(used, limit.toString())),
+            const SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: limit == 0 ? 1 : (used / limit).clamp(0.0, 1.0),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+            ),
+            if (remaining == 0) ...[
+              const SizedBox(height: 8),
+              Text(
+                l10n.publicLinkQuotaExhausted,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
