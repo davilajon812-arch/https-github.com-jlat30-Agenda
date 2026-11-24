@@ -287,7 +287,6 @@ class _CurrentPlanCard extends StatelessWidget {
 
     final staffLimit = entitlements.plan.maxStaff;
     final appointmentsLimit = entitlements.plan.maxAppointmentsPerMonth;
-    final messagesLimit = entitlements.plan.maxMessagesPerMonth;
 
     return Card(
       child: Padding(
@@ -342,14 +341,6 @@ class _CurrentPlanCard extends StatelessWidget {
               ),
               used: entitlements.usage.appointmentsThisMonth,
               limit: appointmentsLimit,
-            ),
-            _UsageRow(
-              label: l10n.billingUsageMessages(
-                entitlements.usage.messagesThisMonth,
-                messagesLimit?.toString() ?? l10n.billingUnlimited,
-              ),
-              used: entitlements.usage.messagesThisMonth,
-              limit: messagesLimit,
             ),
             if (entitlements.isPaid && entitlements.source == 'play') ...[
               const SizedBox(height: 12),
@@ -455,22 +446,14 @@ class _PlanCard extends ConsumerWidget {
                   : '${l10n.staffTitle}: ${plan.maxStaff}',
             ),
             _FeatureLine(
-              enabled: plan.maxAppointmentsPerMonth != 30,
+              enabled: plan.maxAppointmentsPerMonth == null,
               text: plan.maxAppointmentsPerMonth == null
                   ? '${l10n.navAppointments}: ${l10n.billingUnlimited}'
                   : '${l10n.navAppointments}: ${plan.maxAppointmentsPerMonth} / mes',
             ),
             _FeatureLine(
-              enabled: plan.feature('reminders'),
-              text: l10n.billingFeatureReminders,
-            ),
-            _FeatureLine(
-              enabled: plan.feature('advanced_reports'),
-              text: l10n.billingFeatureReports,
-            ),
-            _FeatureLine(
-              enabled: plan.feature('custom_branding'),
-              text: l10n.billingFeatureBranding,
+              enabled: !plan.feature('ads'),
+              text: l10n.billingFeatureNoAds,
             ),
             const SizedBox(height: 12),
             if (isCurrent)

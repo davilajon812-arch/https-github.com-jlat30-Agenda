@@ -1406,35 +1406,17 @@ abstract class AppLocalizations {
   /// **'Citas este mes: {used} de {limit}'**
   String billingUsageAppointments(int used, String limit);
 
-  /// No description provided for @billingUsageMessages.
-  ///
-  /// In es, this message translates to:
-  /// **'Mensajes este mes: {used} de {limit}'**
-  String billingUsageMessages(int used, String limit);
-
   /// No description provided for @billingUnlimited.
   ///
   /// In es, this message translates to:
   /// **'Ilimitado'**
   String get billingUnlimited;
 
-  /// No description provided for @billingFeatureReminders.
+  /// No description provided for @billingFeatureNoAds.
   ///
   /// In es, this message translates to:
-  /// **'Recordatorios automáticos'**
-  String get billingFeatureReminders;
-
-  /// No description provided for @billingFeatureReports.
-  ///
-  /// In es, this message translates to:
-  /// **'Reportes avanzados'**
-  String get billingFeatureReports;
-
-  /// No description provided for @billingFeatureBranding.
-  ///
-  /// In es, this message translates to:
-  /// **'Marca personalizada'**
-  String get billingFeatureBranding;
+  /// **'Sin anuncios'**
+  String get billingFeatureNoAds;
 
   /// No description provided for @planLimitTitle.
   ///

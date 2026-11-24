@@ -218,6 +218,24 @@ solo considera `pendiente`, `confirmada` y `completada`.
 - `subscriptions (business_id, current_period_end)`: plan vigente.
 - `subscriptions_purchase_token_key`: un `purchase_token` pertenece a un solo negocio.
 
+## Límites por plan
+
+`plans` guarda los cupos y se puede ajustar sin redesplegar.
+
+| Plan | Empleados | Citas al mes | Anuncios |
+| ---- | --------- | ------------ | -------- |
+| `free` | 1 | **100** | sí |
+| `pro` | ilimitados | ilimitadas | no |
+
+El cupo de citas cuenta las **citas atendibles del mes en curso**: se mira
+`starts_at` (convertido a la zona horaria del negocio) y se descartan
+`cancelada` y `no_asistio`. Una cita cancelada devuelve el cupo y agendar para el
+mes siguiente no descuenta del actual. El cálculo vive en
+`backend/app/services/entitlements.py`.
+
+Los límites de `max_locations` y `max_messages_per_month` están en `null`: no
+hay pantalla de sedes y todavía no se envían mensajes, así que no se anuncian.
+
 ## Pruebas de aislamiento
 
 `backend/tests/rls/test_isolation.py` crea dos negocios con un dueño cada uno más

@@ -13,9 +13,9 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
         "name": "Gratis",
         "play_product_id": None,
         "max_staff": 1,
-        "max_locations": 1,
-        "max_appointments_per_month": 30,
-        "max_messages_per_month": 0,
+        "max_locations": None,
+        "max_appointments_per_month": 100,
+        "max_messages_per_month": None,
         "features": {
             "reminders": False,
             "advanced_reports": False,
@@ -30,7 +30,7 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
         "max_staff": None,
         "max_locations": None,
         "max_appointments_per_month": None,
-        "max_messages_per_month": 1000,
+        "max_messages_per_month": None,
         "features": {
             "reminders": True,
             "advanced_reports": True,

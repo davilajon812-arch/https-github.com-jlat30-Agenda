@@ -236,14 +236,8 @@
   "@billingUsageAppointments": {
     "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
   },
-  "billingUsageMessages": "Messages this month: {used} of {limit}",
-  "@billingUsageMessages": {
-    "placeholders": { "used": { "type": "int" }, "limit": { "type": "String" } }
-  },
   "billingUnlimited": "Unlimited",
-  "billingFeatureReminders": "Automatic reminders",
-  "billingFeatureReports": "Advanced reports",
-  "billingFeatureBranding": "Custom branding",
+  "billingFeatureNoAds": "No ads",
   "planLimitTitle": "Plan limit",
   "planLimitStaff": "Your plan allows {limit} active staff member(s).",
   "@planLimitStaff": {

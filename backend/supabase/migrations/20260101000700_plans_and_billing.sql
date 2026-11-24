@@ -30,7 +30,7 @@ insert into public.plans (
     id, name, play_product_id, max_staff, max_locations,
     max_appointments_per_month, max_messages_per_month, features, sort_order
 ) values
-    ('free', 'Gratis', null, 1, 1, 30, 0,
+    ('free', 'Gratis', null, 1, 1, 100, 0,
      '{"reminders": false, "advanced_reports": false, "custom_branding": false}'::jsonb, 1),
     ('basico', 'Básico', 'agendapro_basico_mensual', 3, 1, null, 200,
      '{"reminders": true, "advanced_reports": false, "custom_branding": false}'::jsonb, 2),

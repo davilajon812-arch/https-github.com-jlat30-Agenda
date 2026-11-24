@@ -13,6 +13,7 @@ from typing import Any
 from fastapi import HTTPException, status
 from psycopg import Connection
 
+from app.core.timeutils import get_timezone
 from app.services.plans import PlanLimit, get_plan, next_plan
 from app.services.subscriptions import SubscriptionSnapshot, grants_paid_plan, now_utc
 
@@ -21,6 +22,9 @@ LIMIT_STAFF = "staff"
 LIMIT_LOCATIONS = "locations"
 LIMIT_APPOINTMENTS = "appointments_per_month"
 LIMIT_MESSAGES = "messages_per_month"
+
+# Estados que no consumen cupo: la cita no se llegó a atender.
+QUOTA_EXCLUDED_STATUSES = ("cancelada", "no_asistio")
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,6 +72,13 @@ class Entitlements:
             LIMIT_APPOINTMENTS: self.usage.appointments_this_month,
             LIMIT_MESSAGES: self.usage.messages_this_month,
         }[kind]
+
+
+def _business_timezone(conn: Connection[Any], business_id: str) -> str:
+    row = conn.execute(
+        "select timezone from public.businesses where id = %s", (business_id,)
+    ).fetchone()
+    return row["timezone"] if row else "UTC"
 
 
 def _month_bounds(now: datetime) -> tuple[datetime, datetime]:
@@ -131,7 +142,13 @@ def _sync_usage_counter(
 
 
 def load_entitlements(conn: Connection[Any], business_id: str | None) -> Entitlements:
-    """Calcula el plan efectivo y el consumo del negocio."""
+    """Calcula el plan efectivo y el consumo del negocio.
+
+    El cupo de citas cuenta las citas **atendibles del mes en curso** (por su
+    `starts_at`, en la zona horaria del negocio) y descarta las canceladas y los
+    no-shows. Antes se contaban las citas *creadas*, así que una cancelación
+    gastaba cupo y una cita agendada para el mes siguiente descontaba del actual.
+    """
     if not business_id:
         plan = get_plan(conn, "free")
         return Entitlements(
@@ -154,18 +171,23 @@ def load_entitlements(conn: Connection[Any], business_id: str | None) -> Entitle
         (business_id,),
     ).fetchone()
 
-    start, end = _month_bounds(now_utc())
+    timezone_name = _business_timezone(conn, business_id)
+    tz = get_timezone(timezone_name)
+    start_local, end_local = _month_bounds(now_utc().astimezone(tz))
+
     appointments_row = conn.execute(
         """
         select count(*) as total
         from public.appointments
-        where business_id = %s and created_at >= %s and created_at < %s
+        where business_id = %s
+          and status <> all(%s)
+          and starts_at >= %s and starts_at < %s
         """,
-        (business_id, start, end),
+        (business_id, list(QUOTA_EXCLUDED_STATUSES), start_local, end_local),
     ).fetchone()
     appointments_used = appointments_row["total"] if appointments_row else 0
     messages_used = _sync_usage_counter(
-        conn, business_id, start, end, appointments_used
+        conn, business_id, start_local, end_local, appointments_used
     )
 
     upgrade = next_plan(conn, plan.id)

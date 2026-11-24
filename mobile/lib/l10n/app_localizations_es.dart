@@ -693,21 +693,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String billingUsageMessages(int used, String limit) {
-    return 'Mensajes este mes: $used de $limit';
-  }
-
-  @override
   String get billingUnlimited => 'Ilimitado';
 
   @override
-  String get billingFeatureReminders => 'Recordatorios automáticos';
-
-  @override
-  String get billingFeatureReports => 'Reportes avanzados';
-
-  @override
-  String get billingFeatureBranding => 'Marca personalizada';
+  String get billingFeatureNoAds => 'Sin anuncios';
 
   @override
   String get planLimitTitle => 'Límite de tu plan';
