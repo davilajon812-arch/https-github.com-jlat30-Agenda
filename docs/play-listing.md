@@ -79,7 +79,7 @@ TU NEGOCIO, DESDE EL TELÉFONO
 • Administra más de un negocio con la misma cuenta (plan Pro).
 
 PLANES
-• Gratis: con anuncios, 1 empleado y hasta 100 citas al mes.
+• Gratis: con anuncios, 1 empleado, hasta 100 citas al mes y 50 reservas por el enlace público.
 • Pro: 5 USD al mes. Sin anuncios, sin límites y con varios negocios. El precio final lo muestra Google Play en tu moneda e impuestos. Se cancela cuando quieras desde Google Play.
 
 PENSADA PARA LATINOAMÉRICA
