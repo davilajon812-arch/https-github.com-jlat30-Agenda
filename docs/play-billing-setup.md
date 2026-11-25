@@ -211,8 +211,8 @@ flutter build appbundle --flavor prod -t lib/main_prod.dart ^
 
 Salida: `build/app/outputs/bundle/prodRelease/app-prod-release.aab`.
 
-> Sube `versionCode` en `pubspec.yaml` (`version: 0.1.0+2`) antes de **cada**
-> envío a Play.
+> Sube `versionCode` en `pubspec.yaml` (p. ej. `version: 0.2.0+2`) antes de
+> **cada** envío a Play.
 
 Verificar la firma del paquete:
 
