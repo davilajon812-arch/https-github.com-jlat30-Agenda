@@ -94,20 +94,25 @@ Soporte: soporte@agendapro.app
 
 *(2280 caracteres de 4000)*
 
-## Novedades de la versión (límite 500 por envío)
+## Novedades de la versión 0.2.0 (límite 500 por envío)
 
 ```
 Primera versión de AgendaPro.
 
 • Agenda de citas por día y por semana, con estados y recordatorio por WhatsApp.
 • Clientes con historial de visitas.
-• Servicios, empleados y horarios con bloqueos.
+• Servicios, empleados, horarios y bloqueos.
 • Registro de cobros e ingresos por día, semana y mes.
-• Enlace público de reservas con código QR: tus clientes reservan sin instalar nada.
-• Plan Gratis con anuncios y plan Pro sin anuncios ni límites.
+• Enlace público con QR: tus clientes reservan sin instalar nada.
+• Plan Gratis: 100 citas al mes en la agenda y 50 reservas en línea, con anuncios.
+• Plan Pro sin anuncios ni límites.
 ```
 
-*(399 caracteres de 500)*
+*(433 caracteres de 500)*
+
+Versión `0.2.0` (`versionCode` 2). Si el envío anterior se hubiera publicado,
+estas notas cambiarían a un resumen de los cambios; al ser el primer envío, se
+mantiene el texto de presentación.
 
 ## Acceso a la app (revisión)
 
