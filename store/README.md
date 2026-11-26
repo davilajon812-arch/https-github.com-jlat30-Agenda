@@ -61,8 +61,6 @@ Antes de capturar, comprueba que la app **no muestre el banner de DEBUG**
 - Subir el AAB a pruebas internas.
 - Crear la suscripción `agendapro_pro_mensual` (USD 5,00) **después** del primer
   AAB, y añadirse como *license tester*.
-- Reemplazar el App ID de AdMob de prueba y el ad unit ID antes del build de
-  producción.
 
 Los **textos de la ficha** (título, descripciones y novedades) ya están en
 [`docs/play-listing.md`](../docs/play-listing.md).

@@ -11,7 +11,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # --build-number. En Android, build-name es versionName y build-number es
 # versionCode (el número que Play exige subir en cada envío).
 # Referencia: https://developer.android.com/studio/publish/versioning
-version: 0.2.0+2
+version: 0.2.1+3
 
 environment:
   sdk: ^3.11.4

@@ -52,24 +52,33 @@ El plan Gratis muestra un banner; el plan Pro no. La decisión la toma el
 backend con `plans.features.ads`, así que se puede apagar sin publicar una
 versión nueva.
 
-La app ya viene con los **IDs de prueba de Google**, que no generan ingresos y
-sirven para validar todo el flujo:
+La app ya apunta a la cuenta de AdMob de AgendaPro y el banner es adaptativo
+(ajusta el ancho al de la pantalla, con altura calculada por Google):
 
-| Dónde | Variable | Valor de prueba |
-| ----- | -------- | --------------- |
-| `AndroidManifest.xml` | `com.google.android.gms.ads.APPLICATION_ID` | `ca-app-pub-3940256099942544~3347511713` |
-| Compilación | `--dart-define=ADMOB_BANNER_UNIT_ID=...` | `ca-app-pub-3940256099942544/6300978111` |
+| Dónde | Variable | Valor |
+| ----- | -------- | ----- |
+| `AndroidManifest.xml` | `com.google.android.gms.ads.APPLICATION_ID` | `ca-app-pub-7577794697772765~5358276955` |
+| `.env.prod` | `ADMOB_BANNER_UNIT_ID` | `ca-app-pub-7577794697772765/4748349971` |
 
-Para cobrar de verdad hace falta:
+El App ID va versionado en el manifiesto (es público); el bloque de anuncios
+llega por `--dart-define-from-file=.env.prod`. Si esa clave falta, la app cae
+al bloque de **prueba** de Google (`ca-app-pub-3940256099942544/6300978111`),
+que no genera ingresos.
 
-1. Crear la app en <https://admob.google.com> y anotar el **App ID**.
-2. Crear un **bloque de anuncios → Banner** y anotar el **Ad unit ID**.
-3. Reemplazar el `android:value` del manifiesto por tu App ID.
-4. Compilar con `--dart-define=ADMOB_BANNER_UNIT_ID=ca-app-pub-XXXX/YYYY`
-   (o editar el valor por defecto en `.env.prod`).
+Si algún día cambian los IDs:
+
+1. Reemplazar el `android:value` del manifiesto por el nuevo App ID.
+2. Actualizar `ADMOB_BANNER_UNIT_ID` en `.env.prod` y en `.env.example`.
 
 > Si el App ID del manifiesto no es válido, **la app se cierra al arrancar**.
 > Es el error más común al integrar AdMob.
+
+### Consentimiento (EEE y Reino Unido)
+
+La app pide el banner sin formulario de consentimiento. Si se distribuye en el
+EEE o Reino Unido, Play exige un CMP certificado: hay que crear el mensaje en
+AdMob → *Privacidad y mensajes* y añadir el flujo de
+`ConsentInformation`/`ConsentForm` antes de `MobileAds.initialize`.
 
 ### Declaración obligatoria en Play Console
 

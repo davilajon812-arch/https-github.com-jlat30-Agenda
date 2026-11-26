@@ -39,36 +39,60 @@ class _BannerAdSlot extends ConsumerStatefulWidget {
 }
 
 class _BannerAdSlotState extends ConsumerState<_BannerAdSlot> {
-  static const _height = 50.0;
+  static const _fallbackHeight = 50.0;
 
   BannerAd? _banner;
   bool _loaded = false;
   bool _failed = false;
+  int? _width;
 
   @override
-  void initState() {
-    super.initState();
-    _banner = BannerAd(
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Un banner de 320 px fijo deja bandas laterales en pantallas anchas; el
+    // adaptativo ocupa el ancho real y Google calcula la altura.
+    final width = MediaQuery.sizeOf(context).width.truncate();
+    if (width == _width) return;
+    _width = width;
+    _loadBanner(width);
+  }
+
+  Future<void> _loadBanner(int width) async {
+    final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSize(width) ??
+        AdSize.banner;
+
+    // El ancho pudo cambiar mientras se pedía el tamaño.
+    if (!mounted || width != _width) return;
+
+    _banner?.dispose();
+    final banner = BannerAd(
       adUnitId: ref.read(appConfigProvider).admobBannerUnitId,
-      size: AdSize.banner,
+      size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          if (!mounted) {
-            ad.dispose();
-            return;
-          }
+          if (!mounted || ad != _banner) return;
           setState(() => _loaded = true);
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
-          _banner = null;
-          if (!mounted) return;
+          if (!mounted || ad != _banner) return;
           // Sin anuncio no se deja un hueco vacío.
-          setState(() => _failed = true);
+          setState(() {
+            _banner = null;
+            _failed = true;
+          });
         },
       ),
-    )..load();
+    );
+
+    setState(() {
+      _banner = banner;
+      _loaded = false;
+      _failed = false;
+    });
+    await banner.load();
   }
 
   @override
@@ -81,8 +105,9 @@ class _BannerAdSlotState extends ConsumerState<_BannerAdSlot> {
   Widget build(BuildContext context) {
     if (_failed) return const SizedBox.shrink();
 
+    final height = _banner?.size.height.toDouble() ?? _fallbackHeight;
     return SizedBox(
-      height: _height,
+      height: height,
       width: double.infinity,
       child: _loaded && _banner != null
           ? Center(child: AdWidget(ad: _banner!))

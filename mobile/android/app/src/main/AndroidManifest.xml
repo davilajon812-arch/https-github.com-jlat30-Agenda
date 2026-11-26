@@ -5,12 +5,11 @@
         android:label="@string/app_name"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- ID de la app en AdMob. Este es el de PRUEBA de Google: hay que
-             reemplazarlo por el real (ca-app-pub-XXXXXXXX~YYYYYYYY) al
-             publicar, o la app no arranca en release. -->
+        <!-- App ID de AdMob de AgendaPro. Si no es válido, la app se cierra
+             al arrancar; el bloque de anuncios va en ADMOB_BANNER_UNIT_ID. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-7577794697772765~5358276955"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

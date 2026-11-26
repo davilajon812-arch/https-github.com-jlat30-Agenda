@@ -94,7 +94,7 @@ Soporte: soporte@agendapro.app
 
 *(2280 caracteres de 4000)*
 
-## Novedades de la versión 0.2.0 (límite 500 por envío)
+## Novedades de la versión 0.2.1 (límite 500 por envío)
 
 ```
 Primera versión de AgendaPro.
@@ -110,7 +110,7 @@ Primera versión de AgendaPro.
 
 *(433 caracteres de 500)*
 
-Versión `0.2.0` (`versionCode` 2). Si el envío anterior se hubiera publicado,
+Versión `0.2.1` (`versionCode` 3). Si el envío anterior se hubiera publicado,
 estas notas cambiarían a un resumen de los cambios; al ser el primer envío, se
 mantiene el texto de presentación.
 
