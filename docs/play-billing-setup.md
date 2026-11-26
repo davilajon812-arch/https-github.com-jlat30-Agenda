@@ -281,6 +281,7 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 - [ ] `versionCode` incrementado respecto al envío anterior.
 - [ ] Producto `agendapro_pro_mensual` activo con precio base **USD 5.00**.
 - [ ] App ID y Ad unit ID reales de AdMob (no los de prueba) en manifiesto y compilación.
+- [ ] Login con Google configurado ([docs/google-sign-in.md](./google-sign-in.md)): clientes OAuth Android (upload, debug y Play App Signing) + `GOOGLE_WEB_CLIENT_ID`.
 - [ ] Seguridad de los datos y clasificación de contenido declaran los anuncios.
 - [ ] `plans.play_product_id` coincide con los IDs de Play.
 - [ ] Cuenta de servicio con permiso de suscripciones en Play Console.

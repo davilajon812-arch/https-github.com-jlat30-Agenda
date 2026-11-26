@@ -1772,6 +1772,30 @@ abstract class AppLocalizations {
   /// **'Solo quiero reservar una cita'**
   String get authJustBooking;
 
+  /// No description provided for @authContinueWithGoogle.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar con Google'**
+  String get authContinueWithGoogle;
+
+  /// No description provided for @authOrEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'o con tu correo'**
+  String get authOrEmail;
+
+  /// No description provided for @authGoogleEmailExists.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya tienes una cuenta con ese correo. Entra con tu contraseña.'**
+  String get authGoogleEmailExists;
+
+  /// No description provided for @authGoogleUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo iniciar sesión con Google. Inténtalo de nuevo en un momento.'**
+  String get authGoogleUnavailable;
+
   /// No description provided for @clientBookingTitle.
   ///
   /// In es, this message translates to:

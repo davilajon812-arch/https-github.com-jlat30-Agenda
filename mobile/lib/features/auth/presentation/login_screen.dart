@@ -6,6 +6,7 @@ import '../../../core/providers/app_providers.dart';
 import '../../../l10n/app_localizations.dart';
 import 'auth_error_messages.dart';
 import 'widgets/auth_scaffold.dart';
+import 'widgets/google_sign_in_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -52,6 +53,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    final l10n = AppLocalizations.of(context);
+    final serverClientId = ref.read(appConfigProvider).googleServerClientId;
+
+    setState(() {
+      _submitting = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await ref.read(authRepositoryProvider).signInWithGoogle(
+            serverClientId: serverClientId,
+          );
+      // El router redirige solo cuando cambia la sesión.
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _errorMessage = authErrorMessage(l10n, error));
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -64,6 +87,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (ref.watch(appConfigProvider).isGoogleSignInConfigured) ...[
+              GoogleSignInButton(
+                busy: _submitting,
+                onPressed: _signInWithGoogle,
+              ),
+              const SizedBox(height: 20),
+              const AuthProvidersDivider(),
+              const SizedBox(height: 20),
+            ],
             TextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,

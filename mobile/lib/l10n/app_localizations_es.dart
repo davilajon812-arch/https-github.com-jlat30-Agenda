@@ -905,6 +905,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get authJustBooking => 'Solo quiero reservar una cita';
 
   @override
+  String get authContinueWithGoogle => 'Continuar con Google';
+
+  @override
+  String get authOrEmail => 'o con tu correo';
+
+  @override
+  String get authGoogleEmailExists =>
+      'Ya tienes una cuenta con ese correo. Entra con tu contraseña.';
+
+  @override
+  String get authGoogleUnavailable =>
+      'No se pudo iniciar sesión con Google. Inténtalo de nuevo en un momento.';
+
+  @override
   String get clientBookingTitle => 'Reservar una cita';
 
   @override

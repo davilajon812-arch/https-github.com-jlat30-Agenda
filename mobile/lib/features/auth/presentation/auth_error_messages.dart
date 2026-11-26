@@ -1,16 +1,34 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../data/auth_repository.dart';
 
 /// Traduce los errores de Supabase Auth a mensajes de la interfaz.
 String authErrorMessage(AppLocalizations l10n, Object error) {
+  if (error is GoogleSignInEmailInUse) {
+    return l10n.authGoogleEmailExists;
+  }
+  if (error is GoogleSignInTokenUnavailable) {
+    return l10n.authGoogleUnavailable;
+  }
+  if (error is GoogleSignInException) {
+    // El detalle (SHA-1 equivocado, consentimiento en pruebas…) no se muestra
+    // al usuario, pero deja rastro al depurar en el teléfono.
+    debugPrint('Google Sign-In: ${error.code} ${error.description}');
+    return l10n.authGoogleUnavailable;
+  }
   if (error is AuthException) {
     final code = (error.code ?? '').toLowerCase();
     final message = error.message.toLowerCase();
 
+    if (code == 'email_exists' || code == 'identity_already_exists') {
+      return l10n.authGoogleEmailExists;
+    }
     if (code == 'invalid_credentials' || message.contains('invalid login')) {
       return l10n.errorInvalidCredentials;
     }

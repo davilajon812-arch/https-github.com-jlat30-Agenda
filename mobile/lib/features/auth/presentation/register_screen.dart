@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import 'auth_error_messages.dart';
 import 'login_screen.dart' show validateEmailField;
 import 'widgets/auth_scaffold.dart';
+import 'widgets/google_sign_in_button.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -70,6 +71,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    final l10n = AppLocalizations.of(context);
+    final serverClientId = ref.read(appConfigProvider).googleServerClientId;
+
+    setState(() {
+      _submitting = true;
+      _errorMessage = null;
+      _infoMessage = null;
+    });
+
+    try {
+      await ref.read(authRepositoryProvider).signInWithGoogle(
+            serverClientId: serverClientId,
+          );
+      // Al crear la cuenta el usuario queda sin negocio: AppGate abre el
+      // onboarding, que es donde se piden los datos del negocio.
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _errorMessage = authErrorMessage(l10n, error));
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -82,6 +107,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (ref.watch(appConfigProvider).isGoogleSignInConfigured) ...[
+              GoogleSignInButton(
+                busy: _submitting,
+                onPressed: _signInWithGoogle,
+              ),
+              const SizedBox(height: 20),
+              const AuthProvidersDivider(),
+              const SizedBox(height: 20),
+            ],
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.words,

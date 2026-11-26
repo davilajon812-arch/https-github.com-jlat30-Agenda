@@ -160,6 +160,7 @@ como secretos y verificar que `GET /health` responda 200.
 - [docs/phase-02-report.md](docs/phase-02-report.md): entrega de la fase 2.
 - [docs/phase-03-report.md](docs/phase-03-report.md): entrega de la fase 3.
 - [docs/play-billing-setup.md](docs/play-billing-setup.md): Play Console, cuenta de servicio y RTDN.
+- [docs/google-sign-in.md](docs/google-sign-in.md): "Continuar con Google" (OAuth, SHA-1 y Supabase).
 - [docs/demo-account.md](docs/demo-account.md): cuenta demo con datos para la revisión de Play.
 
 ## Reglas de cumplimiento (Google Play)

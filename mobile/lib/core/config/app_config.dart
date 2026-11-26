@@ -35,6 +35,7 @@ class AppConfig {
         'https://agendapro-api-469f.onrender.com/privacidad',
     this.termsUrl = 'https://agendapro-api-469f.onrender.com/terminos',
     this.admobBannerUnitId = defaultTestBannerUnitId,
+    this.googleServerClientId = '',
   });
 
   /// Bloque de anuncios de prueba de Google (nunca genera ingresos).
@@ -69,6 +70,9 @@ class AppConfig {
         'ADMOB_BANNER_UNIT_ID',
         defaultValue: defaultTestBannerUnitId,
       ),
+      googleServerClientId: const String.fromEnvironment(
+        'GOOGLE_WEB_CLIENT_ID',
+      ),
     );
   }
 
@@ -96,6 +100,18 @@ class AppConfig {
 
   /// Bloque de anuncios del plan Gratis.
   final String admobBannerUnitId;
+
+  /// Client ID **Web** del proyecto de Google Cloud.
+  ///
+  /// `google_sign_in` lo usa como `serverClientId` para obtener el idToken que
+  /// Supabase valida. El cliente Android no sirve aquí: Supabase compara la
+  /// audiencia del token contra este valor.
+  final String googleServerClientId;
+
+  /// Sin Client ID Web el botón de Google no se muestra: pulsarlo solo daría
+  /// un error de configuración al usuario.
+  bool get isGoogleSignInConfigured =>
+      googleServerClientId.trim().isNotEmpty;
 
   /// applicationId de Android (necesario para el enlace de gestión de suscripción).
   final String androidPackageName;

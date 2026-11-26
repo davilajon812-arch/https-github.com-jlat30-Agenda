@@ -902,6 +902,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authJustBooking => 'I just want to book an appointment';
 
   @override
+  String get authContinueWithGoogle => 'Continue with Google';
+
+  @override
+  String get authOrEmail => 'or with your email';
+
+  @override
+  String get authGoogleEmailExists =>
+      'You already have an account with that email. Sign in with your password.';
+
+  @override
+  String get authGoogleUnavailable =>
+      'Couldn\'t sign in with Google. Please try again in a moment.';
+
+  @override
   String get clientBookingTitle => 'Book an appointment';
 
   @override
