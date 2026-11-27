@@ -1,10 +1,10 @@
-import 'package:turnia/core/config/app_config.dart';
-import 'package:turnia/core/providers/app_providers.dart';
-import 'package:turnia/features/auth/presentation/providers/auth_providers.dart';
-import 'package:turnia/features/business/domain/business.dart';
-import 'package:turnia/features/business/presentation/providers/business_providers.dart';
-import 'package:turnia/features/settings/presentation/settings_screen.dart';
-import 'package:turnia/l10n/app_localizations.dart';
+import 'package:citurno/core/config/app_config.dart';
+import 'package:citurno/core/providers/app_providers.dart';
+import 'package:citurno/features/auth/presentation/providers/auth_providers.dart';
+import 'package:citurno/features/business/domain/business.dart';
+import 'package:citurno/features/business/presentation/providers/business_providers.dart';
+import 'package:citurno/features/settings/presentation/settings_screen.dart';
+import 'package:citurno/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

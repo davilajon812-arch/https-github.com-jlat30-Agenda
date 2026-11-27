@@ -1,4 +1,4 @@
-import 'package:turnia/features/business/presentation/widgets/onboarding_options.dart';
+import 'package:citurno/features/business/presentation/widgets/onboarding_options.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

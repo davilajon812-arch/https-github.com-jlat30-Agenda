@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In es, this message translates to:
-  /// **'Turnia'**
+  /// **'Citurno'**
   String get appTitle;
 
   /// No description provided for @commonRetry.

@@ -60,7 +60,7 @@ $env:BILLING_PROVIDER="fake"
 # Con un JWT de un dueño de negocio:
 curl -X POST http://localhost:8000/api/v1/billing/verify ^
   -H "Authorization: Bearer <token>" -H "Content-Type: application/json" ^
-  -d "{\"business_id\":\"<uuid>\",\"product_id\":\"turnia_pro_mensual\",\"purchase_token\":\"prueba-1\"}"
+  -d "{\"business_id\":\"<uuid>\",\"product_id\":\"citurno_pro_mensual\",\"purchase_token\":\"prueba-1\"}"
 ```
 
 Cualquier token activa el plan Pro (30 días). Luego:
@@ -96,7 +96,7 @@ flutter analyze; flutter test           # 29 pruebas
 | Verificación real | Necesita productos activos y cuenta de servicio con permisos; hasta entonces `BILLING_PROVIDER=fake` simula todo. |
 | Prueba de compra | Requiere la app instalada desde Play (pruebas internas) con una cuenta de licencia: no funciona con un APK instalado a mano. |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` | Es un secreto largo: guárdalo solo en Render, nunca en el repositorio ni en el chat. |
-| Autenticación de RTDN | Se usa un secreto compartido (`X-Turnia-Token`). Para endurecerlo, validar el OAuth de Pub/Sub. |
+| Autenticación de RTDN | Se usa un secreto compartido (`X-Citurno-Token`). Para endurecerlo, validar el OAuth de Pub/Sub. |
 | Prorrateo / cambio de plan | Play no permite cambiar de plan base desde la app sin `updatePurchase`; hoy se compra el nuevo producto y se cancela el anterior desde Play. |
 | Consumibles (paquetes de mensajes) | Fase 5. |
 | Reembolsos manuales | Se procesan por RTDN; no hay panel de administración todavía. |

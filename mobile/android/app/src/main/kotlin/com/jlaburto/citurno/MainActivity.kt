@@ -1,4 +1,4 @@
-package com.turnia.app
+package com.jlaburto.citurno
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -27,7 +27,7 @@ la app se comporta como antes: correo y contraseña.
 1. <https://console.cloud.google.com> → crear (o elegir) el proyecto.
 2. **APIs y servicios → Pantalla de consentimiento de OAuth**:
    - Tipo de usuario: **Externo**.
-   - Nombre de la app: `Turnia`, correo de soporte, logo y dominio
+   - Nombre de la app: `Citurno`, correo de soporte, logo y dominio
      (`agendapro-api-469f.onrender.com`).
    - Permisos: `email` y `profile` (no requieren verificación de Google).
    - **Publicar la app**. Si queda en *Testing*, solo entran los 100 testers
@@ -36,9 +36,9 @@ la app se comporta como antes: correo y contraseña.
 
 | Cliente | Tipo | Datos |
 | ------- | ---- | ----- |
-| Android (debug) | Android | paquete `com.turnia.app` · SHA-1 `9B:40:F8:46:F6:6B:32:DD:D7:51:18:35:F9:62:00:DA:4E:A3:BB:C2` |
-| Android (release) | Android | paquete `com.turnia.app` · SHA-1 `FA:EE:55:D7:BE:28:32:64:EB:E0:02:D7:35:10:2E:5B:20:64:1D:EB` |
-| Android (Play) | Android | paquete `com.turnia.app` · SHA-1 de **Play App Signing** |
+| Android (debug) | Android | paquete `com.jlaburto.citurno` · SHA-1 `9B:40:F8:46:F6:6B:32:DD:D7:51:18:35:F9:62:00:DA:4E:A3:BB:C2` |
+| Android (release) | Android | paquete `com.jlaburto.citurno` · SHA-1 `FA:EE:55:D7:BE:28:32:64:EB:E0:02:D7:35:10:2E:5B:20:64:1D:EB` |
+| Android (Play) | Android | paquete `com.jlaburto.citurno` · SHA-1 de **Play App Signing** |
 | **Web** | Web | el **Client ID** de este cliente es el que va en `GOOGLE_WEB_CLIENT_ID` |
 
 > El SHA-1 de Play App Signing está en Play Console → **Probar y publicar →

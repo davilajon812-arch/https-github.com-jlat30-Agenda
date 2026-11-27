@@ -72,7 +72,7 @@ function New-Secret { -join ((48..57) + (65..90) + (97..122) | Get-Random -Count
    ```
 
    ```json
-   {"status":"ok","service":"Turnia API","version":"0.1.0","environment":"prod"}
+   {"status":"ok","service":"Citurno API","version":"0.1.0","environment":"prod"}
    ```
 
 7. Comprueba que conecta a la base y cargó los planes:
@@ -168,7 +168,7 @@ curl.exe -s -o NUL -w "%{http_code}`n" -X POST `
 
 | Check | Respuesta |
 | ----- | --------- |
-| 1 | `{"status":"ok","service":"Turnia API","version":"0.1.0","environment":"prod"} [200]` |
+| 1 | `{"status":"ok","service":"Citurno API","version":"0.1.0","environment":"prod"} [200]` |
 | 2 | Array con los dos planes (`free`, `pro`) |
 | 3 | `{"result":"unknown_token"}` con código 200 |
 | 4 | `{"detail":"Token de RTDN inválido"}` con código 401 |

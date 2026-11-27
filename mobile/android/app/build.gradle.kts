@@ -18,7 +18,7 @@ if (hasReleaseKeystore) {
 }
 
 android {
-    namespace = "com.turnia.app"
+    namespace = "com.jlaburto.citurno"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.turnia.app"
+        applicationId = "com.jlaburto.citurno"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -67,11 +67,11 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            resValue("string", "app_name", "Turnia Dev")
+            resValue("string", "app_name", "Citurno Dev")
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "Turnia")
+            resValue("string", "app_name", "Citurno")
         }
     }
 }

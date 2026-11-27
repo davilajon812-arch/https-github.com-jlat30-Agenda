@@ -11,17 +11,17 @@ el mensaje ya escrito y es el negocio quien decide cuándo enviarlo.
 ## Nombre de la app (límite 30)
 
 ```
-Turnia: citas y clientes
+Citurno: citas y clientes
 ```
 
-*(24 caracteres)*
+*(25 caracteres)*
 
 Alternativas:
 
 | Texto | Caracteres |
 | ----- | ---------- |
-| `Turnia: agenda y citas` | 22 |
-| `Turnia · Agenda de citas` | 24 |
+| `Citurno: agenda y citas` | 23 |
+| `Citurno · Agenda de citas` | 25 |
 
 El descriptor ("citas y clientes") ayuda a que la ficha aparezca en búsquedas
 por función y no solo por marca.
@@ -44,7 +44,7 @@ Alternativas:
 ## Descripción completa (límite 4000)
 
 ```
-Turnia es la agenda de citas para negocios de servicios: barberías, salones de belleza, uñas, talleres, veterinarias, gimnasios y más.
+Citurno es la agenda de citas para negocios de servicios: barberías, salones de belleza, uñas, talleres, veterinarias, gimnasios y más.
 
 Olvídate del cuaderno y de los mensajes cruzados. Tus clientes reservan solos desde un enlace, tu agenda se actualiza al instante y sabes cuánto cobraste sin abrir una hoja de cálculo.
 
@@ -92,12 +92,12 @@ Términos del servicio: https://agendapro-api-469f.onrender.com/terminos
 Soporte: soporte@agendapro.app
 ```
 
-*(2358 caracteres de 4000)*
+*(2359 caracteres de 4000)*
 
 ## Novedades de la versión 0.3.0 (límite 500 por envío)
 
 ```
-Primera versión de Turnia.
+Primera versión de Citurno.
 
 • Agenda de citas por día y por semana, con estados y recordatorio por WhatsApp.
 • Clientes con historial de visitas.
@@ -108,7 +108,7 @@ Primera versión de Turnia.
 • Plan Pro sin anuncios ni límites.
 ```
 
-*(438 caracteres de 500)*
+*(439 caracteres de 500)*
 
 Versión `0.3.0` (`versionCode` 5). Si el envío anterior se hubiera publicado,
 estas notas cambiarían a un resumen de los cambios; al ser el primer envío, se
@@ -139,8 +139,12 @@ Pro ya está activa, así que no hace falta comprar nada. En Ajustes → Mi nego
   omite, Play rechaza la versión.
 - **Precio**: el plan Pro se describe como 5 USD al mes porque es el precio base
   configurado en Play Console. Si cambia, hay que actualizar el texto.
-- **Nombre**: se descartó "Citaly" porque ya existe una app del mismo rubro
-  (*Citaly - Reserva y gestión*, `com.citaly.app`, de Digital-Nest) que además
-  ocupa ese paquete. "Turnia" no apareció en Play al comprobarlo, pero antes de
-  publicar conviene buscarlo otra vez y revisar el registro de marcas del país
-  donde se distribuya.
+- **Nombre**: se descartaron dos nombres antes de llegar a este. "Citaly"
+  porque ya existe *Citaly - Reserva y gestión* (`com.citaly.app`, de
+  Digital-Nest, mismo rubro) y "Turnia" porque hay *Turnia: Cuadrante de
+  Turnos* y un MMORPG con ese nombre. "Citurno" no apareció en Play al
+  comprobarlo, pero antes de publicar conviene buscarlo otra vez y revisar el
+  registro de marcas del país donde se distribuya.
+- **Paquete**: es `com.jlaburto.citurno`, con el prefijo del desarrollador.
+  Play bloquea un `applicationId` en cuanto lo usa cualquier app, incluso en
+  borrador; el prefijo personal evita esa colisión.

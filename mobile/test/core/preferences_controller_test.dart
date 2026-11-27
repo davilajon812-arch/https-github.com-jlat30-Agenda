@@ -1,5 +1,5 @@
-import 'package:turnia/core/preferences/preferences_controller.dart';
-import 'package:turnia/core/providers/app_providers.dart';
+import 'package:citurno/core/preferences/preferences_controller.dart';
+import 'package:citurno/core/providers/app_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

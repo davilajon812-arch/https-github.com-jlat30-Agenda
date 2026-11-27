@@ -225,7 +225,7 @@ class FakeGooglePlayClient:
 
     def __init__(
         self,
-        package_name: str = "com.turnia.app",
+        package_name: str = "com.jlaburto.citurno",
         known_tokens: dict[str, dict[str, Any]] | None = None,
         acknowledged: set[str] | None = None,
     ) -> None:

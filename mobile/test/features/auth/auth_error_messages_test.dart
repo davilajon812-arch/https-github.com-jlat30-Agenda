@@ -1,5 +1,5 @@
-import 'package:turnia/features/auth/data/auth_repository.dart';
-import 'package:turnia/features/auth/presentation/auth_error_messages.dart';
+import 'package:citurno/features/auth/data/auth_repository.dart';
+import 'package:citurno/features/auth/presentation/auth_error_messages.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_helpers.dart';

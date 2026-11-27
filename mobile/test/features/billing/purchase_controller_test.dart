@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-import 'package:turnia/core/api/agenda_api.dart';
-import 'package:turnia/core/providers/app_providers.dart';
-import 'package:turnia/features/billing/domain/plan.dart';
-import 'package:turnia/features/billing/presentation/providers/billing_providers.dart';
+import 'package:citurno/core/api/agenda_api.dart';
+import 'package:citurno/core/providers/app_providers.dart';
+import 'package:citurno/features/billing/domain/plan.dart';
+import 'package:citurno/features/billing/presentation/providers/billing_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _businessId = 'b1';
-const _productId = 'turnia_pro_mensual';
+const _productId = 'citurno_pro_mensual';
 
 Entitlements _proPlan() {
   return Entitlements.fromJson({

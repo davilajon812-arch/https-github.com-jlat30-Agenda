@@ -27,7 +27,7 @@ FALLBACK_PLANS: dict[str, dict[str, Any]] = {
     },
     "pro": {
         "name": "Pro",
-        "play_product_id": "turnia_pro_mensual",
+        "play_product_id": "citurno_pro_mensual",
         "max_staff": None,
         "max_locations": None,
         "max_appointments_per_month": None,

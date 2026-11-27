@@ -1,5 +1,5 @@
-import 'package:turnia/core/l10n/labels.dart';
-import 'package:turnia/features/staff/domain/staff.dart';
+import 'package:citurno/core/l10n/labels.dart';
+import 'package:citurno/features/staff/domain/staff.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_helpers.dart';

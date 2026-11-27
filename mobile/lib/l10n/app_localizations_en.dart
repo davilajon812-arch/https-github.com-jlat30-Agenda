@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Turnia';
+  String get appTitle => 'Citurno';
 
   @override
   String get commonRetry => 'Retry';

@@ -1,4 +1,4 @@
-"""Punto de entrada de la API de Turnia."""
+"""Punto de entrada de la API de Citurno."""
 
 from __future__ import annotations
 

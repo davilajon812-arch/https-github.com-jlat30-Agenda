@@ -1,6 +1,6 @@
-import 'package:turnia/core/providers/app_providers.dart';
-import 'package:turnia/features/auth/data/auth_repository.dart';
-import 'package:turnia/features/auth/presentation/login_screen.dart';
+import 'package:citurno/core/providers/app_providers.dart';
+import 'package:citurno/features/auth/data/auth_repository.dart';
+import 'package:citurno/features/auth/presentation/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

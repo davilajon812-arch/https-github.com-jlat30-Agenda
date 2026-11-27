@@ -18,14 +18,14 @@ class Settings(BaseSettings):
     )
 
     # --- Aplicación ---
-    app_name: str = "Turnia API"
+    app_name: str = "Citurno API"
     app_version: str = "0.1.0"
     app_env: Literal["dev", "prod"] = "dev"
     api_v1_prefix: str = "/api/v1"
     log_level: str = "INFO"
 
     # --- CORS ---
-    # Lista separada por comas: "http://localhost:3000,https://app.turnia.com"
+    # Lista separada por comas: "http://localhost:3000,https://app.citurno.com"
     # NoDecode evita que pydantic-settings intente parsear el valor como JSON.
     cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: ["http://localhost:3000"]
@@ -51,18 +51,18 @@ class Settings(BaseSettings):
     # "play" usa la Google Play Developer API; "fake" simula Play para
     # desarrollo local y pruebas.
     billing_provider: Literal["play", "fake"] = "fake"
-    google_play_package_name: str = "com.turnia.app"
+    google_play_package_name: str = "com.jlaburto.citurno"
     # JSON completo de la cuenta de servicio con permisos en Play Console.
     # Se define como secreto en Render; nunca en el repositorio.
     google_play_service_account_json: str = ""
     # Secreto compartido que se configura en la suscripción push de Pub/Sub
-    # (se envía en la cabecera X-Turnia-Token).
+    # (se envía en la cabecera X-Citurno-Token).
     google_pubsub_rtdn_token: str = ""
     # Secreto para el endpoint de mantenimiento manual.
     maintenance_token: str = ""
 
     # --- Legal (páginas públicas de privacidad y términos) ---
-    legal_entity_name: str = "Turnia"
+    legal_entity_name: str = "Citurno"
     support_email: str = "soporte@agendapro.app"
 
     @field_validator("cors_origins", mode="before")

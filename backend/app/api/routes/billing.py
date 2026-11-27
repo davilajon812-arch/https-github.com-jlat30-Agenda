@@ -151,13 +151,13 @@ def receive_rtdn(
         Query(description="Secreto compartido (Pub/Sub no envía cabeceras propias)"),
     ] = None,
     x_agendapro_token: Annotated[
-        str | None, Header(alias="X-Turnia-Token")
+        str | None, Header(alias="X-Citurno-Token")
     ] = None,
 ) -> dict[str, str]:
     """Procesa renovaciones, cancelaciones, pausas, gracia y reembolsos.
 
     El secreto puede venir en `?token=` (lo que sí permite configurar la
-    suscripción push de Pub/Sub) o en la cabecera `X-Turnia-Token`, útil
+    suscripción push de Pub/Sub) o en la cabecera `X-Citurno-Token`, útil
     para pruebas manuales.
     """
     settings = request.app.state.settings
