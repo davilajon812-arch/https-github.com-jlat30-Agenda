@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from app.services.google_play import FakeGooglePlayClient
 from tests.api.conftest import BUSINESS_ID
 
-PRO = "agendapro_pro_mensual"
+PRO = "citaly_pro_mensual"
 
 
 def _verify(client: TestClient, headers: dict[str, str], token: str, product: str = PRO):
@@ -162,7 +162,7 @@ def test_rtdn_registra_la_compra_y_actualiza_el_plan(
         client,
         {
             "version": "1.0",
-            "packageName": "com.agendapro.agenda_pro",
+            "packageName": "com.citaly.app",
             "subscriptionNotification": {
                 "version": "1.0",
                 "notificationType": 2,
@@ -282,7 +282,7 @@ def test_rtdn_acepta_el_secreto_por_cabecera(
     """Útil para disparar mantenimientos o pruebas manuales."""
     response = client.post(
         "/api/v1/billing/rtdn",
-        headers={"X-Agendapro-Token": "token-rtdn"},
+        headers={"X-Citaly-Token": "token-rtdn"},
         json={
             "message": {
                 "data": base64.b64encode(

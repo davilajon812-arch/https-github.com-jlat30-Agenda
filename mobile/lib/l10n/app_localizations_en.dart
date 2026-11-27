@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'AgendaPro';
+  String get appTitle => 'Citaly';
 
   @override
   String get commonRetry => 'Retry';

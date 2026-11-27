@@ -1,6 +1,6 @@
 {
-    "name": "agenda_pro",
-    "short_name": "agenda_pro",
+    "name": "Citaly",
+    "short_name": "Citaly",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

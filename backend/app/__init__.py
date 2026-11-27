@@ -1,1 +1,1 @@
-"""Paquete principal de la API de AgendaPro."""
+"""Paquete principal de la API de Citaly."""

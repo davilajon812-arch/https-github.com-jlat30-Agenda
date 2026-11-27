@@ -1,4 +1,4 @@
-"""Punto de entrada de la API de AgendaPro."""
+"""Punto de entrada de la API de Citaly."""
 
 from __future__ import annotations
 

@@ -18,7 +18,7 @@ if (hasReleaseKeystore) {
 }
 
 android {
-    namespace = "com.agendapro.agenda_pro"
+    namespace = "com.citaly.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.agendapro.agenda_pro"
+        applicationId = "com.citaly.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -67,11 +67,11 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            resValue("string", "app_name", "AgendaPro Dev")
+            resValue("string", "app_name", "Citaly Dev")
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "AgendaPro")
+            resValue("string", "app_name", "Citaly")
         }
     }
 }

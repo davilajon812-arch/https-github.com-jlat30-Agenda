@@ -1,4 +1,4 @@
-package com.agendapro.agenda_pro
+package com.citaly.app
 
 import io.flutter.embedding.android.FlutterActivity
 

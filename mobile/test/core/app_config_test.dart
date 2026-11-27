@@ -9,7 +9,7 @@ void main() {
       expect(config.flavor, AppFlavor.dev);
       expect(config.isDev, isTrue);
       expect(config.apiBaseUrl, 'http://10.0.2.2:8000');
-      expect(config.androidPackageName, 'com.agendapro.agenda_pro');
+      expect(config.androidPackageName, 'com.citaly.app');
     });
 
     test('sin variables de compilación Supabase no está configurado', () {

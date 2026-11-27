@@ -52,12 +52,12 @@ void main() {
 
     await tester.enterText(
       find.byType(TextField),
-      'https://agendapro.app/r/barberia-demo',
+      'https://citaly.app/r/barberia-demo',
     );
     await tester.tap(find.text('Abrir reservas'));
     await tester.pumpAndSettle();
 
-    expect(opened, Uri.parse('https://agendapro.app/r/barberia-demo'));
+    expect(opened, Uri.parse('https://citaly.app/r/barberia-demo'));
     expect(find.text('Última reserva'), findsOneWidget);
   });
 
@@ -91,7 +91,7 @@ void main() {
 
     await tester.enterText(
       find.byType(TextField),
-      'https://agendapro.app/r/barberia-demo?c=abc123',
+      'https://citaly.app/r/barberia-demo?c=abc123',
     );
     await tester.tap(find.text('Abrir reservas'));
     await tester.pumpAndSettle();
@@ -112,7 +112,7 @@ void main() {
 
     await tester.enterText(
       find.byType(TextField),
-      'https://agendapro.app/privacidad',
+      'https://citaly.app/privacidad',
     );
     await tester.tap(find.text('Abrir reservas'));
     await tester.pumpAndSettle();
@@ -137,7 +137,7 @@ void main() {
       openLink: (uri) async => true,
       prefs: {
         ClientBookingScreen.lastLinkKey:
-            'https://agendapro.app/r/barberia-demo?c=abc123',
+            'https://citaly.app/r/barberia-demo?c=abc123',
       },
     );
 

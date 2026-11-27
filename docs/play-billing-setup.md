@@ -12,7 +12,7 @@ de prueba.
 | Requisito | Detalle |
 | --------- | ------- |
 | Cuenta de desarrollador | Play Console con la cuota de 25 US$ pagada. |
-| App creada | Nombre y package name `com.agendapro.agenda_pro`. |
+| App creada | Nombre y package name `com.citaly.app`. |
 | Build subido | Un AAB en **Pruebas internas** (Fase 8 genera el AAB; sirve cualquiera con la misma firma). |
 | Proyecto de Google Cloud | Se crea en el paso 2. |
 | Acceso al backend | El endpoint público de Render (`https://<servicio>.onrender.com`). |
@@ -21,7 +21,7 @@ de prueba.
 
 1. Play Console → tu app → **Monetizar con Play → Productos → Suscripciones**.
 2. Crea la suscripción **Pro**:
-   - **ID del producto**: `agendapro_pro_mensual` (debe coincidir con
+   - **ID del producto**: `citaly_pro_mensual` (debe coincidir con
      `plans.play_product_id` en la base de datos).
    - **Nombre**: `Pro`.
 3. Dentro de la suscripción, crea el **plan base**:
@@ -52,7 +52,7 @@ El plan Gratis muestra un banner; el plan Pro no. La decisión la toma el
 backend con `plans.features.ads`, así que se puede apagar sin publicar una
 versión nueva.
 
-La app ya apunta a la cuenta de AdMob de AgendaPro y el banner es adaptativo
+La app ya apunta a la cuenta de AdMob de Citaly y el banner es adaptativo
 (ajusta el ancho al de la pantalla, con altura calculada por Google):
 
 | Dónde | Variable | Valor |
@@ -117,7 +117,7 @@ Con anuncios, la ficha cambia:
 > **Importante:** las suscripciones push de Pub/Sub **no permiten cabeceras HTTP
 > personalizadas**. Por eso el secreto compartido viaja en la *query string* del
 > endpoint (`?token=...`). El backend también acepta la cabecera
-> `X-Agendapro-Token` para pruebas manuales.
+> `X-Citaly-Token` para pruebas manuales.
 
 1. Genera un secreto largo y guárdalo:
 
@@ -279,7 +279,7 @@ No uses `fake` en producción: cualquiera podría activar un plan.
 - [ ] `android/key.properties` y el `.jks` existen y están fuera del repositorio.
 - [ ] El AAB de release compila y `keytool -printcert` muestra tu llave, no la de debug.
 - [ ] `versionCode` incrementado respecto al envío anterior.
-- [ ] Producto `agendapro_pro_mensual` activo con precio base **USD 5.00**.
+- [ ] Producto `citaly_pro_mensual` activo con precio base **USD 5.00**.
 - [ ] App ID y Ad unit ID reales de AdMob (no los de prueba) en manifiesto y compilación.
 - [ ] Login con Google configurado ([docs/google-sign-in.md](./google-sign-in.md)): clientes OAuth Android (upload, debug y Play App Signing) + `GOOGLE_WEB_CLIENT_ID`.
 - [ ] Seguridad de los datos y clasificación de contenido declaran los anuncios.

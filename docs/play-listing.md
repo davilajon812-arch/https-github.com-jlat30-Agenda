@@ -11,17 +11,17 @@ el mensaje ya escrito y es el negocio quien decide cuándo enviarlo.
 ## Nombre de la app (límite 30)
 
 ```
-AgendaPro: citas y clientes
+Citaly: citas y clientes
 ```
 
-*(27 caracteres)*
+*(24 caracteres)*
 
 Alternativas:
 
 | Texto | Caracteres |
 | ----- | ---------- |
-| `AgendaPro: agenda y citas` | 25 |
-| `AgendaPro · Agenda de citas` | 27 |
+| `Citaly: agenda y citas` | 22 |
+| `Citaly · Agenda de citas` | 24 |
 
 El descriptor ("citas y clientes") ayuda a que la ficha aparezca en búsquedas
 por función y no solo por marca.
@@ -44,7 +44,7 @@ Alternativas:
 ## Descripción completa (límite 4000)
 
 ```
-AgendaPro es la agenda de citas para negocios de servicios: barberías, salones de belleza, uñas, talleres, veterinarias, gimnasios y más.
+Citaly es la agenda de citas para negocios de servicios: barberías, salones de belleza, uñas, talleres, veterinarias, gimnasios y más.
 
 Olvídate del cuaderno y de los mensajes cruzados. Tus clientes reservan solos desde un enlace, tu agenda se actualiza al instante y sabes cuánto cobraste sin abrir una hoja de cálculo.
 
@@ -92,12 +92,12 @@ Términos del servicio: https://agendapro-api-469f.onrender.com/terminos
 Soporte: soporte@agendapro.app
 ```
 
-*(2280 caracteres de 4000)*
+*(2358 caracteres de 4000)*
 
-## Novedades de la versión 0.2.2 (límite 500 por envío)
+## Novedades de la versión 0.3.0 (límite 500 por envío)
 
 ```
-Primera versión de AgendaPro.
+Primera versión de Citaly.
 
 • Agenda de citas por día y por semana, con estados y recordatorio por WhatsApp.
 • Clientes con historial de visitas.
@@ -108,9 +108,9 @@ Primera versión de AgendaPro.
 • Plan Pro sin anuncios ni límites.
 ```
 
-*(433 caracteres de 500)*
+*(438 caracteres de 500)*
 
-Versión `0.2.2` (`versionCode` 4). Si el envío anterior se hubiera publicado,
+Versión `0.3.0` (`versionCode` 5). Si el envío anterior se hubiera publicado,
 estas notas cambiarían a un resumen de los cambios; al ser el primer envío, se
 mantiene el texto de presentación.
 
@@ -139,6 +139,7 @@ Pro ya está activa, así que no hace falta comprar nada. En Ajustes → Mi nego
   omite, Play rechaza la versión.
 - **Precio**: el plan Pro se describe como 5 USD al mes porque es el precio base
   configurado en Play Console. Si cambia, hay que actualizar el texto.
-- **Nombre**: "Agenda Pro" coincide con un competidor en la región
-  (agendapro.com). El descriptor del título reduce la confusión en búsquedas,
-  pero no sustituye una revisión de marca si el producto crece.
+- **Nombre**: "Citaly" es un nombre inventado, así que no choca con marcas
+  conocidas del sector (el anterior, "Agenda Pro", sí se parecía a
+  agendapro.com). Aun así, antes de crear la ficha conviene buscar "Citaly" en
+  Play y en el registro de marcas del país donde se distribuya.

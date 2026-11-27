@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _businessId = 'b1';
-const _productId = 'agendapro_pro_mensual';
+const _productId = 'citaly_pro_mensual';
 
 Entitlements _proPlan() {
   return Entitlements.fromJson({

@@ -82,7 +82,7 @@ class DayAvailability {
   bool get isEmpty => staff.every((entry) => entry.slots.isEmpty);
 }
 
-/// Cliente HTTP de la API de AgendaPro.
+/// Cliente HTTP de la API de Citaly.
 ///
 /// El backend es la fuente de verdad de disponibilidad y de límites del plan.
 class AgendaApi {

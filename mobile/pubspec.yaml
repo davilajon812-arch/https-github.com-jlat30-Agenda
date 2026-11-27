@@ -1,5 +1,5 @@
 name: agenda_pro
-description: "AgendaPro: agenda de citas para negocios de servicios."
+description: "Citaly: agenda de citas para negocios de servicios."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -11,7 +11,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # --build-number. En Android, build-name es versionName y build-number es
 # versionCode (el número que Play exige subir en cada envío).
 # Referencia: https://developer.android.com/studio/publish/versioning
-version: 0.2.2+4
+version: 0.3.0+5
 
 environment:
   sdk: ^3.11.4
