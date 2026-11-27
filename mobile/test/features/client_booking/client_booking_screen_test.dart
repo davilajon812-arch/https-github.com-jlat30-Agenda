@@ -1,7 +1,7 @@
-import 'package:citaly/core/config/app_config.dart';
-import 'package:citaly/core/providers/app_providers.dart';
-import 'package:citaly/features/client_booking/presentation/client_booking_screen.dart';
-import 'package:citaly/l10n/app_localizations.dart';
+import 'package:turnia/core/config/app_config.dart';
+import 'package:turnia/core/providers/app_providers.dart';
+import 'package:turnia/features/client_booking/presentation/client_booking_screen.dart';
+import 'package:turnia/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,12 +52,12 @@ void main() {
 
     await tester.enterText(
       find.byType(TextField),
-      'https://citaly.app/r/barberia-demo',
+      'https://turnia.app/r/barberia-demo',
     );
     await tester.tap(find.text('Abrir reservas'));
     await tester.pumpAndSettle();
 
-    expect(opened, Uri.parse('https://citaly.app/r/barberia-demo'));
+    expect(opened, Uri.parse('https://turnia.app/r/barberia-demo'));
     expect(find.text('Última reserva'), findsOneWidget);
   });
 
@@ -91,7 +91,7 @@ void main() {
 
     await tester.enterText(
       find.byType(TextField),
-      'https://citaly.app/r/barberia-demo?c=abc123',
+      'https://turnia.app/r/barberia-demo?c=abc123',
     );
     await tester.tap(find.text('Abrir reservas'));
     await tester.pumpAndSettle();
@@ -112,7 +112,7 @@ void main() {
 
     await tester.enterText(
       find.byType(TextField),
-      'https://citaly.app/privacidad',
+      'https://turnia.app/privacidad',
     );
     await tester.tap(find.text('Abrir reservas'));
     await tester.pumpAndSettle();
@@ -137,7 +137,7 @@ void main() {
       openLink: (uri) async => true,
       prefs: {
         ClientBookingScreen.lastLinkKey:
-            'https://citaly.app/r/barberia-demo?c=abc123',
+            'https://turnia.app/r/barberia-demo?c=abc123',
       },
     );
 

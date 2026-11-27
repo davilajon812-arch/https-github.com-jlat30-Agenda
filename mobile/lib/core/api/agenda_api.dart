@@ -82,7 +82,7 @@ class DayAvailability {
   bool get isEmpty => staff.every((entry) => entry.slots.isEmpty);
 }
 
-/// Cliente HTTP de la API de Citaly.
+/// Cliente HTTP de la API de Turnia.
 ///
 /// El backend es la fuente de verdad de disponibilidad y de límites del plan.
 class AgendaApi {

@@ -9,7 +9,7 @@ def test_health_responde_ok(client: TestClient) -> None:
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "ok"
-    assert body["service"] == "Citaly API"
+    assert body["service"] == "Turnia API"
     assert body["environment"] == "dev"
 
 

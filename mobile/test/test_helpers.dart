@@ -1,6 +1,6 @@
-import 'package:citaly/core/config/app_config.dart';
-import 'package:citaly/core/providers/app_providers.dart';
-import 'package:citaly/l10n/app_localizations.dart';
+import 'package:turnia/core/config/app_config.dart';
+import 'package:turnia/core/providers/app_providers.dart';
+import 'package:turnia/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;

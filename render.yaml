@@ -22,7 +22,7 @@ services:
       - key: BILLING_PROVIDER
         value: play
       - key: GOOGLE_PLAY_PACKAGE_NAME
-        value: com.citaly.app
+        value: com.turnia.app
       - key: CORS_ORIGINS
         sync: false
       - key: SUPABASE_URL
@@ -67,7 +67,7 @@ services:
   # - key: BILLING_PROVIDER
   # value: play
   # - key: GOOGLE_PLAY_PACKAGE_NAME
-  # value: com.citaly.app
+  # value: com.turnia.app
   # - key: SUPABASE_URL
   # fromService:
   # type: web

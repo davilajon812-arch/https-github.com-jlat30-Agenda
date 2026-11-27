@@ -1,4 +1,4 @@
-import 'package:citaly/features/appointments/domain/appointment.dart';
+import 'package:turnia/features/appointments/domain/appointment.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

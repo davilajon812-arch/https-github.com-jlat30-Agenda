@@ -63,7 +63,7 @@ def build_env_vars(service_role: str) -> list[dict[str, str]]:
         {"key": "LOG_LEVEL", "value": "INFO"},
         {"key": "API_V1_PREFIX", "value": "/api/v1"},
         {"key": "BILLING_PROVIDER", "value": "fake"},
-        {"key": "GOOGLE_PLAY_PACKAGE_NAME", "value": "com.citaly.app"},
+        {"key": "GOOGLE_PLAY_PACKAGE_NAME", "value": "com.turnia.app"},
         {"key": "SUPABASE_JWT_AUDIENCE", "value": "authenticated"},
         {"key": "SUPABASE_JWT_SECRET", "value": ""},
         {

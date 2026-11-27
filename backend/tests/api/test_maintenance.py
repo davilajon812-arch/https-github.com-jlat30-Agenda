@@ -9,7 +9,7 @@ from app.jobs import daily_maintenance
 from app.services.google_play import FakeGooglePlayClient
 from tests.api.conftest import BUSINESS_ID
 
-PRO = "citaly_pro_mensual"
+PRO = "turnia_pro_mensual"
 
 
 def test_expira_suscripciones_vencidas(postgres_uri: str) -> None:

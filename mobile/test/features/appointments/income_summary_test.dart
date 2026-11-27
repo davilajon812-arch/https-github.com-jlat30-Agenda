@@ -1,5 +1,5 @@
-import 'package:citaly/features/appointments/domain/appointment.dart';
-import 'package:citaly/features/appointments/domain/income.dart';
+import 'package:turnia/features/appointments/domain/appointment.dart';
+import 'package:turnia/features/appointments/domain/income.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Appointment _appointment({

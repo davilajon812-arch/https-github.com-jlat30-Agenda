@@ -18,7 +18,7 @@ if (hasReleaseKeystore) {
 }
 
 android {
-    namespace = "com.citaly.app"
+    namespace = "com.turnia.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.citaly.app"
+        applicationId = "com.turnia.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -67,11 +67,11 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            resValue("string", "app_name", "Citaly Dev")
+            resValue("string", "app_name", "Turnia Dev")
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "Citaly")
+            resValue("string", "app_name", "Turnia")
         }
     }
 }

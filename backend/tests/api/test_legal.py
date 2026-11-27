@@ -15,7 +15,7 @@ def test_las_paginas_legales_son_publicas(client: TestClient, ruta: str) -> None
 
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert "Citaly" in response.text
+    assert "Turnia" in response.text
 
 
 def test_la_politica_menciona_eliminacion_de_cuenta(client: TestClient) -> None:

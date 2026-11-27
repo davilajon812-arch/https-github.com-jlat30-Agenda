@@ -1,4 +1,4 @@
-import 'package:citaly/features/billing/domain/plan.dart';
+import 'package:turnia/features/billing/domain/plan.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -7,7 +7,7 @@ void main() {
       final plan = Plan.fromJson({
         'id': 'pro',
         'name': 'Pro',
-        'play_product_id': 'citaly_pro_mensual',
+        'play_product_id': 'turnia_pro_mensual',
         'max_staff': null,
         'max_locations': null,
         'max_appointments_per_month': null,
@@ -63,7 +63,7 @@ void main() {
         'source': 'play',
         'auto_renewing': true,
         'current_period_end': '2027-01-01T00:00:00+00:00',
-        'product_id': 'citaly_pro_mensual',
+        'product_id': 'turnia_pro_mensual',
         'usage': {
           'staff_count': 1,
           'appointments_this_month': 12,

@@ -1,4 +1,4 @@
-package com.citaly.app
+package com.turnia.app
 
 import io.flutter.embedding.android.FlutterActivity
 

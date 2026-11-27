@@ -11,7 +11,7 @@ el mensaje ya escrito y es el negocio quien decide cuándo enviarlo.
 ## Nombre de la app (límite 30)
 
 ```
-Citaly: citas y clientes
+Turnia: citas y clientes
 ```
 
 *(24 caracteres)*
@@ -20,8 +20,8 @@ Alternativas:
 
 | Texto | Caracteres |
 | ----- | ---------- |
-| `Citaly: agenda y citas` | 22 |
-| `Citaly · Agenda de citas` | 24 |
+| `Turnia: agenda y citas` | 22 |
+| `Turnia · Agenda de citas` | 24 |
 
 El descriptor ("citas y clientes") ayuda a que la ficha aparezca en búsquedas
 por función y no solo por marca.
@@ -44,7 +44,7 @@ Alternativas:
 ## Descripción completa (límite 4000)
 
 ```
-Citaly es la agenda de citas para negocios de servicios: barberías, salones de belleza, uñas, talleres, veterinarias, gimnasios y más.
+Turnia es la agenda de citas para negocios de servicios: barberías, salones de belleza, uñas, talleres, veterinarias, gimnasios y más.
 
 Olvídate del cuaderno y de los mensajes cruzados. Tus clientes reservan solos desde un enlace, tu agenda se actualiza al instante y sabes cuánto cobraste sin abrir una hoja de cálculo.
 
@@ -97,7 +97,7 @@ Soporte: soporte@agendapro.app
 ## Novedades de la versión 0.3.0 (límite 500 por envío)
 
 ```
-Primera versión de Citaly.
+Primera versión de Turnia.
 
 • Agenda de citas por día y por semana, con estados y recordatorio por WhatsApp.
 • Clientes con historial de visitas.
@@ -139,7 +139,8 @@ Pro ya está activa, así que no hace falta comprar nada. En Ajustes → Mi nego
   omite, Play rechaza la versión.
 - **Precio**: el plan Pro se describe como 5 USD al mes porque es el precio base
   configurado en Play Console. Si cambia, hay que actualizar el texto.
-- **Nombre**: "Citaly" es un nombre inventado, así que no choca con marcas
-  conocidas del sector (el anterior, "Agenda Pro", sí se parecía a
-  agendapro.com). Aun así, antes de crear la ficha conviene buscar "Citaly" en
-  Play y en el registro de marcas del país donde se distribuya.
+- **Nombre**: se descartó "Citaly" porque ya existe una app del mismo rubro
+  (*Citaly - Reserva y gestión*, `com.citaly.app`, de Digital-Nest) que además
+  ocupa ese paquete. "Turnia" no apareció en Play al comprobarlo, pero antes de
+  publicar conviene buscarlo otra vez y revisar el registro de marcas del país
+  donde se distribuya.

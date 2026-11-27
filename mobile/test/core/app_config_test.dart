@@ -1,4 +1,4 @@
-import 'package:citaly/core/config/app_config.dart';
+import 'package:turnia/core/config/app_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,7 +9,7 @@ void main() {
       expect(config.flavor, AppFlavor.dev);
       expect(config.isDev, isTrue);
       expect(config.apiBaseUrl, 'http://10.0.2.2:8000');
-      expect(config.androidPackageName, 'com.citaly.app');
+      expect(config.androidPackageName, 'com.turnia.app');
     });
 
     test('sin variables de compilación Supabase no está configurado', () {

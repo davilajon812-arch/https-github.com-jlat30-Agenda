@@ -1,10 +1,10 @@
-import 'package:citaly/core/config/app_config.dart';
-import 'package:citaly/core/providers/app_providers.dart';
-import 'package:citaly/features/auth/presentation/providers/auth_providers.dart';
-import 'package:citaly/features/business/domain/business.dart';
-import 'package:citaly/features/business/presentation/providers/business_providers.dart';
-import 'package:citaly/features/settings/presentation/settings_screen.dart';
-import 'package:citaly/l10n/app_localizations.dart';
+import 'package:turnia/core/config/app_config.dart';
+import 'package:turnia/core/providers/app_providers.dart';
+import 'package:turnia/features/auth/presentation/providers/auth_providers.dart';
+import 'package:turnia/features/business/domain/business.dart';
+import 'package:turnia/features/business/presentation/providers/business_providers.dart';
+import 'package:turnia/features/settings/presentation/settings_screen.dart';
+import 'package:turnia/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

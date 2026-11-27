@@ -1,4 +1,4 @@
-# Citaly
+# Turnia
 
 Agenda de citas para negocios de servicios (barberías, salones de belleza, talleres
 mecánicos, veterinarias, gimnasios, academias, fotógrafos) en Nicaragua y

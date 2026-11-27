@@ -30,7 +30,7 @@ class AppConfig {
     required this.supabaseAnonKey,
     required this.apiBaseUrl,
     this.publicBaseUrl = '',
-    this.androidPackageName = 'com.citaly.app',
+    this.androidPackageName = 'com.turnia.app',
     this.privacyPolicyUrl =
         'https://agendapro-api-469f.onrender.com/privacidad',
     this.termsUrl = 'https://agendapro-api-469f.onrender.com/terminos',
@@ -56,7 +56,7 @@ class AppConfig {
       publicBaseUrl: const String.fromEnvironment('PUBLIC_BASE_URL'),
       androidPackageName: const String.fromEnvironment(
         'APP_PACKAGE_NAME',
-        defaultValue: 'com.citaly.app',
+        defaultValue: 'com.turnia.app',
       ),
       privacyPolicyUrl: const String.fromEnvironment(
         'PRIVACY_POLICY_URL',

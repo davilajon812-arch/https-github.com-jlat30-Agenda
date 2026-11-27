@@ -1,1 +1,1 @@
-"""Paquete principal de la API de Citaly."""
+"""Paquete principal de la API de Turnia."""
