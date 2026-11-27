@@ -1,6 +1,6 @@
-import 'package:agenda_pro/core/providers/app_providers.dart';
-import 'package:agenda_pro/features/auth/data/auth_repository.dart';
-import 'package:agenda_pro/features/auth/presentation/login_screen.dart';
+import 'package:citaly/core/providers/app_providers.dart';
+import 'package:citaly/features/auth/data/auth_repository.dart';
+import 'package:citaly/features/auth/presentation/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

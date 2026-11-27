@@ -1,4 +1,4 @@
-import 'package:agenda_pro/features/business/presentation/widgets/onboarding_options.dart';
+import 'package:citaly/features/business/presentation/widgets/onboarding_options.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

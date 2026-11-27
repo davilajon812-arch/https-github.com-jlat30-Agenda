@@ -1,4 +1,4 @@
-import 'package:agenda_pro/features/billing/domain/plan.dart';
+import 'package:citaly/features/billing/domain/plan.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

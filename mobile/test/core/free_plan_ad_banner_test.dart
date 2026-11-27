@@ -1,6 +1,6 @@
-import 'package:agenda_pro/core/widgets/free_plan_ad_banner.dart';
-import 'package:agenda_pro/features/billing/domain/plan.dart';
-import 'package:agenda_pro/features/billing/presentation/providers/billing_providers.dart';
+import 'package:citaly/core/widgets/free_plan_ad_banner.dart';
+import 'package:citaly/features/billing/domain/plan.dart';
+import 'package:citaly/features/billing/presentation/providers/billing_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

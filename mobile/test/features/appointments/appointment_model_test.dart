@@ -1,4 +1,4 @@
-import 'package:agenda_pro/features/appointments/domain/appointment.dart';
+import 'package:citaly/features/appointments/domain/appointment.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

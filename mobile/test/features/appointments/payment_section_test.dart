@@ -1,10 +1,10 @@
-import 'package:agenda_pro/core/providers/app_providers.dart';
-import 'package:agenda_pro/features/appointments/data/appointments_repository.dart';
-import 'package:agenda_pro/features/appointments/domain/appointment.dart';
-import 'package:agenda_pro/features/appointments/presentation/widgets/payment_section.dart';
-import 'package:agenda_pro/features/business/domain/business.dart';
-import 'package:agenda_pro/features/business/presentation/providers/business_providers.dart';
-import 'package:agenda_pro/l10n/app_localizations.dart';
+import 'package:citaly/core/providers/app_providers.dart';
+import 'package:citaly/features/appointments/data/appointments_repository.dart';
+import 'package:citaly/features/appointments/domain/appointment.dart';
+import 'package:citaly/features/appointments/presentation/widgets/payment_section.dart';
+import 'package:citaly/features/business/domain/business.dart';
+import 'package:citaly/features/business/presentation/providers/business_providers.dart';
+import 'package:citaly/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

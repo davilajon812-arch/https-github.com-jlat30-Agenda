@@ -1,4 +1,4 @@
-import 'package:agenda_pro/core/config/app_config.dart';
+import 'package:citaly/core/config/app_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:agenda_pro/core/api/agenda_api.dart';
-import 'package:agenda_pro/core/providers/app_providers.dart';
-import 'package:agenda_pro/features/billing/domain/plan.dart';
-import 'package:agenda_pro/features/billing/presentation/providers/billing_providers.dart';
+import 'package:citaly/core/api/agenda_api.dart';
+import 'package:citaly/core/providers/app_providers.dart';
+import 'package:citaly/features/billing/domain/plan.dart';
+import 'package:citaly/features/billing/presentation/providers/billing_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;

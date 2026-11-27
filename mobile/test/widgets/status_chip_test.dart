@@ -1,5 +1,5 @@
-import 'package:agenda_pro/features/appointments/domain/appointment.dart';
-import 'package:agenda_pro/features/appointments/presentation/widgets/status_chip.dart';
+import 'package:citaly/features/appointments/domain/appointment.dart';
+import 'package:citaly/features/appointments/presentation/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

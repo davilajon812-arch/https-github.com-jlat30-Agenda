@@ -1,4 +1,4 @@
-import 'package:agenda_pro/features/client_booking/domain/booking_link.dart';
+import 'package:citaly/features/client_booking/domain/booking_link.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

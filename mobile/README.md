@@ -1,4 +1,4 @@
-# agenda_pro
+# Citaly
 
 Agenda de citas para negocios de servicios
 

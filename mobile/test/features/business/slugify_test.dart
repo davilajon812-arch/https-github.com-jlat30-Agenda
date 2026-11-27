@@ -1,4 +1,4 @@
-import 'package:agenda_pro/features/business/data/business_repository.dart';
+import 'package:citaly/features/business/data/business_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,5 +1,5 @@
-import 'package:agenda_pro/core/l10n/labels.dart';
-import 'package:agenda_pro/features/staff/domain/staff.dart';
+import 'package:citaly/core/l10n/labels.dart';
+import 'package:citaly/features/staff/domain/staff.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_helpers.dart';
