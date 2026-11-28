@@ -36,10 +36,14 @@ la app se comporta como antes: correo y contraseña.
 
 | Cliente | Tipo | Datos |
 | ------- | ---- | ----- |
-| Android (debug) | Android | paquete `com.jlaburto.citurno` · SHA-1 `9B:40:F8:46:F6:6B:32:DD:D7:51:18:35:F9:62:00:DA:4E:A3:BB:C2` |
+| Android (debug) | Android | paquete **`com.jlaburto.citurno.dev`** · SHA-1 `9B:40:F8:46:F6:6B:32:DD:D7:51:18:35:F9:62:00:DA:4E:A3:BB:C2` |
 | Android (release) | Android | paquete `com.jlaburto.citurno` · SHA-1 `FA:EE:55:D7:BE:28:32:64:EB:E0:02:D7:35:10:2E:5B:20:64:1D:EB` |
 | Android (Play) | Android | paquete `com.jlaburto.citurno` · SHA-1 de **Play App Signing** |
 | **Web** | Web | el **Client ID** de este cliente es el que va en `GOOGLE_WEB_CLIENT_ID` |
+
+> El flavor `dev` añade el sufijo `.dev` al `applicationId`, así que el cliente
+> de **debug** debe declarar `com.jlaburto.citurno.dev`. Un APK/AAB de release
+> usa `com.jlaburto.citurno`.
 
 > El SHA-1 de Play App Signing está en Play Console → **Probar y publicar →
 > Integridad de la app → Certificado de firma de la app**. Sin ese cliente, el
