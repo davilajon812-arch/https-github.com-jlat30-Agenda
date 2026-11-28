@@ -66,7 +66,7 @@ alguien reclame una cuenta ajena.
 ```powershell
 cd mobile
 # .env.prod
-GOOGLE_WEB_CLIENT_ID=1234567890-abc.apps.googleusercontent.com
+GOOGLE_WEB_CLIENT_ID=309065900074-ph7eq3qsjkuk27ojjm9o233llio0bslp.apps.googleusercontent.com
 ```
 
 Luego el build de siempre (el archivo se pasa completo):
